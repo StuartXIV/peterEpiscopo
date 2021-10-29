@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHP Techniques</title>
+    <meta name="description" content="AJAX/PHP/CURL/JSON test">
+	<meta name="author" content="Peter Episcopo">
+
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="header">
+        <h1>PHP Techniques</h1>
+        <a id="back-home" href="../index.html">Back to Homepage</a>
+    </div>
+
+    <div class="main">
+
+		<table>
+
+			<tr>
+				<th class="small cell">
+					API Name
+				</th>
+				<th class="medium cell" id="description">
+					Description
+				</th>
+				<th class="small cell">
+					Submit
+				</th>
+			</tr>
+
+			<tr>
+				<td class="small cell">
+					1. postalCodeLookup
+				</td>
+				<td class="medium cell">
+					<label>Places for the given postalcode</label>
+					<select id="selPostalCode">
+						<option value="bs81lr">BS81LR</option>
+						<option value="cv471ge">CV471GE</option>
+						<option value="E16AN">E16AN</option>            
+						<option value="SO140AG">SO140AG</option>
+						<option value="DE128HJ">DE128HJ</option>
+					</select>
+				</td>
+				<td class="small cell">
+					<button class="btn" id="btnRun1">Submit</button>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="small cell">
+					2. wikipediaSearch
+				</td>
+				<td class="medium cell">
+					<label>Links and summary from main WIkipedia entry</label>
+					<select id="selCityInfo">
+						<option value="london">London</option>
+						<option value="paris">Paris</option>
+						<option value="bristol">Bristol</option>            
+						<option value="athens">Athens</option>
+						<option value="lisbon">Lisbon</option>
+					</select>
+				</td>
+				<td class="small cell">
+					<button class="btn" id="btnRun2">Submit</button>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="small cell">
+					3. weather
+				</td>
+				<td class="medium cell">
+					<label>Most recent weather observation from nearby stations</label>
+					<select id="selWeather">
+						<option value='5100'>London</option>
+						<option value="4802">Paris</option>
+						<option value="5213">Berlin</option>            
+						<option value="4816">Vienna</option>
+					</select>
+				</td>
+				<td class="small cell">
+					<button class="btn" id="btnRun3">Submit</button>
+				</td>
+			</tr>
+
+			<tr>
+				<td colspan="3" class="large cell" id="cellResults">
+					<div class="divResults">
+						<table id="tableResults">
+							<tr>
+								<th colspan="2">Results</th>
+							</tr>
+							<tr>
+								<td colspan="1" id="result-one">
+									Country Code:
+								</td>
+								<td class="cellResults">
+									<a class="result-link" id="txtCountryCode">Bristol</a>
+								</td>
+							</tr>
+							<tr>
+								<td id="result-two">
+									Country Name: 
+								</td>
+								<td id="txtCountryName"class="cellResults">
+									England
+								</td>
+			
+							</tr>
+			
+							<tr>
+								<td id="result-three">
+									Place Name: 
+								</td>
+								<td id="txtPlaceName" class="cellResults">
+									England
+								</td>
+			
+							</tr>
+						</table>
+					</div>
+				</td>
+			</tr>
+
+		<!-- </table>
+
+        <select id="selPostalCode">
+			<option value="bs81lr">BS81LR</option>
+			<option value="cv471ge">CV471GE</option>
+			<option value="E16AN">E16AN</option>            
+            <option value="SO140AG">SO140AG</option>
+            <option value="DE128HJ">DE128HJ</option>
+		</select>
+
+		<button id="btnRun">Run</button>
+
+		<br><br>
+
+		<div id="divResults">
+			
+			<table>
+
+				<tr>
+					<td align="right">
+						Country Code: 
+					</td>
+					<td id="txtCountryCode">
+						
+					</td>
+
+				</tr>
+
+				<tr>
+					<td align="right">
+						Country Name: 
+					</td>
+					<td id="txtCountryName">
+						
+					</td>
+
+				</tr>
+
+				<tr>
+					<td align="right">
+						Place Name: 
+					</td>
+					<td id="txtPlaceName">
+						
+					</td>
+
+				</tr>
+			</table> -->
+
+		</div>
+
+    </div>
+
+    <!-- <div id="preloader"></div> -->
+    <script src="../home/javascript/jquery-2.2.3.min.js"></script>
+    <script src="./taskscript.js"></script>
+</body>
+</html>
