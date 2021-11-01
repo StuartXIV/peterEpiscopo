@@ -19,8 +19,8 @@ $('#btnRun1').click(function() {
             if (result.status.name == "ok") {
 
                 $('#txtResult-one').html(result['data'][0]['countryCode']);
-                $('#txtResult-three').html(result['data'][0]['adminName1']);
-                $('#txtResult-two').html(result['data'][0]['placeName']);
+                $('#txtResult-two').html(result['data'][0]['adminName1']);
+                $('#txtResult-three').html(result['data'][0]['placeName']);
 
             }
         
@@ -31,11 +31,11 @@ $('#btnRun1').click(function() {
     }); 
 
     $('#result-one').html('Country Code');
-    $('#result-two').html("Country Name");
-    $('#result-three').html("Place Name");
+    $('#result-three').html("Country Name");
+    $('#result-two').html("Place Name");
     $('#txtResult-one').removeClass("url");
-    $('#txtResult-two').removeClass("url");
-    $('#txtResult-three').removeClass("small-text");
+    $('#txtResult-three').removeClass("url");
+    $('#txtResult-two').removeClass("small-text");
 
 });
 
@@ -58,9 +58,9 @@ $('#btnRun2').click(function() {
 
             if (result.status.name == "ok") {
 
-                $('#txtResult-one').html(result['data'][0]['thumbnailImg']);
-                $('#txtResult-three').html(result['data'][0]['summary']);
-                $('#txtResult-two').html(result['data'][0]['wikipediaUrl']);
+                $('#txtResult-one').html(`<a>${result['data'][0]['thumbnailImg']}<a>`);
+                $('#txtResult-two').html(result['data'][0]['summary']);
+                $('#txtResult-three').html(result['data'][0]['wikipediaUrl']);
 
             }
         
@@ -71,11 +71,11 @@ $('#btnRun2').click(function() {
     }); 
 
     $('#result-one').html('Image');
-    $('#result-two').html("Description");
-    $('#result-three').html("Wikipedia Link");
+    $('#result-three').html("Description");
+    $('#result-two').html("Wikipedia Link");
     $('#txtResult-one').addClass("url");
-    $('#txtResult-two').addClass("url");
-    $('#txtResult-three').addClass("small-text");
+    $('#txtResult-three').addClass("url");
+    $('#txtResult-two').addClass("small-text");
 
 });
 
@@ -106,8 +106,8 @@ $('#btnRun3').click(function() {
             if (result.status.name == "ok") {
                 
                 $('#txtResult-one').html(result['data']['humidity'] + "&#37");
-                $('#txtResult-three').html(result['data']['temperature'] + "&#8451");
-                $('#txtResult-two').html(result['data']['clouds']);
+                $('#txtResult-two').html(result['data']['temperature'] + "&#8451");
+                $('#txtResult-three').html(result['data']['clouds']);
 
             }
         
@@ -119,11 +119,11 @@ $('#btnRun3').click(function() {
     });
     
     $('#result-one').html('Humidity');
-    $('#result-two').html("Temperature");
-    $('#result-three').html("Clouds");
+    $('#result-three').html("Temperature");
+    $('#result-two').html("Clouds");
     $('#txtResult-one').removeClass("url");
-    $('#txtResult-two').removeClass("url");
-    $('#txtResult-three').removeClass("small-text");
+    $('#txtResult-three').removeClass("url");
+    $('#txtResult-two').removeClass("small-text");
 
 });
 
