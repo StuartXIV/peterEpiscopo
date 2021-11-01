@@ -5,7 +5,7 @@ $('#btnRun1').click(function() {
 
     $.ajax(
         {
-        url: "./getPostcodeInfo.php",
+        url: "../php/getPostcodeInfo.php",
         type: 'POST',
         dataType: 'json',
         data: {
@@ -46,7 +46,7 @@ $('#btnRun2').click(function() {
 
     $.ajax(
         {
-        url: "./getCityInfo.php",
+        url: "../php/getCityInfo.php",
         type: 'POST',
         dataType: 'json',
         data: {
@@ -81,17 +81,10 @@ $('#btnRun2').click(function() {
 
 $('#btnRun3').click(function() {
 
-    // $lat = ;
-    // $lng = ;
-
-    
-    
-
-
     $.ajax(
 
         {
-        url: "./getWeatherInfo.php",
+        url: "../php/getWeatherInfo.php",
         type: 'POST',
         dataType: 'json',
         data: {
