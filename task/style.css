@@ -104,6 +104,8 @@ select {
 .medium {
     width: 60%;
     height: 10%;
+    border-left: 2px solid #7c24f72c;
+    border-right: 2px solid #7c24f72c;
 }
 
 label {
@@ -121,13 +123,18 @@ label {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 80%;
+    width: 60%;
     height: 80%;
+    
 }
 
 #tableResults {
     width: 100%;
     height: 100%;
+    border-right: 2px solid #7c24f767;
+    border-left: 2px solid #7c24f767;
+    border-top: 2px solid #7c24f767;
+    border-bottom: 2px solid #7c24f767;
 }
 
 #tableResults td {
@@ -216,11 +223,13 @@ label {
  }
  
  /* Large devices (laptops/desktops, 992px and up) */
- @media only screen and (min-width: 992px) {
-
+ @media only screen and (max-width: 992px) {
+    
  }
  
  /* Extra large devices (large laptops and desktops, 1200px and up) */
  @media only screen and (min-width: 1200px) {
-
+    table {
+        width: 80%;
+    }
  } 
