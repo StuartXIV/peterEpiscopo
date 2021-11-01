@@ -18,9 +18,9 @@ $('#btnRun1').click(function() {
 
             if (result.status.name == "ok") {
 
-                $('#txtCountryCode').html(result['data'][0]['countryCode']);
-                $('#txtCountryName').html(result['data'][0]['adminName1']);
-                $('#txtPlaceName').html(result['data'][0]['placeName']);
+                $('#txtResult-one').html(result['data'][0]['countryCode']);
+                $('#txtResult-three').html(result['data'][0]['adminName1']);
+                $('#txtResult-two').html(result['data'][0]['placeName']);
 
             }
         
@@ -33,9 +33,9 @@ $('#btnRun1').click(function() {
     $('#result-one').html('Country Code');
     $('#result-two').html("Country Name");
     $('#result-three').html("Place Name");
-    $('#txtCountryCode').removeClass("url");
-    $('#txtPlaceName').removeClass("url");
-    $('#txtCountryName').removeClass("small-text");
+    $('#txtResult-one').removeClass("url");
+    $('#txtResult-two').removeClass("url");
+    $('#txtResult-three').removeClass("small-text");
 
 });
 
@@ -58,9 +58,9 @@ $('#btnRun2').click(function() {
 
             if (result.status.name == "ok") {
 
-                $('#txtCountryCode').html(result['data'][0]['thumbnailImg']);
-                $('#txtCountryName').html(result['data'][0]['summary']);
-                $('#txtPlaceName').html(result['data'][0]['wikipediaUrl']);
+                $('#txtResult-one').html(result['data'][0]['thumbnailImg']);
+                $('#txtResult-three').html(result['data'][0]['summary']);
+                $('#txtResult-two').html(result['data'][0]['wikipediaUrl']);
 
             }
         
@@ -73,9 +73,9 @@ $('#btnRun2').click(function() {
     $('#result-one').html('Image');
     $('#result-two').html("Description");
     $('#result-three').html("Wikipedia Link");
-    $('#txtCountryCode').addClass("url");
-    $('#txtPlaceName').addClass("url");
-    $('#txtCountryName').addClass("small-text");
+    $('#txtResult-one').addClass("url");
+    $('#txtResult-two').addClass("url");
+    $('#txtResult-three').addClass("small-text");
 
 });
 
@@ -105,9 +105,9 @@ $('#btnRun3').click(function() {
 
             if (result.status.name == "ok") {
                 
-                $('#txtCountryCode').html(result['data']['humidity'] + "&#37");
-                $('#txtCountryName').html(result['data']['temperature'] + "&#8451");
-                $('#txtPlaceName').html(result['data']['clouds']);
+                $('#txtResult-one').html(result['data']['humidity'] + "&#37");
+                $('#txtResult-three').html(result['data']['temperature'] + "&#8451");
+                $('#txtResult-two').html(result['data']['clouds']);
 
             }
         
@@ -121,9 +121,9 @@ $('#btnRun3').click(function() {
     $('#result-one').html('Humidity');
     $('#result-two').html("Temperature");
     $('#result-three').html("Clouds");
-    $('#txtCountryCode').removeClass("url");
-    $('#txtPlaceName').removeClass("url");
-    $('#txtCountryName').removeClass("small-text");
+    $('#txtResult-one').removeClass("url");
+    $('#txtResult-two').removeClass("url");
+    $('#txtResult-three').removeClass("small-text");
 
 });
 
