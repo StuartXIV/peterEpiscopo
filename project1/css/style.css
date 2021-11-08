@@ -5,6 +5,216 @@
     padding: 0;
     box-sizing: border-box;
     text-decoration: none;
-    color: #141C3A;
+    color: #000000;
     font-family: "Roboto", sans-serif;
+}
+
+body {
+    height: 100vh;
+    width: 100%;
+    background: rgba(162, 192, 255, 0.445);
+}
+
+header {
+    height: 6vh;
+    width: 100%;
+    background: white;
+    position: relative;
+    border-bottom: 2px solid #94A9B0;
+}
+
+nav {
+    
+    height: 100%;
+    width: 90%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ul {
+    list-style-type: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    width: 100%;
+}
+
+li {
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+}
+
+li:nth-of-type(2n){
+    border-right: 2px solid #94A9B0;
+    border-left: 2px solid #94A9B0;
+}
+
+li:last-of-type {
+    border-right: none;
+}
+
+.nav-li {
+    cursor: pointer;
+}
+
+.nav-li:active {
+    color: #368BCD;
+}
+
+#map { 
+    height: 94vh;
+    z-index: 1;
+ }
+
+#country-search {
+    display: grid;
+    position: relative;
+    padding: 0 0;
+    /* background-color: yellow; */
+}
+
+#country-search-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    /* background: red; */
+    width: 15rem;
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+}
+
+#country-search select {
+    font-size: 1em;
+    line-height: 2rem;
+    font-weight: 600;
+    background: none;
+    border-top: 1px solid #94A9B0;
+    border-left: 1px solid #94A9B0;
+    border-bottom: 1px solid #94A9B0;
+    border-right: none;
+    border-radius: 5px 0 0 5px;
+    width: 70%;
+    padding: 0 1rem;
+}
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
+  }
+
+#search {
+    border-top: 1px solid #94A9B0;
+    border-right: 1px solid #94A9B0;
+    border-bottom: 1px solid #94A9B0;
+    border-radius: 0 5px 5px 0;
+    border-left:1px solid #94A9B0;
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+#sort-arrow {
+    width: 10%;
+    cursor: pointer;
+    position: absolute;
+    pointer-events: none;
+}
+
+#sort-arrow i {
+    left: 50%;
+    top: 50%;
+    transform: translate(1400%, 50%);
+}
+#search:active i {
+    color: #368BCD;
+}
+
+#country-search select:hover{
+    cursor: pointer;
+}
+
+#iss-icon {
+    height: 20px;
+    width: 20px;
+}
+
+#settings i {
+    margin-right: 1em;
+}
+
+main {
+    position: relative;
+}
+
+#stop-follow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 550%);
+    z-index: 99;
+    padding: 1em 2em;
+    font-size: 1em;
+    font-weight: 600;
+    border-radius: 1rem;
+    border: 2px solid white;
+    color: white;
+    background: #242424;
+    cursor: pointer;
+    display: none;
+
+}
+
+
+#preloader {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+z-index: 9999;
+overflow: hidden;
+background: #fff;
+}
+#preloader:before {
+content: "";
+position: fixed;
+top: calc(50% - 30px);
+left: calc(50% - 30px);
+border: 6px solid #f2f2f2;
+border-top: 6px solid #56829e ;
+border-radius: 50%;
+width: 60px;
+height: 60px;
+
+-webkit-animation: animate-preloader 1s linear infinite;
+animation: animate-preloader 1s linear infinite;
+}
+@-webkit-keyframes animate-preloader {
+0% {
+-webkit-transform: rotate(0deg);
+transform: rotate(0deg);
+}
+100% {
+-webkit-transform: rotate(360deg);
+transform: rotate(360deg);
+}
+}
+@keyframes animate-preloader {
+0% {
+-webkit-transform: rotate(0deg);
+transform: rotate(0deg);
+}
+100% {
+-webkit-transform: rotate(360deg);
+transform: rotate(360deg);
+}
 }

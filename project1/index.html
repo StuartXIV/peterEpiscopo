@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gazetteer</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+    
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li id="country-search">
+                    <div id="country-search-box">
+                        <select name="country" id="country">
+                            <option value="none">Search Country</option>
+                            
+                        </select>
+                        <div class="search" id="sort-arrow"><i class="fas fa-sort-down"></i></div>
+                        <div class="search" id="search"><i class="fas fa-search"></i></div>
+                    </div>
+                </li>
+                <li id="your-location">
+                    <div class="nav-li" id="user-location">Find Your Location</div>
+                    
+                </li>
+                <li>
+                    <!-- <img src="./images/ISS.svg" id="iss-icon" alt="iss-icon"> -->
+                    <div class="nav-li" id="iss">Where is the ISS?</div>
+                </li>
+                <li>
+                    <div class="nav-li" id="settings"><i class="fas fa-moon"></i>Dark Mode</div>                    
+                </li>
+
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div id="map">
+
+        </div>
+        <button id="stop-follow">Stop Following ISS</button>
+    </main>
+
+    <div id=”preloader”></div>
+    <script src="./javascript/jquery-2.2.3.min.js"></script>
+    <script src="./javascript/app.js"></script>
+</body>
+</html>
