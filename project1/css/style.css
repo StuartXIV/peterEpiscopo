@@ -47,6 +47,10 @@ li {
     font-weight: bold;
 }
 
+#hamburger {
+    display: none;
+}
+
 li:nth-of-type(2n){
     border-right: 2px solid #94A9B0;
     border-left: 2px solid #94A9B0;
@@ -67,6 +71,7 @@ li:last-of-type {
 #map { 
     height: 94vh;
     z-index: 1;
+    background-color: #dbf5ff;
  }
 
 #country-search {
@@ -173,6 +178,72 @@ main {
 
 }
 
+/* POPUP STYLES ---------------------------------------------------------------------*/
+
+.popup {
+    letter-spacing: 0.05rem;
+    font-weight: 600;
+}
+
+#country-name-popup {
+    font-weight: 600;
+    margin-right: 0;
+    font-size: 1rem;
+}
+
+span {
+    font-weight: 400;
+    margin-right: 0.2rem;
+}
+
+#img-container {
+    width: 100%;
+    text-align: center;
+}
+
+#flag {
+    width: 70px;
+    height: 40px;
+    box-shadow: 1.3px 1.3px 4px rgb(156, 156, 156);
+    margin: 0 auto;
+}
+
+#little-flag {
+    width: 20px;
+    height: 12px;
+    border-radius: 1px;
+    box-shadow: .4px .4px 1px rgb(158, 158, 158);
+    margin-left: 0.7rem;
+}
+
+#search-wiki:hover {
+    text-decoration: underline;
+}
+
+#search-popup {
+    color: #368BCD;
+    margin-left: .2rem;
+}
+
+#search-popup-box{
+    position: relative;
+    height: 12px;
+    width: 12px;
+    display: inline-block;
+}
+
+#search-popup-box i{
+    position: absolute;
+    transition: all .5s ease;
+    text-shadow: 1px 1px 1px rgb(172, 172, 172);
+}
+
+#search-wiki:hover #search-popup-box i {
+    transform: translate(-9px, 1px);
+    font-size: 1.2em;
+    text-shadow: 1px 1px 2px rgb(161, 161, 161);
+}
+
 
 #preloader {
 position: fixed;
@@ -218,3 +289,47 @@ transform: rotate(0deg);
 transform: rotate(360deg);
 }
 }
+
+@media only screen and (max-width: 600px) {
+    header {
+        width: 100%;
+    }
+
+    nav {
+        width: 100%;
+    }
+
+    ul {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 100%;
+        padding: 0 10px;
+    }
+
+    #country-search-box {
+        position: relative;
+        width: 15rem;
+        height: 36px;
+    }
+
+    #country-search select {
+        font-size: .8em;
+    }
+
+    .list {
+        display: none;
+    }
+
+    #hamburger {
+        display:inline-block;
+        text-align: end;
+        font-size: 1.5em;
+        cursor: pointer;
+    }
+
+    #hamburger:active i {
+        color: #368BCD;
+    }
+  }

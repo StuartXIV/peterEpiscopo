@@ -7,8 +7,8 @@
 
 	$executionStartTime = microtime(true);
 
-	$url='http://api.geonames.org/postalCodeLookupJSON?formatted=true&postalcode=' . $_REQUEST['city'] . '&username=stuart_xiv&style=full';
-	$urll = 'http://api.geonames.org/wikipediaSearchJSON?formatted=true&q=' . $_REQUEST['city'] . '&maxRows=1&username=stuart_xiv&style=full';
+	$url='http://api.geonames.org/countryInfoJSON?formatted=true&lang=en&country=' . $_REQUEST['countrycode'] . '&username=stuart_xiv&style=full';
+	$urll = 'http://api.geonames.org/wikipediaSearchJSON?formatted=true&q=' . $_REQUEST['countrycode'] . '&maxRows=1&username=stuart_xiv&style=full';
 	
 	// the $url will turn into the url below. with $_REQUEST I take 'postalcode' variable from the 'data' object in script.js
 	// $url='http://api.geonames.org/postalCodeLookupJSON?formatted=true&postalcode=bs81lr&username=stuart_xiv&style=full';
@@ -19,7 +19,7 @@
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_URL,$urll);
+	curl_setopt($ch, CURLOPT_URL,$url);
 
 	$result=curl_exec($ch);                                             //////////////// JUST COPY
 
