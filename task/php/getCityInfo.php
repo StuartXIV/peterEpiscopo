@@ -26,7 +26,8 @@
 	curl_close($ch);
 
 	$decode = json_decode($result,true);	
-
+	
+	echo $result;
 	//////////////////////////////////////////////////////////////////////////////////////////
 
 	$output['status']['code'] = "200";
@@ -38,3 +39,4 @@
 	header('Content-Type: application/json; charset=UTF-8');
 
 	echo json_encode($output); 
+

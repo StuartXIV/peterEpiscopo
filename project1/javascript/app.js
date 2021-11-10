@@ -82,19 +82,9 @@ var issIcon = L.icon({
     popupAnchor: [-3, -76]
 });
 
-// var popup = L.popup()
-// .setLatLng([0, 0])
-// .setContent('<p id=\"hello\">Hello world!<br />This is a nice popup.</p>')
-// .openOn(mymap);
-
-
-// const originalmarker = L.marker([51,0]).addTo(mymap);
-const issmarker = L.marker([65,19], {icon: issIcon}).bindPopup("International Space Station");
+const issmarker = L.marker([65,19], {icon: issIcon}).bindPopup("<div id=\"iss-div\"><img id=\"iss-logo\" src=\"images/iss_logo.png\"><h3>International Space Station</h3></div>");
 issmarker.addTo(mymap);
 
-const polygon = L.polygon([
-    
-])
 
 //ONLOAD----------------------------------------------------------------------------------
 
@@ -544,19 +534,21 @@ function createPopup(name, code, capital, population, currency, area, continent,
         symbol = '';
     }
 
+    let code_lowercase = code.toLowerCase();
+
         
     
     let popup = L.popup().setContent                            
                             (`
                             <div class="popup">
-                            <div id="img-container"><img id="flag" src=\"http://www.geognos.com/api/en/countries/flag/${code}.png\" alt="flag"></div>
+                            <div id="img-container"><img id="flag" src=\"images/flags/${code_lowercase}.png\" alt="flag"></div>
                             <p><span>Country:</span> <span id="country-name-popup"> ${name} </span> <span>(${code})</span></p>
                             <p><span>Capital City:</span>  ${capital}</p>
                             <p><span>Population:</span>  ${population}</p>
                             <p><span>Currency:</span>  ${currency} <span id="currency_symbol"> ${symbol}</p>
                             <p><span>Area:</span>  ${area} Km<sup>2</sup></p>
                             <p><span>Continent:</span>  ${continent}</p>
-                            <p><a id="search-wiki" href=\"https://en.wikipedia.org/wiki/${name}\" target=\"_blank\">${name} Wikipedia <img id="little-flag" src=\"http://www.geognos.com/api/en/countries/flag/${code}.png\" alt=""><span id="search-popup-box"><i id="search-popup" class="fas fa-search"></i></span></a></p>
+                            <p><a id="search-wiki" href=\"https://en.wikipedia.org/wiki/${name}\" target=\"_blank\">${name} Wikipedia <img id="little-flag" src=\"images/flags/${code_lowercase}.png\" alt=""><span id="search-popup-box"><i id="search-popup" class="fas fa-search"></i></span></a></p>
                             </div>
                             `);
     layer.bindPopup(popup);  
@@ -586,11 +578,13 @@ function createPopupForMarker(name, code, currency, symbol, time_zone_name, time
     layer.closePopup();  
     
     console.log(weather_main);
+
+    let code_lowercase = code.toLowerCase();
        
     let popup = L.popup().setContent                            
                             (`
                             <div class="popup">
-                            <div id="img-container"><img id="flag" src=\"http://www.geognos.com/api/en/countries/flag/${code}.png\" alt="flag"></div>
+                            <div id="img-container"><img id="flag" src=\"images/flags/${code_lowercase}.png\" alt="flag"></div>
                             <p><span>Country:</span> <span id="country-name-popup"> ${name} </span> <span>(${code})</span></p>
                             <p><span>Currency:</span>  ${currency} <span id="currency-symbol"> ${symbol}</span></p>
                             <p><span>Time Zone:</span>  ${time_zone} (${time_zone_name})</p>
