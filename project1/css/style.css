@@ -199,12 +199,12 @@ span {
 #img-container {
     width: 100%;
     text-align: center;
-    width: 70px;
     height: 40px;
+
 }
 
 #flag {
-    width: 100%;
+    width: 70px;
     height: 100%;
     box-shadow: 1.3px 1.3px 4px rgb(156, 156, 156);
     margin: 0 auto;
@@ -299,10 +299,6 @@ span {
     text-align: center;
 }
 
-/* #img-container img {
-    height: 100%;
-    width: 100%;
-} */
 
 
 #preloader {

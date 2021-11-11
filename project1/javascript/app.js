@@ -6,6 +6,8 @@ const search = document.getElementById('search');
 const stop_follow = document.getElementById("stop-follow");
 const map = document.getElementById("map");
 
+const api_key = '70ee96dfc29aab191c8ebe3d0acddc70';
+
 
 // LOADING SCRIPT -----------------------------------------------------------------------------------------------------------------
 !function(n,i){"function"==typeof define&&define.amd?define(["leaflet","spin.js"],function(i,t){n(i,t)}):"object"==typeof exports?module.exports=function(i,t){return void 0===i&&(i=require("leaflet")),void 0===t&&(t=require("spin.js")),n(i,t),i}:void 0!==i&&i.L&&i.Spinner&&n(i.L,i.Spinner)}(function(n,i){var t={spin:function(n,t){n?(this._spinner||(this._spinner=new i(t).spin(this._container),this._spinning=0),this._spinning++):--this._spinning<=0&&this._spinner&&(this._spinner.stop(),this._spinner=null)}},e=function(){this.on("layeradd",function(n){n.layer.loading&&this.spin(!0),"function"==typeof n.layer.on&&(n.layer.on("data:loading",function(){this.spin(!0)},this),n.layer.on("data:loaded",function(){this.spin(!1)},this))},this),this.on("layerremove",function(n){n.layer.loading&&this.spin(!1),"function"==typeof n.layer.on&&(n.layer.off("data:loaded"),n.layer.off("data:loading"))},this)}
@@ -101,7 +103,7 @@ $(window).on('load', function () {
 
 //USER LOCATION ---------------------------------------------------------------------------
 function getLocation() {
-    clearInterval(timer);
+    if (iss_active){activateTimer()};
     loading();
     console.log("Getting User Location");
     if (navigator.geolocation) {
@@ -204,7 +206,8 @@ function getWeatherInfo(code_country, name, currency, currency_symbol, time_zone
         dataType: 'json',
         data: {
             lat: latitude,
-            lng: longitude
+            lng: longitude,
+            api: api_key
         },
         
         success: function(result) {
@@ -399,7 +402,7 @@ function getCountryPolygonForUser(code, symbol) {
                             layer.setStyle({
                                 color: 'yellow',
                                 weight: 1,
-                                fillOpacity: 0.15,
+                                fillOpacity: 0.1,
                         
                             });
                             country_selected = element['properties']['name'];
@@ -445,7 +448,7 @@ function getCountryPolygonForUser(code, symbol) {
                             layer.setStyle({
                                 color: 'yellow',
                                 weight: 1,
-                                fillOpacity: 0.15,
+                                fillOpacity: 0.1,
                         
                             });
                             country_selected = element['properties']['name'];
@@ -581,7 +584,7 @@ function createPopupForMarker(name, code, currency, symbol, time_zone_name, time
 
     let code_lowercase = code.toLowerCase();
        
-    let popup = L.popup().setContent                            
+    let popup = L.responsivePopup().setContent                            
                             (`
                             <div class="popup">
                             <div id="img-container"><img id="flag" src=\"images/flags/${code_lowercase}.png\" alt="flag"></div>
@@ -598,7 +601,7 @@ function createPopupForMarker(name, code, currency, symbol, time_zone_name, time
     marker.bindPopup(popup);
     marker.openPopup();  
     let bounds = marker.getLatLng();
-    mymap.setView([bounds.lat, bounds.lng], 7);
+    mymap.setView([bounds.lat, bounds.lng]);
     
 }
 
