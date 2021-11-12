@@ -218,6 +218,23 @@ main {
     display: none;
 }
 
+#result {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 500%);
+    z-index: 99;
+    padding: 0.5em 1em;
+    font-size: .9em;
+    font-weight: 600;
+    border-radius: 1rem;
+    border: 2px solid #242424;
+    color: #242424;
+    background: white;
+    cursor: pointer;
+    display: none;
+}
+
 /* POPUP STYLES ---------------------------------------------------------------------*/
 
 .popup {

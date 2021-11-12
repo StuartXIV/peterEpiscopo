@@ -1,6 +1,7 @@
 document.getElementById('user-location').addEventListener('click', getLocation);
 document.getElementById('iss').addEventListener('click', activateTimer);
 document.getElementById('quiz').addEventListener('click', activateQuiz);
+const answer = document.getElementById('result');
 const quiz_question = document.getElementById('quiz-question');
 const next_question = document.getElementById('next-question');
 next_question.addEventListener('click', computerChoice);
@@ -203,10 +204,14 @@ function getMarkerInfo(event) {
                 const lng = event.lng.toFixed(2);
                 player_choice = name;
                 console.log(player_choice);
-                if (player_choice === computer_choice){
-                    console.log("well done");
+                if (player_choice === computer_choice){                    
+                    answer.innerHTML = "Correct!";
+                    answer.style.display = "inline-block";
+                    answer.style.background = "lightgreen";
                 } else {
-                    console.log("You fucked it");
+                    answer.innerHTML = "Wrong";
+                    answer.style.display = "inline-block";
+                    answer.style.background = "red";
                 }
                 getWeatherInfo(code_country, name, currency, currency_symbol, time_zone_name, time_zone, county, description, lat, lng);
                 //getCountryPolygonForMarker(code_country, name, currency, currency_symbol, time_zone_name, time_zone, county, description);
@@ -761,6 +766,7 @@ function activateQuiz(){
     loading();
     if (!quiz){
         getCountryPolygonsHover();
+        answer.style.display = "none";
         mymap.removeLayer(map_layer);  
         mymap.removeLayer(layer);
         mymap.removeLayer(marker);    
@@ -769,7 +775,7 @@ function activateQuiz(){
         map.style.backgroundColor = "#007AAC";
         quiz = true;
         computerChoice();
-        setTimeout(function(){quiz_question.style.display = "inline-block"; next_question.style.display = "inline-block"}, 4000);
+        setTimeout(function(){quiz_question.style.display = "inline-block"; next_question.style.display = "inline-block"; answer.style.display = "inline-block"}, 4000);
 
     } else {
         quiz_question.style.display = "none";
@@ -780,6 +786,9 @@ function activateQuiz(){
 }
 
 function computerChoice(){
+    mymap.setView([10,0], 3);
+    answer.style.display = "none";
+    answer.style.background = "white";
     let random_number = Math.floor(Math.random() * country_array.length);
     computer_choice = country_array[random_number];
     quiz_question.innerHTML = `Where is ${computer_choice}?`;
