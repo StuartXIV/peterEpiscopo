@@ -36,7 +36,7 @@ nav {
 ul {
     list-style-type: none;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr;
     width: 100%;
 }
@@ -45,6 +45,10 @@ li {
     width: 100%;
     text-align: center;
     font-weight: bold;
+}
+
+#dark {
+    border-right: none;
 }
 
 #hamburger {
@@ -178,6 +182,42 @@ main {
 
 }
 
+/* QUIZ ------------------------------------------------------------*/
+
+#quiz-question {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 550%);
+    z-index: 99;
+    padding: 1em 2em;
+    font-size: 1em;
+    font-weight: 600;
+    border-radius: 1rem;
+    border: 2px solid white;
+    color: white;
+    background: #242424;
+    cursor: pointer;
+    display: none;
+}
+
+#next-question {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 700%);
+    z-index: 99;
+    padding: 0.5em 1em;
+    font-size: .9em;
+    font-weight: 600;
+    border-radius: 1rem;
+    border: 2px solid #242424;
+    color: #242424;
+    background: white;
+    cursor: pointer;
+    display: none;
+}
+
 /* POPUP STYLES ---------------------------------------------------------------------*/
 
 .popup {
@@ -250,7 +290,17 @@ span {
     text-transform: capitalize;
 }
 
+summary {
+    cursor: pointer;
+}
+
+#speed {
+    font-style: italic;
+    font-weight: 600;
+}
+
 #box {
+    margin-top: 25px;
     height: 16px;
     display: inline-block;
     width: 100%;

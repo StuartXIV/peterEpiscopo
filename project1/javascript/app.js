@@ -1,5 +1,9 @@
 document.getElementById('user-location').addEventListener('click', getLocation);
 document.getElementById('iss').addEventListener('click', activateTimer);
+document.getElementById('quiz').addEventListener('click', activateQuiz);
+const quiz_question = document.getElementById('quiz-question');
+const next_question = document.getElementById('next-question');
+next_question.addEventListener('click', computerChoice);
 const select_country = document.getElementById('country');
 const settings = document.getElementById('settings');
 const search = document.getElementById('search');
@@ -21,7 +25,12 @@ let timer;
 let iss_active = false;
 
 const mymap = L.map('map');
-mymap.setView([0, 0], 3);
+mymap.setView([10, 0], 3);
+var southWest = L.latLng(-92.18, -193.30);
+var northEast = L.latLng(92.10, 193.30);
+var mapBounds = L.latLngBounds(southWest, northEast);
+mymap.setMaxBounds(mapBounds);
+console.log(mymap.getBounds());
 var marker = L.marker([0 , 0]);
 
 window.onload = loading();
@@ -39,8 +48,7 @@ var map_dark = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
 	minZoom: 2,
 	maxZoom: 18,
     attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
-    //apikey: '069cf193-4145-4c13-879a-83538c2c639c',
-	//attribution: '&copy; <&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+    
     });
 
 var map_layer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
@@ -48,6 +56,14 @@ var map_layer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/service
 	minZoom: 2,
 	maxZoom: 18
 });
+
+var map_quiz = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg', {
+	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+	subdomains: 'abcd',
+    minZoom: 2,
+	maxZoom: 18
+});
+
 map_layer.addTo(mymap);
 mymap.doubleClickZoom.disable();
 
@@ -185,6 +201,13 @@ function getMarkerInfo(event) {
                 const description = result['data']['results']['0']['formatted'];
                 const lat = event.lat.toFixed(2);
                 const lng = event.lng.toFixed(2);
+                player_choice = name;
+                console.log(player_choice);
+                if (player_choice === computer_choice){
+                    console.log("well done");
+                } else {
+                    console.log("You fucked it");
+                }
                 getWeatherInfo(code_country, name, currency, currency_symbol, time_zone_name, time_zone, county, description, lat, lng);
                 //getCountryPolygonForMarker(code_country, name, currency, currency_symbol, time_zone_name, time_zone, county, description);
             }
@@ -222,8 +245,9 @@ function getWeatherInfo(code_country, name, currency, currency_symbol, time_zone
                 const weather = weather_info[0].toUpperCase() + weather_info.substring(1);
                 const temperature = result['data']['current']['temp'];
                 const humidity = result['data']['current']['humidity'];
+                const wind = result['data']['current']['wind_speed'];
 
-                getCountryPolygonForMarker(code_country, name, currency, currency_symbol, time_zone_name, time_zone, county, description, weather_main, weather, temperature, humidity);
+                getCountryPolygonForMarker(code_country, name, currency, currency_symbol, time_zone_name, time_zone, county, description, weather_main, weather, temperature, humidity, wind);
             }
         
         },
@@ -287,19 +311,14 @@ function getCountryNames() {
                 arr.forEach(element => {
                     const country_name_for_select = element['properties']['name'];
                     empty_arr.push(country_name_for_select);
-                    // const tag = document.createElement("option");
-                    // tag.value = element['properties']['iso_a2'];
-                    // var text = document.createTextNode(country);
-                    // tag.appendChild(text);
-                    // select_country.appendChild(tag);
                 });
                 const ordered_arr = empty_arr.sort();
+                createCountryArr(ordered_arr);
                 ordered_arr.forEach(country => {
 
                     const tag = document.createElement("option");
                     function getCode(x){
                         arr.forEach(element => {
-                            // console.log(x);
                             if (element['properties']['name'] === x){
                                 tag.value = element['properties']['iso_a2'];
                             }
@@ -319,6 +338,15 @@ function getCountryNames() {
     }); 
     
 };
+
+// CREATE COUNTRYS ARRAY
+
+let country_array;
+function createCountryArr(arr){
+    country_array = arr;
+    console.log(country_array);
+    console.log(country_array.length)
+}
 
 // GET COUNTRY POLYGONS -------------------------------------------------------------------
 let country_selected = "";
@@ -424,7 +452,7 @@ function getCountryPolygonForUser(code, symbol) {
 
 // GET COUNTRY POLYGON FOR MARKER
 
-    function getCountryPolygonForMarker(code, name, currency, symbol, time_zone_name, time_zone, county, description, weather_main, weather, temperature, humidity) {    
+    function getCountryPolygonForMarker(code, name, currency, symbol, time_zone_name, time_zone, county, description, weather_main, weather, temperature, humidity, wind) {    
         
         $.ajax(
             {
@@ -445,14 +473,22 @@ function getCountryPolygonForUser(code, symbol) {
                             mymap.removeLayer(layer);                                                    
                             layer = L.geoJSON(myGeoJSON);                        
                             layer.addTo(mymap); 
-                            createPopupForMarker(name, code, currency, symbol, time_zone_name, time_zone, county, description, weather_main, weather, temperature, humidity);                                        
+                            createPopupForMarker(name, code, currency, symbol, time_zone_name, time_zone, county, description, weather_main, weather, temperature, humidity, wind);                                        
                             // mymap.fitBounds(layer.getBounds());
-                            layer.setStyle({
-                                color: 'yellow',
-                                weight: 1,
-                                fillOpacity: 0.1,
-                        
-                            });
+                            if (!quiz){
+                                layer.setStyle({
+                                    color: 'yellow',
+                                    weight: 1,
+                                    fillOpacity: 0.1,
+                            
+                                });
+                            } else {
+                                layer.setStyle({
+                                    color: 'green',
+                                    weight: 1,
+                                    fillOpacity: 0.2,
+                                });
+                            }
                             country_selected = element['properties']['name'];
                         }
                     })
@@ -541,7 +577,7 @@ function createPopup(name, code, capital, population, currency, area, continent,
 
     let code_lowercase = code.toLowerCase();
 
-        
+      
     
     let popup = L.popup().setContent                            
                             (`
@@ -569,7 +605,7 @@ function numberWithCommas(x) {
 // CREATE POPUP FOR MARKER-------------------------------------------------------------------
 
 
-function createPopupForMarker(name, code, currency, symbol, time_zone_name, time_zone, county, description, weather_main, weather, temperature, humidity){
+function createPopupForMarker(name, code, currency, symbol, time_zone_name, time_zone, county, description, weather_main, weather, temperature, humidity, wind){
 
     if (!symbol){
         symbol = '';
@@ -580,6 +616,9 @@ function createPopupForMarker(name, code, currency, symbol, time_zone_name, time
         county = 'N/A';
     }
     
+    wind = (wind * 2.23694).toFixed(0);
+    let wind_kmph = (wind * 1.609344).toFixed(0);
+
     layer.closePopup();  
     
     console.log(weather_main);
@@ -595,9 +634,13 @@ function createPopupForMarker(name, code, currency, symbol, time_zone_name, time
                             <p><span>Time Zone:</span>  ${time_zone} (${time_zone_name})</p>
                             <p><span>Place:</span>  ${description}</p>    
                             <p><span>County:</span>  ${county}</p> 
+                            <details>
+                            <summary>Weather Info</summary>
                             <div id="box"><p id="weather"><span>Weather:</span>  ${weather}<div id="weather-icon-box"><img id="weather-icon" src="images/${weather_main}.svg"></div></div></p> 
                             <p><span>Temperature:</span>  ${temperatureConverter(temperature)}&#8451;</p> 
-                            <p><span>Humidity:</span>  ${humidity}%</p>                         
+                            <p><span>Humidity:</span>  ${humidity}%</p>
+                            <p><span>Wind Speed:</span>  ${wind_kmph} <span id="speed">km/h</span></p>       
+                            </details>                   
                             </div>
                             `);
     marker.bindPopup(popup);
@@ -633,28 +676,49 @@ function getCountryPolygonsHover() {
                     arr.forEach(element => {
                             myGeoJSON = element;
                             layer_hover = L.geoJSON(myGeoJSON);                            
-                            layer_hover.addTo(mymap);       
-                            layer_hover.setStyle({
-                                weight: 0,
-                                fillOpacity: 0,
-                        
-                            });
-                            layer_hover.on('mouseover', function (e){
-                                this.setStyle({
-                                    color: 'white',
-                                    weight: 0.2,
-                                    fillOpacity: 0.3,
-                                });
-                                // this.openPopup();
-                            });    
-                            layer_hover.on('mouseout', function (e){
-                                this.setStyle({
-                                    color: 'white',
+                            layer_hover.addTo(mymap);   
+                            if (!quiz){    
+                                layer_hover.setStyle({
                                     weight: 0,
                                     fillOpacity: 0,
+                            
                                 });
-                                // this.closePopup();
-                            });                       
+                                layer_hover.on('mouseover', function (e){
+                                    this.setStyle({
+                                        color: 'white',
+                                        weight: 0.2,
+                                        fillOpacity: 0.3,
+                                    });
+                                });    
+                                layer_hover.on('mouseout', function (e){
+                                    this.setStyle({
+                                        color: 'white',
+                                        weight: 0,
+                                        fillOpacity: 0,
+                                    });
+                                });
+                            } else {
+                                layer_hover.setStyle({
+                                    color: 'brown',
+                                    weight: 0.5,
+                                    fillOpacity: 0
+                                });
+                                layer_hover.on('mouseover', function (e){
+                                    this.setStyle({
+                                        color: 'brown',
+                                        weight: 0.5,
+                                        fillOpacity: 0.3,
+                                    });
+                                });    
+                                layer_hover.on('mouseout', function (e){
+                                    this.setStyle({
+                                        color: 'brown',
+                                        weight: 0.5,
+                                        fillOpacity: 0,
+                                    });
+                                });
+                            }
+                                                   
                     })
                 }            
             },
@@ -668,6 +732,7 @@ function getCountryPolygonsHover() {
 // MAP SETTINGS Bright/Dark
 
 let map_style = "light";
+let quiz = false;
 
 $('#settings').click(function(){
     loading();
@@ -687,6 +752,38 @@ $('#settings').click(function(){
     
 });
 
+//QUIZ
+
+let computer_choice = "Iran";
+let player_choice = "none";
+
+function activateQuiz(){
+    loading();
+    if (!quiz){
+        getCountryPolygonsHover();
+        mymap.removeLayer(map_layer);  
+        mymap.removeLayer(layer);
+        mymap.removeLayer(marker);    
+        map_quiz.addTo(mymap);
+        mymap.setView([10, 0], 3);
+        map.style.backgroundColor = "#007AAC";
+        quiz = true;
+        computerChoice();
+        setTimeout(function(){quiz_question.style.display = "inline-block"; next_question.style.display = "inline-block"}, 4000);
+
+    } else {
+        quiz_question.style.display = "none";
+        mymap.removeLayer(map_quiz);
+        map_layer.addTo(mymap);
+        quiz = false;
+    }
+}
+
+function computerChoice(){
+    let random_number = Math.floor(Math.random() * country_array.length);
+    computer_choice = country_array[random_number];
+    quiz_question.innerHTML = `Where is ${computer_choice}?`;
+}
 
 getCountryNames();
 getCountryPolygonsHover();
