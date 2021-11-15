@@ -888,7 +888,7 @@ function showPlayerChoice(choice){
                     weight: 1,
                     fillOpacity: 0.5,        
                 });  
-                quiz_layer.bindPopup(`<p id=\"quiz-choice\">${computer_choice}</p> <div id=\"img-container\"><img id=\"flag\" src=\"images/flags/${country_code_for_quiz_flag_correct}.png\"></div>`, {autoclose: false}).openPopup();                        
+                quiz_layer.bindPopup(`<p id=\"quiz-choice\">${computer_choice}</p> <div id=\"img-container\"><img id=\"flag\" src=\"images/flags/${country_code_for_quiz_flag_correct.toLowerCase()}.png\"></div>`, {autoclose: false}).openPopup();                        
             } else {
                 console.log("computer shows mistake");
                 mistake_count++;
