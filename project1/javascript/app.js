@@ -15,6 +15,7 @@ const quiz_question = document.getElementById('quiz-question');
 const next_question = document.getElementById('next-question');
 next_question.addEventListener('click', computerChoice);
 const select_country = document.getElementById('country');
+const country_search_div = document.getElementById('country-search-box');
 const settings = document.getElementById('settings');
 settings.addEventListener('click', changeMapStyle);
 const settings_side = document.getElementById('settings-side');
@@ -23,6 +24,8 @@ const search = document.getElementById('search');
 const stop_follow = document.getElementById("stop-follow");
 const map = document.getElementById("map");
 const quiz_container = document.getElementById("quiz-container");
+const exit_quiz = document.getElementById("exit-quiz");
+exit_quiz.addEventListener('click', activateQuiz);
 const hamburger = document.getElementById('hamburger');
 hamburger.addEventListener('click', openSideMenu);
 const side_menu = document.getElementById('side-menu');
@@ -128,6 +131,7 @@ mymap.on('dblclick', function (event){
 )
 
 mymap.on('click', function (event){
+    openSideMenu();
     if (quiz && single_click_active){
         single_click_active = false;
         loading();
@@ -642,8 +646,8 @@ function fixName(country){
         return country= "Dem. Rep. Korea";
     } else if (country === "South Korea"){ 
         return country= "Korea";
-    } else if (country === "Bahamas"){ 
-        return country= "The Bahamas";
+    } else if (country === "The Bahamas"){ 
+        return country= "Bahamas";
     } else if (country === "Sahrawi Arab Democratic Republic"){ 
         return country= "W. Sahara";
     } else if (country === "Falkland Islands"){ 
@@ -772,6 +776,9 @@ function activateQuiz(){
     loading();
     if (!quiz){
         quiz = true;
+        exit_quiz.style.display = "inline-block";
+        quiz_btn_side.innerHTML = "<i class=\"fas fa-sign-out-alt\"> Exit Quiz Mode";
+        country_search_div.style.display = "none";
         changeNavBar(quiz);
         quizHover();
         answer.style.display = "none";
@@ -787,7 +794,10 @@ function activateQuiz(){
 
     } else {
         quiz = false;
+        exit_quiz.style.display = "none";
         quiz_container.style.display = "none";
+        quiz_btn_side.innerHTML = "Quiz Mode";
+        country_search_div.style.display = "flex";
         changeNavBar(quiz);
         defaultHover();     
         answer.style.display = "none";
