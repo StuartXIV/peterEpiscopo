@@ -910,7 +910,7 @@ function showPlayerChoice(choice){
                             weight: 1,
                             fillOpacity: 0.5,        
                         });
-                        let popup_quiz = `<p id=\"quiz-choice\">${computer_choice}</p> <div id=\"img-container\"><img id=\"flag\" src=\"images/flags/${country_code_for_quiz_flag}.png\" alt=\"flag\"></div>`;
+                        let popup_quiz = `<p id=\"quiz-choice\">${computer_choice}</p> <div id=\"img-container\"><img id=\"flag\" src=\"images/flags/${country_code_for_quiz_flag.toLowerCase()}.png\" alt=\"flag\"></div>`;
                         computer_layer.bindPopup(popup_quiz, {autoclose: false}).openPopup();
                     }    
                 })             
