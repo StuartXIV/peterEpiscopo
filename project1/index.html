@@ -11,20 +11,23 @@
     crossorigin=""/>
     <link rel="shortcut icon" href="#">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-responsive-popup@0.6.4/leaflet.responsive.popup.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-responsive-popup@0.6.4/leaflet.responsive.popup.rtl.css" />   
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
     integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
     crossorigin=""></script>    
     <script src="javascript/spin/dist/spin.min.js" charset="utf-8"></script>
     <script src="javascript/leaflet.spin.min.js" charset="utf-8"></script>
-    <script src="https://unpkg.com/leaflet-responsive-popup@0.6.4/leaflet.responsive.popup.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-responsive-popup@0.6.4/leaflet.responsive.popup.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-responsive-popup@0.6.4/leaflet.responsive.popup.rtl.css" />
+    <script src="https://unpkg.com/leaflet-responsive-popup@0.6.4/leaflet.responsive.popup.js"></script>     
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
+
     
 </head>
 <body>
     <header>
         <nav>
-            <ul>
+            <ul id="top-nav">
                 <li id="country-search">
                     <div id="country-search-box">
                         <select name="country" id="country">
@@ -36,36 +39,62 @@
                     </div>
                 </li>
                 <li class="list" id="your-location">
-                    <div class="nav-li" id="user-location">Find Your Location</div>
+                    <div class="nav-li noselect" id="user-location">Find Your Location</div>
                     
                 </li>
                 <li class="list">
-                    <div class="nav-li" id="iss">Where is the ISS?</div>
+                    <div class="nav-li noselect" id="iss">Where is the ISS?</div>
                 </li>
                 <li class="list">
-                    <div class="nav-li" id="quiz">Quiz</div>
+                    <div class="nav-li noselect" id="quiz">Quiz Mode</div>
                 </li>
                 <li class="list" id="dark">
-                    <div class="nav-li" id="settings"><i class="fas fa-moon"></i>Dark Mode</div>                    
+                    <div class="nav-li noselect" id="settings"><i class="fas fa-moon"></i>Dark Mode</div>                    
                 </li>
                 <li id="hamburger">
-                    <i class="fas fa-bars"></i>
+                    <i class ="fas fa-bars noselect"></i>
                 </li>
             </ul>
         </nav>
     </header>
     <main>
         <div id="map">
-
+            
+        </div>
+        <div id="side-menu">
+            <ul id="side-list">
+                <li class="side-list" id="your-location">
+                    <div class="nav-li noselect" id="user-location-side">Find Your Location</div>
+                    
+                </li>
+                <li class="side-list">
+                    <div class="nav-li noselect" id="iss-side">Where is the ISS?</div>
+                </li>
+                <li class="side-list">
+                    <div class="nav-li noselect" id="quiz-side">Quiz Mode</div>
+                </li>
+                <li class="side-list" id="dark-side">
+                    <div class="nav-li noselect" id="settings-side"><i class="fas fa-moon"></i>Dark Mode</div>                    
+                </li>
+            </ul>
         </div>
         <button id="stop-follow">Stop Following ISS</button>
-        <div id="quiz-question">Where is Iran?</div>
-        <div id="next-question">Next</div>
-        <div id="result">Correct</div>
+        <div id="quiz-container">
+             
+             
+            <div id="quiz-wrapper">
+                <div id="quiz-question-answer-wrapper">                    
+                    <div class="quiz-item noselect" id="result">Correct</div> 
+                    <div class="quiz-item noselect" id="quiz-question">Where is Iran?</div>
+                </div>
+                <div class="quiz-item noselect" id="next-question">Next</div>             
+            </div>            
+        </div>
     </main>
 
     <div id=”preloader”></div>
     <script src="./javascript/jquery-2.2.3.min.js"></script>
     <script src="./javascript/app.js"></script>
+    <!-- <script type="module" src="./javascript/index.js"></script> -->
 </body>
 </html>
