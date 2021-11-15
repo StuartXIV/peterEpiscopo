@@ -1,4 +1,7 @@
+const header = document.querySelector('header');
 const user_location = document.getElementById('user-location');
+const user_location_list = document.getElementById('user-location-list');
+const iss_list = document.getElementById('iss-list');
 user_location.addEventListener('click', getLocation);
 const user_location_side = document.getElementById('user-location-side');
 user_location_side.addEventListener('click', getLocation);
@@ -8,6 +11,7 @@ const iss_btn_side = document.getElementById('iss-side');
 iss_btn_side.addEventListener('click', activateTimer);
 const quiz_btn = document.getElementById('quiz');
 quiz_btn.addEventListener('click', activateQuiz);
+const quiz_list = document.getElementById('quiz-mode');
 const quiz_btn_side = document.getElementById('quiz-side');
 quiz_btn_side.addEventListener('click', activateQuiz);
 const answer = document.getElementById('result');
@@ -56,7 +60,8 @@ marker.addTo(mymap);
 
 let geojson_arr = [];
 
-var user_location_btn = L.easyButton('fas fa-map-marker-alt', getLocation, 'Find Your Location').addTo(mymap);
+var user_location_btn = L.easyButton('fas fa-map-marker-alt', getLocation, 'Find Your Location');
+user_location_btn.addTo(mymap);
 
 function loading(){
     if (side_menu_open){
@@ -131,7 +136,7 @@ mymap.on('dblclick', function (event){
 )
 
 mymap.on('click', function (event){
-    openSideMenu();
+    closeSideMenu();
     if (quiz && single_click_active){
         single_click_active = false;
         loading();
@@ -197,6 +202,12 @@ function openSideMenu(){
     }
 }
 
+function closeSideMenu(){
+    if(side_menu_open){
+        side_menu.style.transform = "translateY(-130%)";
+        side_menu_open = false;
+    }
+}
 
 
 //USER LOCATION (onload)---------------------------------------------------------------------------
@@ -769,16 +780,14 @@ let player_choice = "none";
 let mistake_count = 0;
 let quiz_layer;
 
-function activateQuiz(){ 
+function activateQuiz(){         
     computerChoice();  
     mymap.removeLayer(marker);     
     mymap.setView([10,0],3); 
     loading();
     if (!quiz){
-        quiz = true;
-        exit_quiz.style.display = "inline-block";
+        quiz = true;        
         quiz_btn_side.innerHTML = "<i class=\"fas fa-sign-out-alt\"> Exit Quiz Mode";
-        country_search_div.style.display = "none";
         changeNavBar(quiz);
         quizHover();
         answer.style.display = "none";
@@ -788,16 +797,11 @@ function activateQuiz(){
             mymap.removeLayer(map_dark);
         };     
         brightQuizMap();         
-        setTimeout(function(){
-            quiz_container.style.display = "flex";
-        }, 4000);
+        
 
     } else {
         quiz = false;
-        exit_quiz.style.display = "none";
-        quiz_container.style.display = "none";
         quiz_btn_side.innerHTML = "Quiz Mode";
-        country_search_div.style.display = "flex";
         changeNavBar(quiz);
         defaultHover();     
         answer.style.display = "none";
@@ -814,14 +818,21 @@ function activateQuiz(){
 }
 
 function changeNavBar(quiz){
+    let easy_btn = document.querySelector('.easy-button-button');
     if(quiz){
-        quiz_btn.innerHTML = "Exit Quiz Mode";
-        settings.style.display = "none";
-        iss_btn.style.display = "none";
-    } else {
-        quiz_btn.innerHTML = "Quiz Mode";
-        settings.style.display = "inline-block";
-        iss_btn.style.display = "inline-block";
+        header.style.background = "url(images/navbar.png)";
+        quiz_list.classList.add("quiz-mode");
+        quiz_btn.innerHTML = "<i class=\"fas fa-sign-out-alt\"></i> Exit Quiz Mode";  
+        easy_btn.style.display = "none";
+        setTimeout(function(){
+            quiz_container.style.display = "flex";
+        }, 4000);
+    } else {        
+        header.style.background = "white";
+        quiz_container.style.display = "none";
+        quiz_list.classList.remove("quiz-mode");
+        quiz_btn.innerHTML = "Quiz Mode";        
+        easy_btn.style.display = "block";
     }
 }
 
