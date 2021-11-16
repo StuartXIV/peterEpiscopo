@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-
 * {
     margin: 0;
     padding: 0;
@@ -24,7 +23,7 @@ header {
     z-index: 5;
 }
 
-nav {    
+nav {
     height: 100%;
     width: 90%;
     margin: auto;
@@ -64,8 +63,6 @@ li {
     font-size: .8em;
 }
 
-
-
 #dark {
     border-right: none;
 }
@@ -74,7 +71,7 @@ li {
     display: none;
 }
 
-#top-nav li:nth-of-type(2n){
+#top-nav li:nth-of-type(2n) {
     border-right: 2px solid #94A9B0;
     border-left: 2px solid #94A9B0;
 }
@@ -91,11 +88,11 @@ li:last-of-type {
     color: #368BCD;
 }
 
-#map { 
+#map {
     height: 94vh;
     z-index: 1;
     background-color: #dbf5ff;
- }
+}
 
 #country-search {
     display: grid;
@@ -108,8 +105,7 @@ li:last-of-type {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
-    /* background: red; */
+    transform: translate(-50%, -50%);
     width: 15rem;
     height: 40px;
     display: flex;
@@ -135,14 +131,14 @@ select {
     -moz-appearance: none;
     text-indent: 1px;
     text-overflow: '';
-  }
+}
 
 #search {
     border-top: 1px solid #94A9B0;
     border-right: 1px solid #94A9B0;
     border-bottom: 1px solid #94A9B0;
     border-radius: 0 5px 5px 0;
-    border-left:1px solid #94A9B0;
+    border-left: 1px solid #94A9B0;
     width: 30%;
     display: flex;
     justify-content: center;
@@ -162,11 +158,12 @@ select {
     top: 50%;
     transform: translate(1400%, 50%);
 }
+
 #search:active i {
     color: #368BCD;
 }
 
-#country-search select:hover{
+#country-search select:hover {
     cursor: pointer;
 }
 
@@ -198,7 +195,6 @@ main {
     background: #242424;
     cursor: pointer;
     display: none;
-
 }
 
 /* SIDE MENU -----------------------------------------------------------------------------------------------------------*/
@@ -216,10 +212,9 @@ main {
     transform: translateY(-130%);
     opacity: 0;
     transition: all .5s ease;
-
 }
 
-#side-list {    
+#side-list {
     height: 100%;
     width: 100%;
     display: grid;
@@ -277,7 +272,6 @@ main {
     justify-content: center;
     align-items: center;
     text-align: center;
-
 }
 
 #quiz-wrapper {
@@ -293,8 +287,7 @@ main {
     flex-direction: column;
     border-radius: 5%;
     box-shadow: 1px 1px 5px grey;
-    pointer-events:initial;
-    
+    pointer-events: initial;
 }
 
 .quiz-item {
@@ -355,7 +348,7 @@ main {
     border-radius: 1rem;
     border: 2px solid #242424;
     color: #242424;
-    background: white;     
+    background: white;
     transition: all 1s ease;
     transform: translateY(0);
     opacity: 0;
@@ -383,7 +376,6 @@ span {
     width: 100%;
     text-align: center;
     height: 40px;
-
 }
 
 #flag {
@@ -439,14 +431,14 @@ span {
     text-shadow: .5px .5px 1px grey;
 }
 
-#search-popup-box{
+#search-popup-box {
     position: relative;
     height: 12px;
     width: 12px;
     display: inline-block;
 }
 
-#search-popup-box i{
+#search-popup-box i {
     position: absolute;
     transition: all .5s ease;
     text-shadow: 1px 1px 1px rgb(172, 172, 172);
@@ -521,62 +513,60 @@ summary {
     text-align: center;
 }
 
-
-
 #preloader {
-position: fixed;
-top: 0;
-left: 0;
-right: 0;
-bottom: 0;
-z-index: 9999;
-overflow: hidden;
-background: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    overflow: hidden;
+    background: #fff;
 }
-#preloader:before {
-content: "";
-position: fixed;
-top: calc(50% - 30px);
-left: calc(50% - 30px);
-border: 6px solid #f2f2f2;
-border-top: 6px solid #56829e ;
-border-radius: 50%;
-width: 60px;
-height: 60px;
 
--webkit-animation: animate-preloader 1s linear infinite;
-animation: animate-preloader 1s linear infinite;
+#preloader:before {
+    content: "";
+    position: fixed;
+    top: calc(50% - 30px);
+    left: calc(50% - 30px);
+    border: 6px solid #f2f2f2;
+    border-top: 6px solid #56829e;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    -webkit-animation: animate-preloader 1s linear infinite;
+    animation: animate-preloader 1s linear infinite;
 }
+
 @-webkit-keyframes animate-preloader {
-0% {
--webkit-transform: rotate(0deg);
-transform: rotate(0deg);
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
 }
-100% {
--webkit-transform: rotate(360deg);
-transform: rotate(360deg);
-}
-}
+
 @keyframes animate-preloader {
-0% {
--webkit-transform: rotate(0deg);
-transform: rotate(0deg);
-}
-100% {
--webkit-transform: rotate(360deg);
-transform: rotate(360deg);
-}
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
 }
 
 @media only screen and (max-width: 600px) {
     header {
         width: 100%;
     }
-
     nav {
         width: 100%;
     }
-
     #top-nav {
         width: 100%;
         display: flex;
@@ -585,53 +575,53 @@ transform: rotate(360deg);
         height: 100%;
         padding: 0 10px 0 0;
     }
-
-    #top-nav li:nth-of-type(2n){
+    #top-nav li:nth-of-type(2n) {
         border-right: none;
         border-left: none;
     }
-
     #country-search-box {
         position: relative;
         width: 15rem;
-        height: 36px;        
+        height: 36px;
         margin-right: 50px;
     }
-
     #country-search select {
         font-size: .8em;
     }
-
     .list {
         display: none;
     }
-
     #quiz-mode {
         display: flex;
     }
-
-    #quiz {
-    
-    }
-
     #hamburger {
-        display:inline-block;
+        display: inline-block;
         text-align: end;
         font-size: 1.5em;
         cursor: pointer;
     }
-
     #hamburger:active i {
         color: #368BCD;
     }
-  }
+}
 
 .noselect {
-    -webkit-touch-callout: none; /* iOS Safari */
-      -webkit-user-select: none; /* Safari */
-       -khtml-user-select: none; /* Konqueror HTML */
-         -moz-user-select: none; /* Old versions of Firefox */
-          -ms-user-select: none; /* Internet Explorer/Edge */
-              user-select: none; /* Non-prefixed version, currently
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Old versions of Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently
                                     supported by Chrome, Edge, Opera and Firefox */
+}
+
+.leaflet-marker-icon {
+    -webkit-filter: drop-shadow( 3px 3px 2px rgba(160, 81, 45, 0.836));
+    filter: drop-shadow( 3px 3px 2px rgba(47, 79, 79, 0.555));
 }
