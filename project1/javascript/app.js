@@ -469,7 +469,6 @@ function getCountryPolygonForMarker(code, name, currency, symbol, time_zone_name
  }
 // GET COUNTRY INFO FOR POPUS-------------------------------------------------------------------
 
-
 function getCountryInfo(name, code, symbol) {    
 
     $.ajax(
@@ -489,8 +488,9 @@ function getCountryInfo(name, code, symbol) {
                 let population = result['data'][0]['population'];
                 let currency = result['data'][0]['currencyCode'];
                 let area = result['data'][0]['areaInSqKm'];
-                let continent = result['data'][0]['continentName'];
-                createPopup(name, code, capital, population, currency, area, continent, symbol);
+                let continent = result['data'][0]['continentName'];      
+                $.when(exchangeRate(currency)).done(createPopup(name, code, capital, population, currency, area, continent, symbol)); 
+                
             };
             
         
@@ -508,6 +508,9 @@ function getCountryInfo(name, code, symbol) {
 
 
 function createPopup(name, code, capital, population, currency, area, continent, symbol){
+
+    console.log(exchangeRate(currency));
+
     if (population >= 1000000000){
         population = `${(population / 1000000000).toFixed(1)} billion`;
     }
@@ -538,11 +541,12 @@ function createPopup(name, code, capital, population, currency, area, continent,
     let popup = L.popup().setContent                            
                             (`
                             <div class="popup">
-                            <div id="img-container"><img id="flag" src=\"images/flags/${code_lowercase}.png\" alt="flag"></div>
+                            <div id="img-container"><img id=\"flag\" src=\"images/flags/${code_lowercase}.png\" alt="flag"></div>
                             <p><span>Country:</span> <span id="country-name-popup"> ${name} </span> <span>(${code})</span></p>
                             <p><span>Capital City:</span>  ${capital}</p>
                             <p><span>Population:</span>  ${population}</p>
-                            <p><span>Currency:</span>  ${currency} <span id="currency_symbol"> ${symbol}</p>
+                            <p><span>Currency:</span>  ${currency} <span id=\"currency_symbol\"> ${symbol}</p>
+                            <p><span>EXR:</span> USD/${currency} <span id="exchange-rate">--</span></p>
                             <p><span>Area:</span>  ${area} Km<sup>2</sup></p>
                             <p><span>Continent:</span>  ${continent}</p>
                             <p><a id="search-wiki" href=\"https://en.wikipedia.org/wiki/${name}\" target=\"_blank\">${name} Wikipedia <img id="little-flag" src=\"images/flags/${code_lowercase}.png\" alt=""><span id="search-popup-box"><i id="search-popup" class="fas fa-search"></i></span></a></p>
@@ -606,6 +610,31 @@ function temperatureConverter(valNum) {
     const temp = valNum-273.15;
     return Math.round(temp);
   }
+
+// EXCHANGE RATE ---------------------------------------------------------------------------------------
+
+function exchangeRate(currency) {   
+            
+    return $.ajax(
+        {
+        url: "php/getExchangeRate.php",
+        type: 'POST',
+        dataType: 'json',
+        
+        success: function(result) {              
+            // console.log(JSON.stringify(result));              
+            
+            if (result.status.name == "ok") {
+                let exr= result['data']['rates'][currency];
+                document.getElementById('exchange-rate').innerHTML = exr.toFixed(2);
+            }            
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            // your error code
+            console.log("error polygons hover");
+        }
+    });             
+};
 
 // GET COUNTRY POLYGONS HOVER (onload)-------------------------------------------------------------------
 

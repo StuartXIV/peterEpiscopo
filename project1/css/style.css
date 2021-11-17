@@ -412,6 +412,17 @@ span {
     margin-left: 0.7rem;
 }
 
+#exchange-rate {
+    width: 30px;
+    height: 16px;
+    background-color: rgba(204, 204, 204, 0.219);
+    border: 1px solid grey;
+    border-radius: 8%;
+    text-align: center;
+    padding: 2px 4px;
+    margin-left: 4px;
+}
+
 #search-wiki:hover {
     text-decoration: underline;
 }
