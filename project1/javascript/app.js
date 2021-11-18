@@ -33,6 +33,7 @@ exit_quiz.addEventListener('click', activateQuiz);
 const hamburger = document.getElementById('hamburger');
 hamburger.addEventListener('click', openSideMenu);
 const side_menu = document.getElementById('side-menu');
+const loading_screen = document.getElementById('loading');
 
 const api_key = '70ee96dfc29aab191c8ebe3d0acddc70';
 
@@ -71,11 +72,13 @@ function loading(){
     if (side_menu_open){
         side_menu_open = false;
         side_menu.style.transform = "translateY(-130%)";
-        side_menu.style.opacity = "0";
+        side_menu.style.opacity = "0";        
     }
+    loading_screen.style.display = "inline";
     mymap.spin(true);
     setTimeout(function(){
         mymap.spin(false);
+        loading_screen.style.display = "none";
         if (!quiz){double_click_active = true};
         if (quiz){single_click_active = true};
     }, timeOfLoading());
@@ -83,9 +86,9 @@ function loading(){
 
 function timeOfLoading(){
     if (quiz){
-        return 2000;
+        return 1500;
     } else {
-        return 4000;
+        return 3300;
     }
 }
 
@@ -144,12 +147,14 @@ mymap.on('click', function (event){
 
 function activateTimer(){
     loading();
-    if (iss_active === true){
+    if (iss_active === true){        
+        if(mymap.hasLayer(issmarker)){mymap.removeLayer(issmarker)};
         clearInterval(timer);
         iss_active = false;
         stop_follow.style.display = "none";
         mymap.setZoom(3);
     } else {
+        if(!mymap.hasLayer(issmarker)){issmarker.addTo(mymap)};
         timer = setInterval(iSS, 1000);
         iss_active = true;
         stop_follow.style.display = "inline-block";
@@ -372,7 +377,9 @@ function getCountryNames() {
                 geojson = arr;
                 arr.forEach(element => {
                     const country_name_for_select = element['properties']['name'];
-                    empty_arr.push(country_name_for_select);
+                    if (country_name_for_select != 'New Caledonia'){
+                        empty_arr.push(country_name_for_select);
+                    }                    
                 });
                 polygonCountryNameArr(empty_arr);
                 const ordered_arr = empty_arr.sort();                
@@ -546,7 +553,7 @@ function createPopup(name, code, capital, population, currency, area, continent,
                             <p><span>Capital City:</span>  ${capital}</p>
                             <p><span>Population:</span>  ${population}</p>
                             <p><span>Currency:</span>  ${currency} <span id=\"currency_symbol\"> ${symbol}</p>
-                            <p><span>EXR:</span> USD/${currency} <span id="exchange-rate">--</span></p>
+                            <p><span>EXR:</span> USD/${currency} <span id="exchange-rate">----</span></p>
                             <p><span>Area:</span>  ${area} Km<sup>2</sup></p>
                             <p><span>Continent:</span>  ${continent}</p>
                             <p><a id="search-wiki" href=\"https://en.wikipedia.org/wiki/${name}\" target=\"_blank\">${name} Wikipedia <img id="little-flag" src=\"images/flags/${code_lowercase}.png\" alt=""><span id="search-popup-box"><i id="search-popup" class="fas fa-search"></i></span></a></p>
@@ -939,7 +946,6 @@ function showPlayerChoice(choice){
             quiz_layer = L.geoJSON(myGeoJSON);                        
             quiz_layer.addTo(mymap);           
             if (choice === computer_choice){
-                console.log("computer doesnt show   " + choice + " " + computer_choice);
                 quiz_layer.setStyle({
                     color: 'green',
                     weight: 1,
@@ -947,7 +953,6 @@ function showPlayerChoice(choice){
                 });  
                 quiz_layer.bindPopup(`<p id=\"quiz-choice\">${computer_choice}</p> <div id=\"img-container\"><img id=\"flag\" src=\"images/flags/${country_code_for_quiz_flag_correct.toLowerCase()}.png\"></div>`, {autoclose: false}).openPopup();                        
             } else {
-                console.log("computer shows mistake");
                 mistake_count++;
                 quiz_layer.setStyle({
                     color: 'red',
