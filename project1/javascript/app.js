@@ -982,7 +982,7 @@ function showPlayerChoice(choice){
                         computer_layer.bindPopup(popup_quiz, {autoclose: false}).openPopup();
                         let bounds = computer_layer.getBounds();
                         let center = bounds.getCenter();
-                        mymap.setView([center.lat, center.lng]);
+                        mymap.setView([center.lat - 15, center.lng]);
                         console.log(center);
                     }    
                 })             
