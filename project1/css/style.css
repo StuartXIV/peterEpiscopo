@@ -28,7 +28,7 @@ body {
 }
 
 header {
-    height: 6vh;
+    height: 9vh;
     width: 100%;
     background: white;
     position: relative;
@@ -102,7 +102,7 @@ li:last-of-type {
 }
 
 #map {
-    height: 94vh;
+    height: 91vh;
     z-index: 1;
     background-color: #dbf5ff;
 }
@@ -627,12 +627,16 @@ summary {
     #hamburger:active i {
         color: #368BCD;
     }
+
+    
     #quiz-wrapper {
         margin-bottom: 0;
         height: 100%;
-        padding-bottom: 40px;
+        padding-bottom: 20px;
         width: 100%;
         pointer-events: none;
+        background: transparent;
+        box-shadow: none;
     }
 
     #next-question {
