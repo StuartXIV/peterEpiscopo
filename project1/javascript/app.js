@@ -17,6 +17,8 @@ quiz_btn_side.addEventListener('click', activateQuiz);
 const answer = document.getElementById('result');
 const quiz_question = document.getElementById('quiz-question');
 const next_question = document.getElementById('next-question');
+const exit_quiz = document.getElementById('exit-quiz');
+exit_quiz.addEventListener('click', activateQuiz);
 next_question.addEventListener('click', computerChoice);
 const select_country = document.getElementById('country');
 const country_search_div = document.getElementById('country-search-box');
@@ -869,18 +871,14 @@ function activateQuiz(){
 function changeNavBar(quiz){
     let easy_btn = document.querySelector('.easy-button-button');
     if(quiz){
-        header.style.background = "url(images/navbar.png)";
-        quiz_list.classList.add("quiz-mode");
-        quiz_btn.innerHTML = "<i class=\"fas fa-sign-out-alt\"></i> Exit Quiz Mode";  
+        exit_quiz.style.display = "flex";
         easy_btn.style.display = "none";
         setTimeout(function(){
             quiz_container.style.display = "flex";
         }, 4000);
     } else {        
-        header.style.background = "white";
         quiz_container.style.display = "none";
-        quiz_list.classList.remove("quiz-mode");
-        quiz_btn.innerHTML = "Quiz Mode";        
+        exit_quiz.style.display = "none";  
         easy_btn.style.display = "block";
     }
 }
