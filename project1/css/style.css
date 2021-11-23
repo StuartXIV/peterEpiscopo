@@ -617,6 +617,8 @@ summary {
         align-items: center;
         height: 100%;
         padding: 0 10px 0 0;
+        border-left: none;
+        border-right: none;
     }
     #top-nav li:nth-of-type(2n) {
         border-right: none;
