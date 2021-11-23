@@ -18,7 +18,8 @@ const answer = document.getElementById('result');
 const quiz_question = document.getElementById('quiz-question');
 const next_question = document.getElementById('next-question');
 const exit_quiz = document.getElementById('exit-quiz');
-exit_quiz.addEventListener('click', activateQuiz);
+const exit_quiz_btn = document.getElementById('exit-quiz-bar');
+exit_quiz_btn.addEventListener('click', activateQuiz);
 next_question.addEventListener('click', computerChoice);
 const select_country = document.getElementById('country');
 const country_search_div = document.getElementById('country-search-box');
@@ -30,6 +31,7 @@ const search = document.getElementById('search');
 const stop_follow = document.getElementById("stop-follow");
 const map = document.getElementById("map");
 const quiz_container = document.getElementById("quiz-container");
+const winning_streak = document.getElementById('score');
 const hamburger = document.getElementById('hamburger');
 hamburger.addEventListener('click', openSideMenu);
 const side_menu = document.getElementById('side-menu');
@@ -71,7 +73,7 @@ marker.addTo(mymap);
 
 let geojson_arr = [];
 
-var user_location_btn = L.easyButton('fas fa-map-marker-alt', getLocation, 'Find Your Location');
+var user_location_btn = L.easyButton('<img id=\"easy-button-icon\" src=\"images/marker.svg\">', getLocation, 'Find Your Location');
 user_location_btn.addTo(mymap);
 
 function loading(){
@@ -165,7 +167,6 @@ function activateTimer(){
         if(!mymap.hasLayer(issmarker)){issmarker.addTo(mymap)};
         timer = setInterval(iSS, 1000);
         iss_active = true;
-        stop_follow.innerHTML = "<i class=\"fas fa-sign-out-alt\"> Exit ISS Mode";
         stop_follow.style.display = "flex";
     }
 }
@@ -564,7 +565,7 @@ function createPopup(name, code, capital, population, currency, area, continent,
                             <p><span>EXR:</span> USD/${currency} <span id="exchange-rate">----</span></p>
                             <p><span>Area:</span>  ${area} Km<sup>2</sup></p>
                             <p><span>Continent:</span>  ${continent}</p>
-                            <p><a id="search-wiki" href=\"https://en.wikipedia.org/wiki/${name}\" target=\"_blank\">${name} Wikipedia <img id="little-flag" src=\"images/flags/${code_lowercase}.png\" alt=""><span id="search-popup-box"><i id="search-popup" class="fas fa-search"></i></span></a></p>
+                            <p><a id="search-wiki" href=\"https://en.wikipedia.org/wiki/${name}\" target=\"_blank\">${name} Wikipedia <img id="little-flag" src=\"images/flags/${code_lowercase}.png\" alt=""><span id="search-popup-box"><img id="search-popup" src="images/icons/search-solid.svg"></i></span></a></p>
                             </div>
                             `);
     layer.bindPopup(popup);  
@@ -806,7 +807,7 @@ function brightMap(){
     map_bright.addTo(mymap);
     map_style = "bright";
     map.style.backgroundColor = "#dbf5ff";
-    settings.innerHTML = "<i class=\"fas fa-moon\"></i>Dark Mode";
+    settings.innerHTML = "<img class=\"icon\" src=\"images/icons/moon.svg\"> Dark Mode";
     settings_side.innerHTML = settings.innerHTML;
 }
 
@@ -814,7 +815,7 @@ function darkMap(){
     map_dark.addTo(mymap);
     map_style = "dark";
     map.style.backgroundColor = "#262626";
-    settings.innerHTML = "<i class=\"fas fa-sun\"></i>Bright Mode";
+    settings.innerHTML = "<img class=\"icon\" src=\"images/icons/sun.svg\"> Bright Mode";
     settings_side.innerHTML = settings.innerHTML;
 }
 
@@ -823,9 +824,11 @@ function brightQuizMap(){
     map.style.backgroundColor = "#007AAC";
 }
 
-//QUIZ
+//QUIZ ------------------------------------------------------------------------------------------------------------------------
+
+
 let computer_layer;
-let computer_layer_count = 0;
+let winning_streak_count = 0;
 let computer_choice = "Iran";
 let player_choice = "none";
 let mistake_count = 0;
@@ -838,7 +841,6 @@ function activateQuiz(){
     loading();
     if (!quiz){
         quiz = true;        
-        quiz_btn_side.innerHTML = "<i class=\"fas fa-sign-out-alt\"> Exit Quiz Mode";
         changeNavBar(quiz);
         quizHover();
         answer.style.display = "none";
@@ -914,21 +916,35 @@ function getMarkerInfoQuiz(event) {
 
             if (result.status.name == "ok") {
                 player_choice = result['data']['results']['0']['components']['country'];
-                getCountryPolygonForMarker(player_choice);
-                console.log(fixName(player_choice));
-                if (fixName(player_choice) === computer_choice){                    
-                    answer.innerHTML = "<i class=\"fas fa-check\"></i>    Correct!";
-                    answer.style.display = "inline-block";
-                    answer.style.backgroundColor = "lightgreen";
-                    answer.style.color = "black";
-                } else {
-                    answer.innerHTML = `<i class="fas fa-times"></i>    Incorrect.<br> <span id=\"incorrect-answer\">Your guess: <b>${fixName(player_choice)}</b></span>`;
-                    answer.style.display = "inline-block";
-                    answer.style.backgroundColor = "white";
-                    answer.style.color= "#cc0000";                    
-                }
-                answer.style.transform = "translateY(-130%)";
-                answer.style.opacity = "1";             
+                if (player_choice){
+                    getCountryPolygonForMarker(player_choice);
+                    console.log(fixName(player_choice));
+                    if (fixName(player_choice) === computer_choice){                    
+                        answer.innerHTML = "<img class=\"icon\" id=\"times\" src=\"images/icons/check.svg\">  Correct!";
+                        answer.style.display = "inline-block";
+                        answer.style.backgroundColor = "lightgreen";
+                        answer.style.color = "black";
+                        winning_streak_count++;
+                        score.innerHTML = `Winning Streak: ${winning_streak_count}`;
+                        score.style.fontSize = "1.03rem";
+                        setTimeout(function(){
+                            score.style.fontSize = "1rem";
+                        }, 300);
+                    } else {
+                        answer.innerHTML = `<img class="icon" id="times" src="images/icons/times.svg">  Incorrect.<br> <span id=\"incorrect-answer\">You guessed: <b>${fixName(player_choice)}</b></span>`;
+                        answer.style.display = "inline-block";
+                        answer.style.backgroundColor = "white";
+                        answer.style.color= "#cc0000";    
+                        winning_streak_count = 0;
+                        score.innerHTML = `Winning Streak: 0`;
+                        score.classList.add("shake-score");   
+                        setTimeout(function(){
+                            score.classList.remove("shake-score");
+                        }, 250);   
+                    }
+                    answer.style.transform = "translateY(-150%)";
+                    answer.style.opacity = "1";   
+                }          
             }
         
         },
@@ -938,6 +954,16 @@ function getMarkerInfoQuiz(event) {
     }); 
     
 };
+
+jQuery.fn.shake = function() {
+    this.each(function(i) {
+        $(this).css({ "position": "relative" });
+        for (var x = 1; x <= 3; x++) {
+            $(this).animate({ left: -25 }, 10).animate({ left: 0 }, 50).animate({ left: 25 }, 10).animate({ left: 0 }, 50);
+        }
+    });
+    return this;
+} 
 
 function showPlayerChoice(choice){
     choice = fixName(choice);
@@ -990,3 +1016,13 @@ function showPlayerChoice(choice){
 }
 
 
+
+
+
+function calculate(x, y){
+    console.log(x * 3/4);
+    console.log(y * 3/4);
+}
+
+
+calculate(19, 25);

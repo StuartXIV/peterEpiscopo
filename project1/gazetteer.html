@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gazetteer</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
     integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-    crossorigin=""/>
-    <!-- <link rel="stylesheet" href="css/leaflet.css"> -->
+    crossorigin=""/> -->
+    <link rel="stylesheet" href="css/leaflet.css">
     <link rel="shortcut icon" href="#">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="css/easyButton.css">
     <link rel="stylesheet" href="css/leaflet-responsive-popup.css" />
     <link rel="stylesheet" href="css/leaflet-responsive-popup2.css" />   
@@ -26,9 +26,11 @@
 </head>
 <body>
     <header>
+        <div id="space"></div>
+        <div id="header-shade"></div>
         <nav>
-            <div id="stop-follow"><i class="fas fa-sign-out-alt"></i> Exit ISS Mode</div>
-            <div id="exit-quiz"><i class="fas fa-sign-out-alt"></i> Exit Quiz Mode</div>
+            <div id="stop-follow"><img class="sign-out" src="images/icons/sign-out.svg" alt=""> Exit ISS Mode</div>
+            <div id="exit-quiz"><div id="score">Winning Streak: 0</div> <div id="exit-quiz-bar"><img class="sign-out" id="sign-out-quiz" src="images/icons/sign-out.svg" alt=""> Exit Quiz Mode</div> </div>
             <ul id="top-nav">
                 <li id="country-search">
                     <div id="country-search-box">
@@ -37,7 +39,7 @@
                             
                         </select>
                         <!-- <div class="search" id="sort-arrow"><i class="fas fa-sort-down"></i></div> -->
-                        <div class="search" id="search"><i class="fas fa-search"></i></div>
+                        <div class="search" id="search"><img class="icon" id="search-select-icon" src="./images/icons/search-solid.svg" alt="Search"></div>
                     </div>
                 </li>
                 <li class="list" id="user-location-list">
@@ -51,10 +53,10 @@
                     <div class="nav-li noselect" id="quiz">Quiz Mode</div>
                 </li>
                 <li class="list" id="dark">
-                    <div class="nav-li noselect" id="settings"><i class="fas fa-moon"></i>Dark Mode</div>                    
+                    <div class="nav-li noselect" id="settings"><img class="icon" src="images/icons/moon.svg" alt=""> Dark Mode</div>                    
                 </li>
                 <li id="hamburger" class="noselect">
-                    <i class ="fas fa-bars noselect"></i>
+                    <img src="images/icons/bars.svg" id="hamburger-icon" alt="Menu">
                 </li>
             </ul>
         </nav>
@@ -76,7 +78,7 @@
                     <div class="nav-li noselect" id="quiz-side">Quiz Mode</div>
                 </li>
                 <li class="side-list" id="dark-side">
-                    <div class="nav-li noselect" id="settings-side"><i class="fas fa-moon"></i>Dark Mode</div>                    
+                    <div class="nav-li noselect" id="settings-side"><img class="icon" src="images/icons/moon.svg" alt=""> Dark Mode</div>                    
                 </li>
             </ul>
         </div>
@@ -92,7 +94,7 @@
             </div>            
         </div>
     </main>
-    <footer></footer>
+    <footer><div id="footer-shade"></div> </footer>
     <div id="loading"></div>
     <div id=”preloader”></div>
     <script src="./javascript/jquery-2.2.3.min.js"></script>
