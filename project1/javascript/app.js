@@ -57,6 +57,7 @@ var markerIcon = L.icon({
 let timer;
 let iss_active = false;
 let geojson;
+let cluster_active = false;
 let double_click_active = true;
 let single_click_active = true;
 const mymap = L.map('map', {
@@ -72,8 +73,10 @@ marker.addTo(mymap);
 
 let geojson_arr = [];
 
-var user_location_btn = L.easyButton('<img id=\"easy-button-icon\" src=\"images/marker.svg\">', getLocation, 'Find Your Location');
+var user_location_btn = L.easyButton('<img id=\"easy-button-icon\" src=\"images/marker-easybutton.png\">', getLocation, 'Find Your Location');
 user_location_btn.addTo(mymap);
+var user_cluster_btn = L.easyButton('<img id=\"cluster-icon\" src=\"images/cluster3.png\">', activateCluster, 'Allow Multiple Markers');
+user_cluster_btn.addTo(mymap);
 
 function loading(){
     if (side_menu_open){
@@ -96,6 +99,23 @@ function timeOfLoading(){
         return 1500;
     } else {
         return 3300;
+    }
+}
+
+//ACTIVATE CLUSTER -------------------------------------------------------------------------
+
+function activateCluster(){
+    const cluster_icon = document.getElementById('cluster-icon');
+    if (!cluster_active){
+        cluster_active = true;
+        console.log("Cluster Mode Active");        
+        cluster_icon.style.filter = "saturate(1)";
+        cluster_icon.style.opacity = 1;
+    } else {
+        cluster_active = false;
+        console.log("Cluster Mode Disabled");      
+        cluster_icon.style.filter = "saturate(0.5)";
+        cluster_icon.style.opacity = 0.4;
     }
 }
 
