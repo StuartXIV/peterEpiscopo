@@ -22,7 +22,6 @@ const exit_quiz_btn = document.getElementById('exit-quiz-bar');
 exit_quiz_btn.addEventListener('click', activateQuiz);
 next_question.addEventListener('click', computerChoice);
 const select_country = document.getElementById('country');
-const country_search_div = document.getElementById('country-search-box');
 const settings = document.getElementById('settings');
 settings.addEventListener('click', changeMapStyle);
 const settings_side = document.getElementById('settings-side');
@@ -273,6 +272,7 @@ function getMarkerInfo(event) {
                 const lat = event.lat.toFixed(2);
                 const lng = event.lng.toFixed(2);
                 player_choice = name;
+                select_country.value = code_country;
                 if (player_choice === computer_choice){                    
                     answer.innerHTML = "Correct!";
                     answer.style.display = "inline-block";
@@ -433,7 +433,7 @@ function createCountryArr(arr){
 let country_selected = "";
 let layer = []; //layer is the single highlighted country
 
-$('#search').click(function getCountryPolygon() {    
+$('#country').change(function getCountryPolygon() {    
     loading();
 
     $country_value = $('#country').val();    
