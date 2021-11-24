@@ -82,7 +82,7 @@ user_location_btn.addTo(mymap);
 var user_cluster_btn = L.easyButton({
     states: [{
         stateName: 'cluster',
-        icon:      '<img id=\"cluster-icon\" src=\"images/cluster3.png\">',
+        icon:      '<img id="cluster-icon" src="images/cluster3.png">',
         title:     'Allow Multiple Markers',
         onClick: activateCluster
         }]
