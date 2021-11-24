@@ -141,6 +141,8 @@ function activateCluster(){
     }
 }
 
+activateCluster();
+
 //MAP SETUP---------------------------------------------------------------------------------
 
 var map_dark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
@@ -289,7 +291,7 @@ function showPosition(position) {
     marker.setLatLng([coordinates.lat, coordinates.lng]);
     if(!mymap.hasLayer(marker)){marker.addTo(mymap)};
     mymap.setView([coordinates.lat, coordinates.lng], 5);
-    getMarkerInfo(coordinates);
+    getMarkerInfo(coordinates, marker);
   }
 
 //DOUBLE CLICK MARKER---------------------------------------------------------------------------
