@@ -57,7 +57,11 @@ var markerIcon = L.icon({
 let timer;
 let iss_active = false;
 let geojson;
+let markers = L.markerClusterGroup({
+    showCoverageOnHover: false
+});
 let cluster_active = false;
+let cluster_arr = [];
 let double_click_active = true;
 let single_click_active = true;
 const mymap = L.map('map', {
@@ -75,7 +79,14 @@ let geojson_arr = [];
 
 var user_location_btn = L.easyButton('<img id=\"easy-button-icon\" src=\"images/marker-easybutton.png\">', getLocation, 'Find Your Location');
 user_location_btn.addTo(mymap);
-var user_cluster_btn = L.easyButton('<img id=\"cluster-icon\" src=\"images/cluster3.png\">', activateCluster, 'Allow Multiple Markers');
+var user_cluster_btn = L.easyButton({
+    states: [{
+        stateName: 'cluster',
+        icon:      '<img id=\"cluster-icon\" src=\"images/cluster3.png\">',
+        title:     'Allow Multiple Markers',
+        onClick: activateCluster
+        }]
+})
 user_cluster_btn.addTo(mymap);
 
 function loading(){
@@ -108,14 +119,25 @@ function activateCluster(){
     const cluster_icon = document.getElementById('cluster-icon');
     if (!cluster_active){
         cluster_active = true;
+        mymap.addLayer(markers);
+        if(mymap.hasLayer(marker)){
+            // cluster_arr.push(marker); 
+            markers.addLayer(marker);
+        };
         console.log("Cluster Mode Active");        
         cluster_icon.style.filter = "saturate(1)";
         cluster_icon.style.opacity = 1;
     } else {
+        cluster_arr.forEach(element => {
+            mymap.removeLayer(element);
+        })
+        if(mymap.hasLayer(layer)){mymap.removeLayer(layer)};
         cluster_active = false;
+        markers.clearLayers();
         console.log("Cluster Mode Disabled");      
         cluster_icon.style.filter = "saturate(0.5)";
         cluster_icon.style.opacity = 0.4;
+        cluster_arr = [];
     }
 }
 
@@ -149,19 +171,27 @@ map_quiz.on('loading', function (event){
 
 
 mymap.on('dblclick', function (event){
-    if (double_click_active && !quiz){        
-        marker.setLatLng(event.latlng); 
-        if (!mymap.hasLayer(marker)){
-            marker.addTo(mymap);
-        } 
-        double_click_active = false;  
-        loading();
-        mymap.setView(event.latlng);
-        marker.bindPopup(`${event.latlng}`);
-        getMarkerInfo(event.latlng);
+    if (double_click_active && !quiz){   
+        if (!cluster_active){     
+            marker.setLatLng(event.latlng); 
+            if (!mymap.hasLayer(marker)){
+                marker.addTo(mymap);
+            } 
+            double_click_active = false;  
+            loading();
+            mymap.setView(event.latlng);
+            marker.bindPopup(`${event.latlng}`);
+            getMarkerInfo(event.latlng);
+        } else {
+            let extra_marker = L.marker([0,0], {icon: markerIcon});
+            extra_marker.setLatLng(event.latlng);
+            // extra_marker.addTo(mymap);
+            markers.addLayer(extra_marker);
+            cluster_arr.push(extra_marker);
+            getMarkerInfo(event.latlng, extra_marker);
         }
     }
-)
+})
 
 mymap.on('click', function (event){
     closeSideMenu();
@@ -200,7 +230,7 @@ var issIcon = L.icon({
 });
 
 const issmarker = L.marker([65,19], {icon: issIcon}).bindPopup("<div id=\"iss-div\"><img id=\"iss-logo\" src=\"images/iss_logo.png\"><h3>International Space Station</h3></div>");
-issmarker.addTo(mymap);
+
 
 
 //ONLOAD----------------------------------------------------------------------------------
@@ -264,7 +294,7 @@ function showPosition(position) {
 
 //DOUBLE CLICK MARKER---------------------------------------------------------------------------
 
-function getMarkerInfo(event) {
+function getMarkerInfo(event, extra_marker) {
 
     $.ajax(
         {
@@ -277,8 +307,6 @@ function getMarkerInfo(event) {
         },
         
         success: function(result) {
-            
-            // console.log(JSON.stringify(result));
 
             if (result.status.name == "ok") {
                 const code_country = result['data']['results']['0']['components']['country_code'].toUpperCase();
@@ -302,7 +330,7 @@ function getMarkerInfo(event) {
                     answer.style.display = "inline-block";
                     answer.style.background = "red";
                 }
-                getWeatherInfo(code_country, name, currency, currency_symbol, time_zone_name, time_zone, county, description, lat, lng);
+                getWeatherInfo(code_country, name, currency, currency_symbol, time_zone_name, time_zone, county, description, lat, lng, extra_marker);
                 
             }
         
@@ -316,7 +344,7 @@ function getMarkerInfo(event) {
 
 // GET WEATHER INFO
 
-function getWeatherInfo(code_country, name, currency, currency_symbol, time_zone_name, time_zone, county, description, latitude, longitude) {  
+function getWeatherInfo(code_country, name, currency, currency_symbol, time_zone_name, time_zone, county, description, latitude, longitude, extra_marker) {  
 
     $.ajax(
         {
@@ -341,7 +369,7 @@ function getWeatherInfo(code_country, name, currency, currency_symbol, time_zone
                 const humidity = result['data']['current']['humidity'];
                 const wind = result['data']['current']['wind_speed'];
 
-                getCountryPolygonForMarker(code_country, name, currency, currency_symbol, time_zone_name, time_zone, county, description, weather_main, weather, temperature, humidity, wind);
+                getCountryPolygonForMarker(code_country, name, currency, currency_symbol, time_zone_name, time_zone, county, description, weather_main, weather, temperature, humidity, wind, extra_marker);
             }
         
         },
@@ -366,8 +394,6 @@ function iSS() {
         dataType: 'json',
         
         success: function(result) {
-            
-            // console.log(JSON.stringify(result));
 
             if (result.status.name == "ok") {
 
@@ -379,7 +405,7 @@ function iSS() {
         
         },
         error: function(jqXHR, textStatus, errorThrown) {
-            // your error code
+            console.log("error ISS info");
         }
     }); 
     
@@ -482,7 +508,7 @@ $('#country').change(function getCountryPolygon() {
                     
 // GET COUNTRY POLYGON FOR MARKER ------------------------------------------------------------------------------------------------------------------------------
 
-function getCountryPolygonForMarker(code, name, currency, symbol, time_zone_name, time_zone, county, description, weather_main, weather, temperature, humidity, wind) {    
+function getCountryPolygonForMarker(code, name, currency, symbol, time_zone_name, time_zone, county, description, weather_main, weather, temperature, humidity, wind, extra_marker) {    
     if (!quiz){  
         geojson.forEach(element => {
             if (element['properties']['iso_a2'] === code){
@@ -490,13 +516,21 @@ function getCountryPolygonForMarker(code, name, currency, symbol, time_zone_name
                 mymap.removeLayer(layer);                                                    
                 layer = L.geoJSON(myGeoJSON);                        
                 layer.addTo(mymap); 
-                createPopupForMarker(name, code, currency, symbol, time_zone_name, time_zone, county, description, weather_main, weather, temperature, humidity, wind);                                        
-                layer.setStyle({
+                createPopupForMarker(name, code, currency, symbol, time_zone_name, time_zone, county, description, weather_main, weather, temperature, humidity, wind, extra_marker);                                        
+                if (!cluster_active){ 
+                        layer.setStyle({
                         color: 'yellow',
                         weight: 1,
                         fillOpacity: 0.1                            
                     });
-                country_selected = element['properties']['name'];
+                } else {
+                    layer.setStyle({
+                        color: 'yellow',
+                        weight: 0,
+                        fillOpacity: 0  
+                    });
+                }
+                country_selected = element['properties']['name'];                
             }
         })
     } else {
@@ -544,8 +578,6 @@ function getCountryInfo(name, code, symbol) {
 
 
 function createPopup(name, code, capital, population, currency, area, continent, symbol){
-
-    console.log(exchangeRate(currency));
 
     if (population >= 1000000000){
         population = `${(population / 1000000000).toFixed(1)} billion`;
@@ -601,7 +633,7 @@ function numberWithCommas(x) {
 // CREATE POPUP FOR MARKER-------------------------------------------------------------------
 
 
-function createPopupForMarker(name, code, currency, symbol, time_zone_name, time_zone, county, description, weather_main, weather, temperature, humidity, wind){
+function createPopupForMarker(name, code, currency, symbol, time_zone_name, time_zone, county, description, weather_main, weather, temperature, humidity, wind, extra_marker){
 
     if (!symbol){
         symbol = '';
@@ -613,7 +645,6 @@ function createPopupForMarker(name, code, currency, symbol, time_zone_name, time
     let wind_kmph = (wind * 1.609344).toFixed(0);
 
     layer.closePopup();      
-    console.log(weather_main);
     let code_lowercase = code.toLowerCase();
        
     let popup = L.responsivePopup().setContent                            
@@ -634,10 +665,22 @@ function createPopupForMarker(name, code, currency, symbol, time_zone_name, time
                             </details>                   
                             </div>
                             `);
-    marker.bindPopup(popup);
-    marker.openPopup();  
-    let bounds = marker.getLatLng();
-    mymap.setView([bounds.lat, bounds.lng]);
+    if (!cluster_active){                            
+        marker.bindPopup(popup);
+        marker.openPopup();  
+        let bounds = marker.getLatLng();
+        mymap.setView([bounds.lat, bounds.lng]);
+    } else {
+        extra_marker.bindPopup(popup);
+        extra_marker.openPopup();  
+        let bounds = extra_marker.getLatLng();
+        mymap.setView([bounds.lat, bounds.lng]);
+
+        // Change Country in Select when Marker in Cluster is clicked
+        extra_marker.on('click', function(){
+            select_country.value = code;
+        })
+    }
     
 }
 
@@ -683,8 +726,7 @@ function exchangeRate(currency) {
                 type: 'POST',
                 dataType: 'json',
                 
-                success: function(result) {              
-                    // console.log(JSON.stringify(result));              
+                success: function(result) {                       
                     
                     if (result.status.name == "ok") {
                         const arr = result['data']['features'];              
@@ -855,15 +897,18 @@ let mistake_count = 0;
 let quiz_layer;
 
 function activateQuiz(){         
-    computerChoice();  
-    mymap.removeLayer(marker);     
-    mymap.setView([10,0],3); 
+    computerChoice();  // generate computer question
+    mymap.hasLayer(marker) ? mymap.removeLayer(marker) : null; //remove marker from map
+    markers.clearLayers(); // remove cluster
+    mymap.setView([10,0],3); // Set Map viewport
     loading();
     if (!quiz){
         quiz = true;        
         changeNavBar(quiz);
         quizHover();
         answer.style.display = "none";
+
+        //CHANGE MAP STYLE
         if (map_style === "bright"){
             mymap.removeLayer(map_bright);
         } else {
@@ -878,6 +923,8 @@ function activateQuiz(){
         changeNavBar(quiz);
         defaultHover();     
         answer.style.display = "none";
+
+        //CHANGE MAP STYLE
         if (mymap.hasLayer(computer_layer)){mymap.removeLayer(computer_layer)};
         if (mymap.hasLayer(quiz_layer)){mymap.removeLayer(quiz_layer)};
         mymap.removeLayer(map_quiz);
@@ -892,24 +939,28 @@ function activateQuiz(){
 
 function changeNavBar(quiz){
     let easy_btn = document.querySelector('.easy-button-button');
+    let cluster_btn = document.querySelector('.cluster-active');
     if(quiz){
         exit_quiz.style.display = "flex";
         easy_btn.style.display = "none";
+        cluster_btn.style.display = "none";
         setTimeout(function(){
             quiz_container.style.display = "flex";
         }, 4000);
+        mymap.removeLayer(user_cluster_btn);
     } else {        
         quiz_container.style.display = "none";
         exit_quiz.style.display = "none";  
         easy_btn.style.display = "block";
+        cluster_btn.style.display = "block";
     }
 }
 
 function computerChoice(){
     answer.style.transform = "translateY(0)";
     answer.style.opacity = "0"; 
-    if(mymap.hasLayer(layer)){mymap.removeLayer(layer), console.log('remove layer')};
-    if(mymap.hasLayer(quiz_layer)){mymap.removeLayer(quiz_layer), console.log('remove quiz layer')};
+    if(mymap.hasLayer(layer)){mymap.removeLayer(layer)};
+    if(mymap.hasLayer(quiz_layer)){mymap.removeLayer(quiz_layer)};
     if(mistake_count > 0){mymap.removeLayer(computer_layer)};
     mymap.setView([10,0], 3);
     answer.style.display = "none";
@@ -938,7 +989,6 @@ function getMarkerInfoQuiz(event) {
                 player_choice = result['data']['results']['0']['components']['country'];
                 if (player_choice){
                     getCountryPolygonForMarker(player_choice);
-                    console.log(fixName(player_choice));
                     if (fixName(player_choice) === computer_choice){                    
                         answer.innerHTML = "<img class=\"icon\" id=\"times\" src=\"images/icons/check.svg\">  Correct!";
                         answer.style.display = "inline-block";
@@ -1027,22 +1077,9 @@ function showPlayerChoice(choice){
                         let bounds = computer_layer.getBounds();
                         let center = bounds.getCenter();
                         mymap.setView([center.lat - 15, center.lng]);
-                        console.log(center);
                     }    
                 })             
             }
         }
     })
 }
-
-
-
-
-
-function calculate(x, y){
-    console.log(x * 3/4);
-    console.log(y * 3/4);
-}
-
-
-calculate(19, 25);

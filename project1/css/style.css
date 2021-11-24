@@ -654,6 +654,7 @@ summary {
     animation: animate-preloader 1s linear infinite;
 }
 
+
 @-webkit-keyframes animate-preloader {
     0% {
         -webkit-transform: rotate(0deg);
@@ -851,3 +852,4 @@ select {
     height: 20px;
     margin-right: .7rem;
 }
+

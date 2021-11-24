@@ -1,8 +1,8 @@
 .marker-cluster-small {
-	background-color: rgba(181, 226, 140, 0.6);
+	background-color: #b72c2c;
 	}
 .marker-cluster-small div {
-	background-color: rgba(110, 204, 57, 0.6);
+	background-color: white;
 	}
 
 .marker-cluster-medium {
@@ -21,10 +21,10 @@
 
 	/* IE 6-8 fallback colors */
 .leaflet-oldie .marker-cluster-small {
-	background-color: rgb(181, 226, 140);
+	background-color: #C54342;
 	}
 .leaflet-oldie .marker-cluster-small div {
-	background-color: rgb(110, 204, 57);
+	background-color: #B72C2C;
 	}
 
 .leaflet-oldie .marker-cluster-medium {
@@ -51,10 +51,13 @@
 	margin-left: 5px;
 	margin-top: 5px;
 
-	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	border-radius: 15px;
-	font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font: 16px "Helvetica", Arial, Helvetica, sans-serif;
 	}
 .marker-cluster span {
-	line-height: 30px;
+	line-height: 30px;	
+	font-weight: 600;
 	}
