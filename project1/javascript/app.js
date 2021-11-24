@@ -670,6 +670,9 @@ function createPopupForMarker(name, code, currency, symbol, time_zone_name, time
         marker.openPopup();  
         let bounds = marker.getLatLng();
         mymap.setView([bounds.lat, bounds.lng]);
+        marker.on('click', function(){
+            select_country.value = code;
+        })
     } else {
         extra_marker.bindPopup(popup);
         extra_marker.openPopup();  
