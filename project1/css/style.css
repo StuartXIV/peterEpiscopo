@@ -72,7 +72,7 @@ nav {
 }
 
 li {
-    min-width: 20%;
+    min-width: 16.6%;
     text-align: center;
     font-weight: bold;
     font-size: 1.2em;
@@ -86,22 +86,29 @@ li {
     font-size: .8em;
 }
 
-#dark {
-    border-right: none;
-}
 
 #hamburger {
     display: none;
 }
 
-#top-nav li:nth-of-type(2n) {
+#user-location-list {
     border-right: 4px solid #C54342;
     border-left: 4px solid #C54342;
 }
 
-li:last-of-type {
+#iss-list {
+    border-right: 4px solid #C54342;
+    border-left: 4px solid #C54342;
+}
+
+#dark {    
+    border-left: 4px solid #C54342;
+}
+
+#dark {
     border-right: none;
 }
+
 
 .nav-li {
     cursor: pointer;
@@ -142,7 +149,6 @@ footer {
 }
 
 #country-select-box {
-    background: yellow;
     width: 70%;
     position: relative;
 }
@@ -311,7 +317,7 @@ main {
 #side-menu {
     position: absolute;
     z-index: 4;
-    height: 50%;
+    height: 70%;
     width: 100%;
     top: 0;
     right: 0;
@@ -328,7 +334,7 @@ main {
     width: 100%;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
 }
 
 #side-list li {
@@ -470,6 +476,18 @@ main {
     font-weight: 600;
     margin-right: 0;
     font-size: 1rem;
+}
+
+#capital-p {
+    width: 100%;
+    text-align: center;
+}
+
+#capital-name-popup {
+    font-weight: 600;
+    margin-right: 0;
+    font-size: 1.5rem;
+    text-align: center;
 }
 
 span {
@@ -853,3 +871,45 @@ select {
     margin-right: .7rem;
 }
 
+
+.marker-cluster-small {
+	background-color: #C54342;
+	}
+.marker-cluster-small div {
+	background-color: white;
+	}
+
+.marker-cluster-medium {
+	background-color: #b72c2c;
+	}
+.marker-cluster-medium div {
+	background-color: white;
+	}
+
+.marker-cluster-large {
+	background-color: rgba(253, 156, 115, 0.6);
+	}
+.marker-cluster-large div {
+	background-color: rgba(241, 128, 23, 0.6);
+	}
+
+.marker-cluster {
+	background-clip: padding-box;
+	border-radius: 20px;
+	}
+.marker-cluster div {
+	width: 30px;
+	height: 30px;
+	margin-left: 5px;
+	margin-top: 5px;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 15px;
+	font: 16px "Helvetica", Arial, Helvetica, sans-serif;
+	}
+.marker-cluster span {
+	line-height: 30px;	
+	font-weight: 600;
+	}

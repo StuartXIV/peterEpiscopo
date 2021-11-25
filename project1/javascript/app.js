@@ -35,6 +35,10 @@ const hamburger = document.getElementById('hamburger');
 hamburger.addEventListener('click', openSideMenu);
 const side_menu = document.getElementById('side-menu');
 const loading_screen = document.getElementById('loading');
+const capital_btn = document.getElementById('capital-btn');
+capital_btn.addEventListener('click', activateCapitals);
+const capital_btn_side = document.getElementById('capitals-side');
+capital_btn_side.addEventListener('click', activateCapitals);
 
 const api_key = '70ee96dfc29aab191c8ebe3d0acddc70';
 
@@ -54,10 +58,20 @@ var markerIcon = L.icon({
     iconSize: [42, 55],
     iconAnchor: [20 , 60]
 });
+var cityIcon = L.icon({
+    iconUrl: 'images/city.svg',
+    iconSize: [42, 55],
+    iconAnchor: [15,60],    
+    popupAnchor: [6,-50]
+});
+
 let timer;
 let iss_active = false;
 let geojson;
 let markers = L.markerClusterGroup({
+    showCoverageOnHover: false
+});
+let capitals = L.markerClusterGroup({
     showCoverageOnHover: false
 });
 let cluster_active = false;
@@ -106,7 +120,7 @@ function loading(){
 }
 
 function timeOfLoading(){
-    if (quiz){
+    if (quiz || capitals_active){
         return 1500;
     } else {
         return 3300;
@@ -120,6 +134,7 @@ function activateCluster(){
     if (!cluster_active){
         cluster_active = true;
         mymap.addLayer(markers);
+        mymap.addLayer(capitals);
         if(mymap.hasLayer(marker)){
             // cluster_arr.push(marker); 
             markers.addLayer(marker);
@@ -173,7 +188,7 @@ map_quiz.on('loading', function (event){
 
 
 mymap.on('dblclick', function (event){
-    if (double_click_active && !quiz){   
+    if (double_click_active && !quiz && !capitals_active){   
         if (!cluster_active){     
             marker.setLatLng(event.latlng); 
             if (!mymap.hasLayer(marker)){
@@ -215,6 +230,8 @@ function activateTimer(){
         stop_follow.innerHTML = "Where is the ISS?";
         mymap.setView([0,0], 3);
     } else {
+        capitals.clearLayers();
+        markers.clearLayers();
         if(!mymap.hasLayer(issmarker)){issmarker.addTo(mymap)};
         timer = setInterval(iSS, 1000);
         iss_active = true;
@@ -434,7 +451,7 @@ function getCountryNames() {
                 geojson = arr;
                 arr.forEach(element => {
                     const country_name_for_select = element['properties']['name'];
-                    if (country_name_for_select != 'New Caledonia'){
+                    if (country_name_for_select != 'New Caledonia' || country_name_for_select != 'Puerto Rico' || country_name_for_select != 'Somaliland' ){
                         empty_arr.push(country_name_for_select);
                     }                    
                 });
@@ -464,6 +481,72 @@ function getCountryNames() {
         }
     }); 
     
+};
+
+// GET COUNTRY CAPITALS ---------------------------------------------------------------------
+
+let capitals_active = false;
+function activateCapitals(){    
+    side_menu_open ? openSideMenu() : null;
+    mymap.hasLayer(marker) ? mymap.removeLayer(marker) : null;
+    if (!capitals_active){
+        capitals_active = true;
+        markers.clearLayers();
+        getCountryCapitals();
+    } else {
+        capitals_active = false;
+        capitals.clearLayers();
+    }
+}
+
+function getCountryCapitals() {   
+    capitals_active ? loading() : null;
+
+    $.ajax(
+        {
+        url: "php/getCapitals.php",
+        type: 'POST',
+        dataType: 'json',
+        
+        success: function(result) {
+            
+            console.log(JSON.stringify(result));
+            const capital_arr = result['data']['features'];
+            if (result.status.name == "ok") {
+                capital_arr.forEach(country => {
+                    if (country['properties']['city']){
+                        let coordinates = country['geometry']['coordinates'].reverse();
+                        let capital_name = country['properties']['city'];
+                        let capital_code = country['properties']['iso2'];
+                        let country_name = country['properties']['country'];
+                        createPopupForCapitals(coordinates, capital_name, capital_code, country_name);
+                    }
+                });
+
+            }        
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            // your error code
+        }
+    }); 
+    
+};
+
+
+function createPopupForCapitals(coordinates, name, code, country){
+    
+    let capital_marker = L.marker(coordinates, {icon: cityIcon});    
+    let popup = L.popup().setContent                            
+                            (`
+                            <div class="popup">
+                            <div id="img-container"><img id=\"flag\" src=\"images/flags/${code.toLowerCase()}.png\" alt="flag"></div>
+                            <p id="capital-p"><span id="capital-name-popup"> ${name} </span></p>
+                            <p><span>Country:</span>  ${country}  <span>(${code})</span></p>
+                            <p><a id="search-wiki" href=\"https://en.wikipedia.org/wiki/${name}\" target=\"_blank\">${name} Wikipedia <img id="little-flag" src=\"images/flags/${code.toLowerCase()}.png\" alt=""><span id="search-popup-box"><img id="search-popup" src="images/icons/search-solid.svg"></i></span></a></p>
+                            </div>
+                            `);
+    capital_marker.bindPopup(popup);
+    capital_marker.addTo(capitals);
 };
 
 // CREATE COUNTRYS ARRAY
@@ -905,6 +988,7 @@ function activateQuiz(){
     computerChoice();  // generate computer question
     mymap.hasLayer(marker) ? mymap.removeLayer(marker) : null; //remove marker from map
     markers.clearLayers(); // remove cluster
+    capitals.clearLayers();
     mymap.setView([10,0],3); // Set Map viewport
     loading();
     if (!quiz){
@@ -951,7 +1035,7 @@ function changeNavBar(quiz){
         cluster_btn.style.display = "none";
         setTimeout(function(){
             quiz_container.style.display = "flex";
-        }, 4000);
+        }, 2000);
         mymap.removeLayer(user_cluster_btn);
     } else {        
         quiz_container.style.display = "none";
@@ -1088,3 +1172,23 @@ function showPlayerChoice(choice){
         }
     })
 }
+
+
+
+
+// var schoolsMarkers = new L.MarkerClusterGroup({
+//     var childCount = cluster.getChildCount();
+//     var c = " marker-cluster-";
+//     if (childCount < 10) {
+//     c += "small";
+//     } else if (childCount < 100) {
+//     c += "medium";
+//     } else {
+//     c += "large";
+//     }
+    
+//     maxClusterRadius: 120,
+//     iconCreateFunction: function (cluster) {
+//     return new L.DivIcon({ html: cluster.getChildCount(), className: "clustergroup-schools marker-cluster" + c, iconSize: new L.Point(40, 40) });
+//     },
+//     spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false });
