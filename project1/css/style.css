@@ -478,9 +478,16 @@ main {
     font-size: 1rem;
 }
 
-#capital-p {
+#capital-p, #place-p {
     width: 100%;
     text-align: center;
+}
+
+#place-p {
+    border: 3px solid #C54342;
+    background-color: #B72C2C;    
+    border-radius: 10px;    
+    padding: .5em 1em;
 }
 
 #capital-name-popup {
@@ -488,7 +495,21 @@ main {
     margin-right: 0;
     font-size: 1.5rem;
     text-align: center;
+    
 }
+
+#place-name-popup {
+    font-weight: 600;
+    margin-right: 0;
+    font-size: 1.3rem;
+    text-align: center;
+    color: white;
+}
+
+.address-place, .wikipedia-place {
+    letter-spacing: normal;
+}
+
 
 span {
     font-weight: 400;
@@ -503,6 +524,20 @@ span {
 
 #flag {
     width: 70px;
+    height: 100%;
+    box-shadow: 1.3px 1.3px 4px rgb(156, 156, 156);
+    margin: 0 auto;
+}
+
+#img-container-place {
+    width: 100%;
+    text-align: center;
+    height: 200px;
+    overflow: hidden;
+}
+
+#place-image {
+    width: auto;
     height: 100%;
     box-shadow: 1.3px 1.3px 4px rgb(156, 156, 156);
     margin: 0 auto;

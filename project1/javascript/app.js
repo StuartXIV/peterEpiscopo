@@ -68,12 +68,17 @@ var cityIcon = L.icon({
 let timer;
 let iss_active = false;
 let geojson;
+
 let markers = L.markerClusterGroup({
     showCoverageOnHover: false
 });
 let capitals = L.markerClusterGroup({
     showCoverageOnHover: false
 });
+let points_of_interest_cluster = L.markerClusterGroup({
+    showCoverageOnHover: false
+});
+
 let cluster_active = false;
 let cluster_arr = [];
 let double_click_active = true;
@@ -155,8 +160,6 @@ function activateCluster(){
         cluster_arr = [];
     }
 }
-
-activateCluster();
 
 //MAP SETUP---------------------------------------------------------------------------------
 
@@ -402,6 +405,7 @@ function getWeatherInfo(code_country, name, currency, currency_symbol, time_zone
 //WHERE IS THE ISS---------------------------------------------------------------------------
 
 function iSS() {
+    points_of_interest_cluster.clearLayers();
     if (mymap.hasLayer(layer)){mymap.removeLayer(layer)};
     if (mymap.hasLayer(marker)){mymap.removeLayer(marker)};
 
@@ -487,6 +491,8 @@ function getCountryNames() {
 
 let capitals_active = false;
 function activateCapitals(){    
+    points_of_interest_cluster.clearLayers();
+    activateCluster();
     side_menu_open ? openSideMenu() : null;
     mymap.hasLayer(marker) ? mymap.removeLayer(marker) : null;
     if (!capitals_active){
@@ -500,7 +506,7 @@ function activateCapitals(){
 }
 
 function getCountryCapitals() {   
-    capitals_active ? loading() : null;
+    // capitals_active ? loading() : null;
 
     $.ajax(
         {
@@ -510,7 +516,7 @@ function getCountryCapitals() {
         
         success: function(result) {
             
-            console.log(JSON.stringify(result));
+            // console.log(JSON.stringify(result));
             const capital_arr = result['data']['features'];
             if (result.status.name == "ok") {
                 capital_arr.forEach(country => {
@@ -549,7 +555,91 @@ function createPopupForCapitals(coordinates, name, code, country){
     capital_marker.addTo(capitals);
 };
 
-// CREATE COUNTRYS ARRAY
+
+
+// GET POINTS OF INTEREST ----------------------------------------------------------------------------------
+
+function getPointsOfInterest(country_name) {   
+    points_of_interest_cluster.clearLayers();
+    country_name = country_name.replace(' ', '+').toLowerCase(); // fix country name, remove spaces
+
+    $.ajax(
+        {
+        url: "php/getPointsOfInterest.php",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            country: country_name
+        },
+        
+        success: function(result) { 
+
+            // console.log(JSON.stringify(result));
+            const poi_arr = result['data']['results'];
+            if (result.status.name == "ok") {
+                poi_arr.forEach(point => {
+                    let lat = point['geometry']['location']['lat'];
+                    let lng = point['geometry']['location']['lng'];
+                    let place = point['name'];
+                    let photo;
+                    point['photos'] ? photo = point['photos']['0']['photo_reference'] : photo = ' ';
+                    let address = point['formatted_address'];
+                    getPlacePicture(lat, lng, place, photo, address);
+                })
+            }        
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            // your error code
+            console.log('error points of interest request');
+        }
+    }); 
+    
+};
+
+function getPlacePicture(lat, lng, place, photo, address) {   
+        let photo_available;
+        photo === ' ' ? photo_available = false : photo_available = true; 
+    $.ajax(
+        {
+        url: "php/getPlacePicture.php",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            photoreference: photo
+        },
+        
+        success: function(result) { 
+            
+            let poi_marker = L.marker([lat, lng], {icon: markerIcon});
+            let image = result['image'];
+            !photo_available ? image = "images/noimage.png" : null ;
+            let popup = L.popup().setContent                            
+                            (`
+                            <div class="popup">
+                            <div id="img-container-place"><img id="place-image" src=\"${image}\" alt="No Image Available"></div>
+                            <p id="place-p"><span id="place-name-popup" class="address-place"> ${place} </span></p>
+                            <p class="address-place"><span>Address:</span>  ${address}</p>
+                            <p class="wikipedia-place"><a id="search-wiki" href=\"https://en.wikipedia.org/wiki/${place}\" target=\"_blank\">Explore on Wikipedia</a></p>
+                            </div>
+                            `);
+            poi_marker.bindPopup(popup);
+            poi_marker.addTo(points_of_interest_cluster);
+            activatePointsOfInterest();
+                   
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            // your error code
+            console.log('error place photo');
+        }
+    }); 
+    
+};
+
+function activatePointsOfInterest(){
+    points_of_interest_cluster.addTo(mymap);
+}
+
+// CREATE COUNTRYS ARRAY ------------------------------------------------------------------------------
 
 function polygonCountryNameArr(arr){
     return arr;
@@ -561,12 +651,11 @@ function createCountryArr(arr){
 }
 
 // GET COUNTRY POLYGON WHEN USING SELECT BAR ------------------------------ -------------------------------------------------------------------
-let country_selected = "";
+
 let layer = []; //layer is the single highlighted country
 
 $('#country').change(function getCountryPolygon() {    
     loading();
-
     $country_value = $('#country').val();    
     
     geojson.forEach(element => {
@@ -706,7 +795,9 @@ function createPopup(name, code, capital, population, currency, area, continent,
                             </div>
                             `);
     layer.bindPopup(popup);  
-    layer.openPopup();    
+    layer.openPopup();   
+    points_of_interest_cluster.clearLayers(); 
+    getPointsOfInterest(name);
 }
 
 
@@ -769,6 +860,8 @@ function createPopupForMarker(name, code, currency, symbol, time_zone_name, time
             select_country.value = code;
         })
     }
+    
+    getPointsOfInterest(name);
     
 }
 
@@ -986,6 +1079,7 @@ let quiz_layer;
 
 function activateQuiz(){         
     computerChoice();  // generate computer question
+    points_of_interest_cluster.clearLayers();
     mymap.hasLayer(marker) ? mymap.removeLayer(marker) : null; //remove marker from map
     markers.clearLayers(); // remove cluster
     capitals_active ? activateCapitals() : null;
