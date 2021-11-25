@@ -988,7 +988,7 @@ function activateQuiz(){
     computerChoice();  // generate computer question
     mymap.hasLayer(marker) ? mymap.removeLayer(marker) : null; //remove marker from map
     markers.clearLayers(); // remove cluster
-    capitals.clearLayers();
+    capitals_active ? activateCapitals() : null;
     mymap.setView([10,0],3); // Set Map viewport
     loading();
     if (!quiz){
