@@ -53,11 +53,15 @@ var map_bright = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/servic
 	minZoom: 2,
 	maxZoom: 18
 });
+
+// ICONS for MARKERS -----------------------------------------------------------------------------------------
+
 var markerIcon = L.icon({
     iconUrl: 'images/marker.svg',
     iconSize: [42, 55],
     iconAnchor: [20 , 60]
 });
+
 var cityIcon = L.icon({
     iconUrl: 'images/city.svg',
     iconSize: [42, 55],
@@ -65,9 +69,28 @@ var cityIcon = L.icon({
     popupAnchor: [6,-50]
 });
 
+var issIcon = L.icon({
+    iconUrl: 'images/ISS2.svg',
+    iconSize: [70, 30],
+    iconAnchor: [50, 53],
+    popupAnchor: [-3, -76]
+});
+
+var poiIcon = L.icon({
+    iconUrl: 'images/poi.svg',    
+    iconSize: [70, 35]
+})
+
+const issmarker = L.marker([65,19], {icon: issIcon}).bindPopup("<div id=\"iss-div\"><img id=\"iss-logo\" src=\"images/iss_logo.png\"><h3>International Space Station</h3></div>");
+
+
+// MAP SETUP ------------------------------------------------------------------------------------
+
 let timer;
 let iss_active = false;
 let geojson;
+
+// CLUSTER GROUPS ----------------------------------------------------------------------------------
 
 let markers = L.markerClusterGroup({
     showCoverageOnHover: false
@@ -243,16 +266,6 @@ function activateTimer(){
 }
 
 stop_follow.addEventListener("click", activateTimer);
-
-var issIcon = L.icon({
-    iconUrl: 'images/ISS2.svg',
-    iconSize: [70, 30],
-    iconAnchor: [50, 53],
-    popupAnchor: [-3, -76]
-});
-
-const issmarker = L.marker([65,19], {icon: issIcon}).bindPopup("<div id=\"iss-div\"><img id=\"iss-logo\" src=\"images/iss_logo.png\"><h3>International Space Station</h3></div>");
-
 
 
 //ONLOAD----------------------------------------------------------------------------------
@@ -496,18 +509,25 @@ function activateCapitals(){
     side_menu_open ? openSideMenu() : null;
     mymap.hasLayer(marker) ? mymap.removeLayer(marker) : null;
     if (!capitals_active){
+        mymap.setView([0,0], 3);
+        capital_btn.innerHTML = "Remove Capitals";
+        capital_btn.style.color = "#B72C2C";
+        capital_btn_side.innerHTML = "Remove Capitals";
         capitals_active = true;
         markers.clearLayers();
         getCountryCapitals();
     } else {
         capitals_active = false;
         capitals.clearLayers();
+        capital_btn.innerHTML = "View Capitals";
+        capital_btn_side.innerHTML = "View Capitals";
+        capital_btn.style.color = "#000e29";
     }
 }
 
-function getCountryCapitals() {   
+function getCountryCapitals(name = null) {   
     // capitals_active ? loading() : null;
-
+    name ? name = name.replace('+', ' ').toLowerCase() : null;
     $.ajax(
         {
         url: "php/getCapitals.php",
@@ -520,12 +540,24 @@ function getCountryCapitals() {
             const capital_arr = result['data']['features'];
             if (result.status.name == "ok") {
                 capital_arr.forEach(country => {
-                    if (country['properties']['city']){
-                        let coordinates = country['geometry']['coordinates'].reverse();
-                        let capital_name = country['properties']['city'];
-                        let capital_code = country['properties']['iso2'];
-                        let country_name = country['properties']['country'];
-                        createPopupForCapitals(coordinates, capital_name, capital_code, country_name);
+                    if (capitals_active){
+                        if (country['properties']['city']){
+                            let coordinates = country['geometry']['coordinates'].reverse();
+                            let capital_name = country['properties']['city'];
+                            let capital_code = country['properties']['iso2'];
+                            let country_name = country['properties']['country'];
+                            createPopupForCapitals(coordinates, capital_name, capital_code, country_name);
+                        }
+                    } else {
+                        console.log(name);
+                        if(country['properties']['country'].toLowerCase() === name){
+                            console.log("found");
+                            let coordinates = country['geometry']['coordinates'].reverse();
+                            let capital_name = country['properties']['city'];
+                            let capital_code = country['properties']['iso2'];
+                            let country_name = country['properties']['country'];
+                            createPopupForCapitals(coordinates, capital_name, capital_code, country_name);
+                        }
                     }
                 });
 
@@ -552,7 +584,10 @@ function createPopupForCapitals(coordinates, name, code, country){
                             </div>
                             `);
     capital_marker.bindPopup(popup);
-    capital_marker.addTo(capitals);
+    capitals_active ? capital_marker.addTo(capitals) : capital_marker.addTo(points_of_interest_cluster);
+    capital_marker.on('click', function(){
+        select_country.value = code;
+    })
 };
 
 
@@ -561,7 +596,9 @@ function createPopupForCapitals(coordinates, name, code, country){
 
 function getPointsOfInterest(country_name) {   
     points_of_interest_cluster.clearLayers();
-    country_name = country_name.replace(' ', '+').toLowerCase(); // fix country name, remove spaces
+    country_name = country_name.replace(' ', '+').toLowerCase(); // fix country name, remove spaces    
+    activatePointsOfInterest();
+    getCountryCapitals(country_name);
 
     $.ajax(
         {
@@ -610,7 +647,7 @@ function getPlacePicture(lat, lng, place, photo, address) {
         
         success: function(result) { 
             
-            let poi_marker = L.marker([lat, lng], {icon: markerIcon});
+            let poi_marker = L.marker([lat, lng], {icon: poiIcon});
             let image = result['image'];
             !photo_available ? image = "images/noimage.png" : null ;
             let popup = L.popup().setContent                            
@@ -623,8 +660,10 @@ function getPlacePicture(lat, lng, place, photo, address) {
                             </div>
                             `);
             poi_marker.bindPopup(popup);
-            poi_marker.addTo(points_of_interest_cluster);
-            activatePointsOfInterest();
+            poi_marker.addTo(points_of_interest_cluster);   
+            poi_marker.on('click', ()=>{
+                mymap.setView([lat,lng]);
+            })         
                    
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -671,7 +710,7 @@ $('#country').change(function getCountryPolygon() {
             layer.setStyle({
                 color: 'yellow',
                 weight: 1,
-                fillOpacity: 0.15,
+                fillOpacity: 0.1,
         
             });
             country_selected = element['properties']['name'];
@@ -695,7 +734,7 @@ function getCountryPolygonForMarker(code, name, currency, symbol, time_zone_name
                         layer.setStyle({
                         color: 'yellow',
                         weight: 1,
-                        fillOpacity: 0.1                            
+                        fillOpacity: 0.05                            
                     });
                 } else {
                     layer.setStyle({
@@ -714,7 +753,7 @@ function getCountryPolygonForMarker(code, name, currency, symbol, time_zone_name
 // GET COUNTRY INFO FOR POPUS-------------------------------------------------------------------
 
 function getCountryInfo(name, code, symbol) {    
-
+    getCountryCapitals(name.toLowerCase());
     $.ajax(
         {
         url: "php/getCityInfo.php",
@@ -748,7 +787,7 @@ function getCountryInfo(name, code, symbol) {
     
 };
 
-// CREATE THE POPUP-------------------------------------------------------------------
+// CREATE POPUP FOR POLYGONS CREATED BY SELECT-------------------------------------------------------------------
 
 
 function createPopup(name, code, capital, population, currency, area, continent, symbol){
@@ -797,6 +836,7 @@ function createPopup(name, code, capital, population, currency, area, continent,
     layer.bindPopup(popup);  
     layer.openPopup();   
     points_of_interest_cluster.clearLayers(); 
+    getCountryCapitals(name, code);
     getPointsOfInterest(name);
 }
 

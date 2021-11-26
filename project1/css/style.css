@@ -908,17 +908,17 @@ select {
 
 
 .marker-cluster-small {
-	background-color: #C54342;
+	background-color: #c54242d3;
 	}
 .marker-cluster-small div {
-	background-color: white;
+	background-color: rgba(255, 255, 255, 0.959);
 	}
 
 .marker-cluster-medium {
-	background-color: #b72c2c;
+	background-color: #b72c2cd0;
 	}
 .marker-cluster-medium div {
-	background-color: white;
+	background-color: rgba(255, 255, 255, 0.952);
 	}
 
 .marker-cluster-large {
