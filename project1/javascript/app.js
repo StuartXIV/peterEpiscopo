@@ -598,7 +598,7 @@ function getPointsOfInterest(country_name) {
     points_of_interest_cluster.clearLayers();
     country_name = country_name.replace(' ', '+').toLowerCase(); // fix country name, remove spaces    
     activatePointsOfInterest();
-    getCountryCapitals(country_name);
+    //getCountryCapitals(country_name);
 
     $.ajax(
         {
