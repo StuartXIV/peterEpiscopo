@@ -377,6 +377,7 @@ function getMarkerInfo(event, extra_marker) {
         success: function(result) {
 
             if (result.status.name == "ok") {
+
                 const code_country = result['data']['results']['0']['components']['country_code'].toUpperCase();
                 const name = result['data']['results']['0']['components']['country'];
                 const currency = result['data']['results']['0']['annotations']['currency']['name'];
@@ -387,17 +388,21 @@ function getMarkerInfo(event, extra_marker) {
                 const description = result['data']['results']['0']['formatted'];
                 const lat = event.lat.toFixed(2);
                 const lng = event.lng.toFixed(2);
+                
                 player_choice = name;
                 select_country.value = code_country;
-                if (player_choice === computer_choice){                    
-                    answer.innerHTML = "Correct!";
-                    answer.style.display = "inline-block";
-                    answer.style.background = "lightgreen";
-                } else {
-                    answer.innerHTML = "Wrong";
-                    answer.style.display = "inline-block";
-                    answer.style.background = "red";
+                if(quiz){
+                    if (player_choice === computer_choice){                    
+                        answer.innerHTML = "Correct!";
+                        answer.style.display = "inline-block";
+                        answer.style.background = "lightgreen";
+                    } else {
+                        answer.innerHTML = "Wrong";
+                        answer.style.display = "inline-block";
+                        answer.style.background = "red";
+                    }
                 }
+                
                 getWeatherInfo(code_country, name, currency, currency_symbol, time_zone_name, time_zone, county, description, lat, lng, extra_marker);
             }        
         },
@@ -551,8 +556,9 @@ function activateCapitals(){
 }
 
 function getCountryCapitals(name = null) {   
-    // capitals_active ? loading() : null;
+    
     name ? name = name.replace('+', ' ').toLowerCase() : null;
+
     $.ajax(
         {
         url: "php/getCapitals.php",
@@ -561,7 +567,6 @@ function getCountryCapitals(name = null) {
         
         success: function(result) {
             
-            // console.log(JSON.stringify(result));
             const capital_arr = result['data']['features'];
             if (result.status.name == "ok") {
                 capital_arr.forEach(country => {
@@ -574,9 +579,7 @@ function getCountryCapitals(name = null) {
                             createPopupForCapitals(coordinates, capital_name, capital_code, country_name);
                         }
                     } else {
-                        console.log(name);
                         if(country['properties']['country'].toLowerCase() === name){
-                            console.log("found");
                             let coordinates = country['geometry']['coordinates'].reverse();
                             let capital_name = country['properties']['city'];
                             let capital_code = country['properties']['iso2'];
@@ -1141,7 +1144,6 @@ function computerChoice(){
     answer.style.background = "white";
     let random_number = Math.floor(Math.random() * country_array.length);
     computer_choice = country_array[random_number];    
-    console.log(computer_choice);
     quiz_question.innerHTML = `Where is ${computer_choice}?`;
 }
 
