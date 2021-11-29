@@ -457,7 +457,7 @@ main {
     font-size: 1.2em;
     font-weight: 600;
     border-radius: 1rem;
-    border: 2px solid #242424;
+    border: 2px solid white;
     color: #242424;
     background: white;
     transform: translateY(0);
@@ -566,6 +566,10 @@ span {
     margin-left: 0.7rem;
 }
 
+.exit {
+    font-size: 1rem;
+}
+
 #little-flag {
     width: 20px;
     height: 12px;
@@ -594,14 +598,12 @@ span {
     margin-left: .2rem;
 }
 
-.fa-check {
-    margin-right: 5px;
+#times {
+    filter: invert(12%) sepia(68%) saturate(5090%) hue-rotate(356deg) brightness(102%) contrast(122%);
 }
 
-.fa-times {
-    margin-right: 5px;
-    color: #cc0000;
-    text-shadow: .5px .5px 1px grey;
+#check {
+    filter: invert(100%) sepia(100%) saturate(1%) hue-rotate(227deg) brightness(101%) contrast(101%);
 }
 
 #search-popup-box {
@@ -746,10 +748,6 @@ summary {
 
     #country-select-box {
         width: 90%;
-    }
-
-    .exit {
-        font-size: 1rem;
     }
 }
 @media only screen and (max-width: 992px) {

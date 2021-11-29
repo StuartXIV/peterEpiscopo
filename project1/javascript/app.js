@@ -265,6 +265,7 @@ mymap.on('dblclick', function (event){
 mymap.on('click', function (event){
     closeSideMenu();
     if (quiz && single_click_active){
+        points_of_interest_cluster.clearLayers();
         single_click_active = false;
         loading();
         marker.setLatLng(event.latlng);  
@@ -398,15 +399,12 @@ function getMarkerInfo(event, extra_marker) {
                     answer.style.background = "red";
                 }
                 getWeatherInfo(code_country, name, currency, currency_symbol, time_zone_name, time_zone, county, description, lat, lng, extra_marker);
-                
-            }
-        
+            }        
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log('Error');
         }
-    }); 
-    
+    });     
 };
 
 
@@ -476,7 +474,7 @@ function iSS() {
 };
 
 
-/* GET COUNTRY NAMES FOR INPUT SELECT */
+/* GET COUNTRY NAMES FOR INPUT SELECT OPTIONS*/
 
 function getCountryNames() {  
 
@@ -597,27 +595,6 @@ function getCountryCapitals(name = null) {
     
 };
 
-// CAPITALS POPUS
-
-const createPopupForCapitals = (coordinates, name, code, country) => {
-    
-    let capital_marker = L.marker(coordinates, {icon: cityIcon});    
-    let popup = L.popup().setContent                            
-                            (`
-                            <div class="popup">
-                            <div id="img-container"><img id=\"flag\" src=\"images/flags/${code.toLowerCase()}.png\" alt="flag"></div>
-                            <p id="capital-p"><span id="capital-name-popup"> ${name} </span></p>
-                            <p><span>Country:</span>  ${country}  <span>(${code})</span></p>
-                            <p><a id="search-wiki" href=\"https://en.wikipedia.org/wiki/${name}\" target=\"_blank\">${name} Wikipedia <img id="little-flag" src=\"images/flags/${code.toLowerCase()}.png\" alt=""><span id="search-popup-box"><img id="search-popup" src="images/icons/search-solid.svg"></i></span></a></p>
-                            </div>
-                            `);
-    capital_marker.bindPopup(popup);
-    capitals_active ? capital_marker.addTo(capitals) : capital_marker.addTo(points_of_interest_cluster);
-    capital_marker.on('click', () => {
-        select_country.value = code;
-    })
-};
-
 
 /* GET POINTS OF INTEREST */
 
@@ -664,6 +641,7 @@ const getPointsOfInterest = (country_name) => {
     
 };
 
+
 const getPlacePicture = (lat, lng, place, photo, address) => {   
 
         // Check if photo exists
@@ -682,7 +660,7 @@ const getPlacePicture = (lat, lng, place, photo, address) => {
         success: function(result) { 
             
             let poi_marker = L.marker([lat, lng], {icon: poiIcon});
-            //
+            
             let image = result['image'];
             !photo_available ? image = "images/noimage.png" : null ;
             let popup = L.responsivePopup().setContent                            
@@ -697,15 +675,13 @@ const getPlacePicture = (lat, lng, place, photo, address) => {
 
             poi_marker.bindPopup(popup).addTo(points_of_interest_cluster).on('click', ()=>{
                 mymap.setView([lat,lng]);
-            });         
-                   
+            });             
         },
         error: function(jqXHR, textStatus, errorThrown) {
             // your error code
             console.log('error place photo');
         }
-    }); 
-    
+    });     
 };
 
 
@@ -930,17 +906,36 @@ function createPopupForMarker(name, code, currency, symbol, time_zone_name, time
         extra_marker.on('click', function(){
             select_country.value = code;
         })
-    }
-    
-    getPointsOfInterest(name);
-    
+    }    
+    getPointsOfInterest(name);    
 }
 
 function temperatureConverter(valNum) {
     valNum = parseFloat(valNum);
-    const temp = valNum-273.15;
+    const temp = valNum - 273.15;
     return Math.round(temp);
-  }
+}
+
+
+//POPUP FOR CAPITALS
+const createPopupForCapitals = (coordinates, name, code, country) => {
+    
+    let capital_marker = L.marker(coordinates, {icon: cityIcon});    
+    let popup = L.popup().setContent                            
+                            (`
+                            <div class="popup">
+                            <div id="img-container"><img id=\"flag\" src=\"images/flags/${code.toLowerCase()}.png\" alt="flag"></div>
+                            <p id="capital-p"><span id="capital-name-popup"> ${name} </span></p>
+                            <p><span>Country:</span>  ${country}  <span>(${code})</span></p>
+                            <p><a id="search-wiki" href=\"https://en.wikipedia.org/wiki/${name}\" target=\"_blank\">${name} Wikipedia <img id="little-flag" src=\"images/flags/${code.toLowerCase()}.png\" alt=""><span id="search-popup-box"><img id="search-popup" src="images/icons/search-solid.svg"></i></span></a></p>
+                            </div>
+                            `);
+    capital_marker.bindPopup(popup);
+    capitals_active ? capital_marker.addTo(capitals) : capital_marker.addTo(points_of_interest_cluster);
+    capital_marker.on('click', () => {
+        select_country.value = code;
+    })
+};
 
 
 /* REQUEST EXCHANGE RATE */
@@ -965,35 +960,6 @@ const exchangeRate = (currency) => {
         }
     });             
 };
-
-
-// GET COUNTRY POLYGONS HOVER (onload)-------------------------------------------------------------------
-
-    const getCountryPolygonsHover = () => {   
-            
-            $.ajax(
-                {
-                url: "php/polygons.php",
-                type: 'POST',
-                dataType: 'json',
-                
-                success: function(result) {                       
-                    
-                    if (result.status.name == "ok") {
-                        const arr = result['data']['features'];              
-                            arr.forEach(element => {
-                                    myGeoJSON = element;
-                                    let layer_hover = L.geoJSON(myGeoJSON);                                       
-                                    geojson_arr.push(layer_hover);                                                                                 
-                            })
-                            highlightOnHover();                        
-                    }            
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.log("error polygons hover");
-                }
-            });             
-        };
 
 //-------------------------------------------------------------------------
 
@@ -1100,7 +1066,6 @@ let computer_layer;
 let winning_streak_count = 0;
 let computer_choice = "Iran";
 let player_choice = "none";
-let mistake_count = 0; // possible delete
 
 
 function activateQuiz(){         
@@ -1170,7 +1135,7 @@ function computerChoice(){
     answer.style.opacity = "0"; 
     removeLayer();
     if(mymap.hasLayer(quiz_layer)){mymap.removeLayer(quiz_layer)};
-    if(mistake_count > 0){mymap.removeLayer(computer_layer)};
+    if(mymap.hasLayer(computer_layer)){mymap.removeLayer(computer_layer)};
     mymap.setView([10,0], 3);
     answer.style.display = "none";
     answer.style.background = "white";
@@ -1200,10 +1165,10 @@ const getMarkerInfoQuiz = (event) => {
                 if (player_choice){
                     getCountryPolygonForMarker(player_choice);
                     if (fixName(player_choice) === computer_choice){                    
-                        answer.innerHTML = "<img class=\"icon\" id=\"times\" src=\"images/icons/check.svg\">  Correct!";
+                        answer.innerHTML = "<img class=\"icon\" id=\"check\" src=\"images/icons/check.svg\">  Correct!";
                         answer.style.display = "inline-block";
-                        answer.style.backgroundColor = "lightgreen";
-                        answer.style.color = "black";
+                        answer.style.backgroundColor = "#04FE59";
+                        answer.style.color = "white";
                         winning_streak_count++;
                         score.innerHTML = `Winning Streak: ${winning_streak_count}`;
                         score.style.fontSize = "1.03rem";
@@ -1225,14 +1190,12 @@ const getMarkerInfoQuiz = (event) => {
                     answer.style.transform = "translateY(-150%)";
                     answer.style.opacity = "1";   
                 }          
-            }
-        
+            }        
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log('Error');
         }
-    }); 
-    
+    });     
 };
 
 
@@ -1254,7 +1217,6 @@ const showPlayerChoice = (choice) => {
                 });  
                 quiz_layer.bindPopup(`<p id=\"quiz-choice\">${computer_choice}</p> <div id=\"img-container\"><img id=\"flag\" src=\"images/flags/${country_code_for_quiz_flag_correct.toLowerCase()}.png\"></div>`, {autoclose: false}).openPopup();                        
             } else {
-                mistake_count++;
                 quiz_layer.setStyle({
                     color: 'red',
                     weight: 1,
@@ -1287,6 +1249,37 @@ const showPlayerChoice = (choice) => {
 
 
 
+
+
+
+
+// GET COUNTRY POLYGONS HOVER (onload)-------------------------------------------------------------------
+
+const getCountryPolygonsHover = () => {   
+            
+    $.ajax(
+        {
+        url: "php/polygons.php",
+        type: 'POST',
+        dataType: 'json',
+        
+        success: function(result) {                       
+            
+            if (result.status.name == "ok") {
+                const arr = result['data']['features'];              
+                    arr.forEach(element => {
+                            myGeoJSON = element;
+                            let layer_hover = L.geoJSON(myGeoJSON);                                       
+                            geojson_arr.push(layer_hover);                                                                                 
+                    })
+                    highlightOnHover();                        
+            }            
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log("error polygons hover");
+        }
+    });             
+};
 
 
 /* SHORTCUT FUNCTIONS */
