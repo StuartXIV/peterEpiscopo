@@ -11,7 +11,7 @@
     $api = '12b940d0-5391-11ec-9874-1b3d2e04c5d6';
 
 	
-	$url = 'https://freecurrencyapi.net/api/v2/latest?apikey=' . $api . '&base_currency=' . $_REQUEST['base'];
+	$url = 'https://freecurrencyapi.net/api/v2/latest?apikey=' . $api;
 
 
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -27,14 +27,6 @@
 
 	$decode = json_decode($result,true);	
 
-	$exr = [$decode['data'][$_REQUEST['currency']]];
-
-
-	// foreach ($decode['data'] as $feature) {
-	// 	if ($feature === $_REQUEST['currency']){
-	// 	array_push($exr, $feature);   
-	// 	}
-	//   } 
 
 
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -43,7 +35,7 @@
 	$output['status']['name'] = "ok";
 	$output['status']['description'] = "success";
 	$output['status']['returnedIn'] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
-	$output['data'] = $exr;   //// check the api link, first detail that expands (little arrow)
+	$output['data'] = $decode;   //// check the api link, first detail that expands (little arrow)
 	
 	header('Content-Type: application/json; charset=UTF-8');
 

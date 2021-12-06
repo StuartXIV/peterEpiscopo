@@ -1,32 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gazetteer</title>
     <link rel="stylesheet" href="css/style.css">
-    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-    crossorigin=""/> -->
-    <link rel="stylesheet" href="css/leaflet.css">
     <link rel="shortcut icon" href="#">
     <link rel="icon" href="./images/marker.svg" sizes="16x16" type="image">
-    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="css/easyButton.css">
     <link rel="stylesheet" href="css/leaflet-responsive-popup.css" />
     <link rel="stylesheet" href="css/leaflet-responsive-popup2.css" />   
-    <link rel="stylesheet" href="css/MarkerCluster.css">
-    <script src="javascript/leaflet.js"></script>    
-    <!-- <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>     -->
-    <script src="javascript/spin/dist/spin.min.js" charset="utf-8"></script>
-    <script src="javascript/leaflet.spin.min.js" charset="utf-8"></script>
-    <script src="javascript/responsive-popup.js"></script>     
-    <script src="javascript/easyButton.js"></script>
-    <script src="javascript/leaflet.markercluster.js"></script>
-
-    
+    <link rel="stylesheet" href="css/MarkerCluster.css">    
+    <link rel="stylesheet" href="css/leaflet.css">  
 </head>
+
 <body>
     <header>
         <div id="space"></div>
@@ -50,15 +39,12 @@
                     <div class="nav-li noselect" id="user-location">Find Your Location</div>
                     
                 </li>
-                <li class="list" id="capital-list">
-                    <div class="nav-li noselect" id="capital-btn">View Capitals</div>
-                </li>
                 <li class="list" id="iss-list">
                     <div class="nav-li noselect" id="iss">Where is the ISS?</div>
                 </li>
-                <li class="list" id="quiz-mode">
+                <!-- <li class="list" id="quiz-mode">
                     <div class="nav-li noselect" id="quiz">Quiz Mode</div>
-                </li>
+                </li> -->
                 <li class="list" id="dark">
                     <div class="nav-li noselect" id="settings"><img class="icon" src="images/icons/moon.svg" alt=""> Dark Mode</div>                    
                 </li>
@@ -72,28 +58,166 @@
         <div id="map">
             
         </div>
+        <div class="popup-wrapper-small-screen">
+            <div class="popup-container"> 
+                <div class="popup">
+                    <div class="popup-header left">
+                        <img class="icon-popup" id="icon-popup-left" src="./images/info.svg" alt="">
+                    </div>
+                    <div class="popup-header right">
+                        <img class="icon-popup"  id="exit-popup" src="./images/icons/times.svg" alt="X Close">
+                    </div>
+                    <div class="popup-header right small-screen">
+                        <img class="icon-popup" id="show-popup" src="./images/icons/double-up.svg" alt="X Close">
+                    </div>
+                    <div id="img-container"><img id="flag" src="#" alt="flag"></div>
+                    <div id="country-name-container">
+                        <span id="country-name-popup"></span> 
+                        <span id="country-code"></span>
+                        <div class="triangle" id="triangle-left"></div>
+                        <div class="triangle" id="triangle-right"></div>
+                    </div>
+                        <div class="data">
+
+                            <div id="info">
+                                <p>Population: <span id="population"></span></p>
+                                <p>Area: <span id="area"></span><sup>2</sup></p>
+                                <p>Capital City: <span id="capital"></span></p>
+                                <p>Continent: <span id="continent"></span></p>
+                                <p>Time Zone: <span id="time-zone"></span></p>
+                                <p id="wiki-link"><a id="search-wiki" href="#" target=\_blank\><span id="name-wiki"></span><img id="little-flag" alt=""><span id="search-popup-box"><img id="search-popup" src="images/icons/search-solid.svg"></i></span></a></p>
+                            </div>
+
+                            <div id="covid">                            
+                                
+                                <!-- <p>Population: <span id="population-covid"></span></p> -->
+                                <p>New Cases: <span id="new-cases"></span></p>                            
+                                <p>New Deaths: <span id="new-deaths"></span></p>
+                                <div class="percentage-wrapper">
+                                    <div class="red-block"></div>
+                                    <div class="total-cases percentage-div">
+                                        <p>Total Cases: <span id="total-cases"></span></p>
+                                        <p class="percentage"><span id="percentage-cases-country"></span>% of the country's population</p>
+                                        <p class="percentage"><span id="percentage-cases-world"></span>% of global cases</p>
+                                    </div>
+                                    <div class="total-deaths percentage-div">
+                                        <p>Total Deaths: <span id="total-deaths"></span></p>
+                                        <p class="percentage"><span id="percentage-deaths-country"></span>% of the country's population</p>
+                                        <p class="percentage"><span id="percentage-deaths-world"></span>% of global deaths</p>
+                                    </div>
+                                    
+                                </div>
+                                <p id="date-stats">Covid-19 Statistic as of <span id="date"></span></p>
+                            </div>
+                            <!-- CURRENCY -->
+                            <div id="exr">   
+                                <div id="service-not-available">
+                                    <h3>Sorry, this service is temporarily unavailable.</h3>
+                                </div>
+                                <p>Currency: <span id="currency-code"></span> - <span id="currency-name">American Dollar</span></p>
+                                <p>Symbol: <span id="currency-symbol"></span></p>
+                                <div id="calculator">
+                                    <div id="calculator-title">
+                                        <h4>Exchange Rate</h4>
+                                        <div id="currency-slash">
+                                            <div class="currency-select-container">
+                                                <div class="fake-select">                                                                                                      
+                                                    <div class="sort-arrow-currency-box">
+                                                        <img src="./images/icons/sort-down.svg" id="sort-down-currency" alt="">
+                                                    </div>  
+                                                    <p id="fake-select-code">AFN</p>         
+                                                </div>
+                                                <select name="base-currency" id="base-currency-select"></select>                         
+                                                
+                                            </div>                                        
+                                            <span id="currency-title"></span>
+                                        </div>
+                                    </div>
+                                    <div id="first-calculation">                                    
+                                        <p id="base-text"> 1.00 British Pound =</p>
+                                        <p> <span id="exchange-rate">----</span><span class="decimals" id="decimals"></span> <span id="currency"></span></p>
+                                    </div>
+                                    <p id="last-calculation">1 <span id="currency-last-calculation"></span> = <span id="base-last-calculation"></span><span class="decimals" id="last-decimals"></span> <span id="last-base"></span> </p>
+                                    
+                                </div>
+                            </div>
+
+                            <div id="weather"> 
+                                <h3 id="capital-weather">Weather in <span id="capital-for-weather"></span> on <span id="date-weather"></span></h3>          
+                                <div class="weather-box">
+                                    <p>Weather: <span id="weather-description"></span>
+                                        <div id="weather-icon-box">
+                                            <img id="weather-icon" src="#">
+                                        </div>
+                                    </p> 
+                                </div>
+                                <p>Temperature: <span id="temperature"></span></p> 
+                                <p>Humidity: <span id="humidity"></span></p>
+                                <p>Wind Speed: <span id="wind-speed"></span><span id="speed">km/h</span></p>    
+                                <div class="forecast-wrapper">
+                                    <div class="forecast-box">
+                                        <h6 id="tomorrow">07/12/21</h6>
+                                        <div class="icon-temp-box">                                        
+                                            <div class="forecast-icon-box">
+                                                <img src="#" id="weather-icon-tomorrow" class="forecast-icon" alt="weather">
+                                            </div>  
+                                            <div class="forecast-temp">
+                                                <span class="temp-forecast temp-max" id="tomorrow-max"></span>
+                                                <span class="temp-forecast temp-min" id="tomorrow-min"></span>
+                                            </div>
+                                        </div>                                  
+                                        
+                                    </div>
+                                    <div class="forecast-box">
+                                        <h6 id="day-after">07/12/21</h6>  
+                                        <div class="icon-temp-box">                                          
+                                            <div class="forecast-icon-box">
+                                                <img src="#" id="weather-icon-dayafter" class="forecast-icon" alt="weather">
+                                            </div>                                                                  
+                                            <div class="forecast-temp">
+                                                <span class="temp-forecast temp-max" id="dayafter-max"></span>
+                                                <span class="temp-forecast temp-min" id="dayafter-min"></span>
+                                            </div>
+                                        </div>  
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+        <!-- <div class="popup-container">
+            <div class="popup">
+                <p>New Confirmed Cases: <span id="new-cases"></span></p>
+                <p>Total Confirmed Cases: <span id="new-cases"></span></p>
+                <p>New Deaths: <span id="new-cases"></span></p>
+                <p>Total Deaths: <span id="new-cases"></span></p>
+                <p>As of <span id="date"></span></p>
+            </div>
+        </div> -->
+
+        <!-- SIDE MENU -->
         <div id="side-menu">
             <ul id="side-list">
                 <li class="side-list" id="your-location">
                     <div class="nav-li noselect" id="user-location-side">Find Your Location</div>                    
                 </li>
                 <li class="side-list">
-                    <div class="nav-li noselect" id="capitals-side">Capitals</div>                    
-                </li>
-                <li class="side-list">
                     <div class="nav-li noselect" id="iss-side">Where is the ISS?</div>
                 </li>
-                <li class="side-list">
+                <!-- <li class="side-list">
                     <div class="nav-li noselect" id="quiz-side">Quiz Mode</div>
-                </li>
+                </li> -->
                 <li class="side-list" id="dark-side">
                     <div class="nav-li noselect" id="settings-side"><img class="icon" src="images/icons/moon.svg" alt=""> Dark Mode</div>                    
                 </li>
             </ul>
         </div>
-        <div id="quiz-container">
-             
-             
+
+        <!-- QUIZ -->
+        <div id="quiz-container">              
             <div id="quiz-wrapper">
                 <div id="quiz-question-answer-wrapper">                    
                     <div class="quiz-item noselect" id="result">Correct</div> 
@@ -105,9 +229,15 @@
     </main>
     <footer><div id="footer-shade"></div> </footer>
     <div id="loading"></div>
-    <div id=”preloader”></div>
-    <script src="./javascript/jquery-2.2.3.min.js"></script>
+    <div id="preloader"></div>
+    
+    <script src="./javascript/jquery-2.2.3.min.js"></script>    
+    <script src="javascript/leaflet.js"></script>    
+    <script src="javascript/spin/dist/spin.min.js" charset="utf-8"></script>
+    <script src="javascript/leaflet.spin.min.js" charset="utf-8"></script>
+    <script src="javascript/responsive-popup.js"></script>     
+    <script src="javascript/easyButton.js"></script>
+    <script src="javascript/leaflet.markercluster.js"></script>
     <script src="./javascript/app.js"></script>
-    <!-- <script type="module" src="./javascript/index.js"></script> -->
 </body>
 </html>
