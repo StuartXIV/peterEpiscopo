@@ -127,7 +127,7 @@ let double_click_active = true;
 let single_click_active = true;
 let side_menu_open = false;
 let capitals_active = false;
-let popup_active = false;
+let popup_active = true;
 let popup_open_small_screen = false;
 
 //Easy Button Activity
@@ -1558,11 +1558,14 @@ function fixName(country){
 /* EASY BUTTON FUNCTIONS */
 
 function displayInfo(){
+    activatePopup();
+    dissolve();
     closePopup("close all");
     changeTopLeftIconPopup();
 }
 
-function displayEXR() {    
+function displayEXR() {  
+    activatePopup();  
     setTimeout(()=>{        
     if (!exr_open){
         dissolve();
@@ -1575,6 +1578,7 @@ function displayEXR() {
 }
 
 function displayWeather() {
+    activatePopup();
     setTimeout(()=>{        
     if (!weather_open){        
         dissolve();
@@ -1587,6 +1591,7 @@ function displayWeather() {
 }
 
 function displayCovid() {
+    activatePopup();
     setTimeout(()=>{        
     if (!covid_open){
         covid_open = true;
@@ -1717,15 +1722,13 @@ function scrollPopup(){
 
 $('#exit-popup').on('click', exitPopup);
 
-
-function activatePopup(){
-    if (!popup_active){
+function activatePopup(){    
+    if (!popup_active && !screenSize()){
         popup_active = true;  
         $('.popup-container').css('display', 'flex');      
-        
         setTimeout(()=>{            
             $('.popup-container').css('opacity', '1');
-        }, 1500)
+        }, 500)
     }
 }
 
@@ -1733,6 +1736,7 @@ function exitPopup(){
     if (popup_active){        
         $('.popup-container').css('opacity', '0');
         popup_active = false;
+        console.log(popup_active);
         setTimeout(()=> {
             $('.popup-container').css('display', 'none');
         }, 500)
