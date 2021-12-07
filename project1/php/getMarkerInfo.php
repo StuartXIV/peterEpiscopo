@@ -8,8 +8,6 @@
 	$executionStartTime = microtime(true);
 
 	$url ='https://api.opencagedata.com/geocode/v1/json?key=a5ff2e33877649c68c4a7ddd0a3ca014&q=' . $_REQUEST['lat'] . ',' . $_REQUEST['lng'] . '&pretty=1';
-	
-
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 

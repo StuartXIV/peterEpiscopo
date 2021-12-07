@@ -9,6 +9,7 @@
 
 body {
     height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
     width: 100%;
     background: rgba(162, 192, 255, 0.445);
     position: relative;
@@ -620,9 +621,9 @@ main {
     width: 100%;
     height: 100%;
     position: relative;
-    opacity: 1;
-    transition: opacity .2s ease;
     visibility: visible;
+    opacity: 1;
+    transition: opacity .05s ease;
 }
 
 
@@ -961,14 +962,14 @@ summary {
     align-items: flex-start;
 }
 #base-text {
-    margin-bottom: .5em;
+    margin-bottom: .8em;
     font-size: .9rem;
-    opacity: 0.6;
+    opacity: 0.8;
     font-weight: 600;
 }
 
 #exchange-rate, #currency, #decimals {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 600;
 }
 
@@ -988,7 +989,6 @@ summary {
 
 #calculator span {
     margin: 0;
-    font-weight: normal;
 }
 
 #calculator select {
@@ -1017,7 +1017,7 @@ summary {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding: 2px 0 0 0;
+    padding: 0 3px 0 0;
     pointer-events: none;
 }
 
@@ -1029,7 +1029,7 @@ summary {
 }
 
 #currency-name {
-    font-size: .8em;
+    font-size: .7em;
 }
 
 .currency-select-container {

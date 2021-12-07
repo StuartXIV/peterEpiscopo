@@ -203,15 +203,6 @@ weather_btn.addTo(mymap);
 exr_btn.addTo(mymap);
 covid_btn.addTo(mymap);
 
-// var user_cluster_btn = L.easyButton({
-//     states: [{
-//         stateName: 'cluster',
-//         icon:      '<img id="cluster-icon" src="images/cluster3.PNG">',
-//         title:     'Allow Multiple Markers',
-//         onClick: activateCluster
-//         }]
-// })
-// user_cluster_btn.addTo(mymap);
 
 /* WEBSITE LOADING */
 
@@ -253,19 +244,17 @@ map_quiz.on('loading', function (event){
 /* DOUBLECLICK ON MAP */
 
 mymap.on('dblclick', function (event){
-    if (double_click_active && !quiz && !capitals_active){   
-        if (!cluster_active){     
-            marker.setLatLng(event.latlng); 
-            double_click_active = false;  
-            loading();
-            getMarkerInfo(event.latlng);
-        } else {
-            let extra_marker = L.marker([0,0], {icon: markerIcon});
-            extra_marker.setLatLng(event.latlng);
-            markers.addLayer(extra_marker);
-            cluster_arr.push(extra_marker);
-            getMarkerInfo(event.latlng, extra_marker);
-        }
+    if (double_click_active && !quiz && !iss_active){    
+        marker.setLatLng(event.latlng); 
+        double_click_active = false;  
+        loading();
+        getMarkerInfo(event.latlng); 
+        if (popup_open_small_screen && screenSize()){
+            scrollPopup();
+            setTimeout(()=>{
+                scrollPopup();
+            }, 3000);
+        }       
     }
 })
 
@@ -313,8 +302,12 @@ $(window).on('load', function () {
         $('#preloader').delay(1000).fadeOut('slow', function () {
         $(this).remove();
         });
-    }
-    getLocation();    
+    }    
+    let coordinates = {
+        lat: 34.55,
+        lng: 69.20
+    };
+    getMarkerInfo(coordinates, marker);     
     getCountryNames();
     setTimeout(() =>{        
         $('.popup-container').css('opacity', '1');
@@ -348,13 +341,6 @@ function closeSideMenu(){
 /* USER LOCATION */
 
 function getLocation() {
-    if ($('#country').val() === "none"){
-        let coordinates = {
-            lat: 34.55,
-            lng: 69.20
-        };
-        getMarkerInfo(coordinates, marker);
-    } else {
         if (iss_active){activateTimer()};
         loading();
         if (navigator.geolocation) {
@@ -363,7 +349,7 @@ function getLocation() {
         console.log("Geolocation is not supported by this browser.");
         user_location.style.display = "none";
         }
-    }    
+        
   }
   
 function showPosition(position) {
@@ -373,13 +359,13 @@ function showPosition(position) {
     }
     // marker.setLatLng([coordinates.lat, coordinates.lng]);
     // mymap.setView([coordinates.lat, coordinates.lng], 5);
-    getMarkerInfo(coordinates, marker);
+    getMarkerInfo(coordinates, "false");
   }
 
   
 /* MARKER generated with DOUBLECLICK */
 
-function getMarkerInfo(event, extra_marker) {
+function getMarkerInfo(event, select) {
     console.log("getMarkerInfo()");
     $.ajax(
         {
@@ -423,8 +409,10 @@ function getMarkerInfo(event, extra_marker) {
                         answer.style.background = "red";
                     }
                 }
-                getCountryPolygon();
-                getWeatherInfo(code_country, name, currency, currency_symbol, time_zone_name, time_zone, county, lat, lng, extra_marker);
+                if (select != "true"){                
+                    getCountryPolygon();
+                    getWeatherInfo(code_country, name, currency, currency_symbol, time_zone_name, time_zone, county, lat, lng);
+                }
             }        
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -546,6 +534,7 @@ function getWeatherInfo(code_country, name, currency, currency_symbol, time_zone
 function iSS() {
     points_of_interest_cluster.clearLayers();
     removeMarker(); removeLayer();
+    exitPopup();
 
     $.ajax(
         {
@@ -576,7 +565,7 @@ function getCountryNames() {
 
     $.ajax(
         {
-        url: "php/polygons.php",
+        url: "php/getCountryNames.php",
         type: 'POST',
         dataType: 'json',
         
@@ -584,31 +573,20 @@ function getCountryNames() {
             
             if (result.status.name == "ok") {
                 empty_arr = [];
-                const arr = result['data']['features'];
-                geojson = arr;
+                const arr = result['data'];
+                //geojson = arr;
                 arr.forEach(element => {
-                    const country_name_for_select = element['properties']['name'];
-                    if (country_name_for_select != 'New Caledonia' || country_name_for_select != 'Puerto Rico' || country_name_for_select != 'Somaliland' ){
-                        empty_arr.push(country_name_for_select);
-                    }                    
-                });
-                polygonCountryNameArr(empty_arr);
-                const ordered_arr = empty_arr.sort();                
-                createCountryArr(ordered_arr);
-                ordered_arr.forEach(country => {
+                    const country = element['name'];
+                    const value = element['code'];
+                    const arr_remove = ['New Caledonia', 'Puerto Rico', 'Somaliland', 'N. Cyprus'];
+                    if (!arr_remove.includes(country)){
+                        const tag = document.createElement("option");
+                        tag.value = value;
+                        const text = document.createTextNode(country);
+                        tag.appendChild(text);
+                        select_country.appendChild(tag);
 
-                    const tag = document.createElement("option");
-                    function getCode(x){
-                        arr.forEach(element => {
-                            if (element['properties']['name'] === x){
-                                tag.value = element['properties']['iso_a2'];
-                            }
-                        })
-                    }
-                    getCode(country);
-                    var text = document.createTextNode(country);
-                    tag.appendChild(text);
-                    select_country.appendChild(tag);
+                    }                    
                 });
             }
         
@@ -622,7 +600,7 @@ function getCountryNames() {
 
 /* GET COUNTRY CAPITAL */
 
-function getCountryCapitals(name = null) {   
+function getCountryCapitals(name = null, select) {   
     console.log("getCountryCapitals()");
     removeCapital();
     name ? name = name.replace('+', ' ').toLowerCase() : null;
@@ -644,6 +622,13 @@ function getCountryCapitals(name = null) {
                             let capital_code = country['properties']['iso2'];
                             let country_name = country['properties']['country'];
                             createPopupForCapitals(coordinates, capital_name, capital_code, country_name);
+                            if (select === "true"){
+                                let coord = {
+                                    lat: coordinates[0],
+                                    lng: coordinates[1]
+                                }
+                                getMarkerInfo(coord, select);
+                            }
                         }
                 });
 
@@ -763,73 +748,94 @@ function createCountryArr(arr){
 // GET COUNTRY POLYGON WHEN USING SELECT BAR ------------------------------ -------------------------------------------------------------------
 
 let layer = []; //layer is the single highlighted country
+$('#country').change(launchGetBorder);
 
-$('#country').change(getCountryPolygon);
+function launchGetBorder(){
+    let select = "true";
+    getCountryPolygon(select);    
+    if (popup_open_small_screen && screenSize()){
+        scrollPopup();
+        setTimeout(()=>{
+            scrollPopup();
+        }, 3000);
+    }   
+}
         
-    
-function getCountryPolygon() {        
-        loading();
-        activatePopup();
-        $country_value = $('#country').val();    
+function getCountryPolygon(select = null){
+    console.log("getCountryPolygon()");
+    loading();
+    activatePopup();
+    $code = $('#country').val();    
+
+    $.ajax(
+        {
+        url: "php/getCountryBorder.php",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            code: $code
+        },
         
-        geojson.forEach(element => {
-            if (element['properties']['iso_a2'] === $country_value){
-                myGeoJSON = element;
-                mymap.removeLayer(layer);
-                let country_name = element['properties']['name'];
-                let country_code = element['properties']['iso_a2'];                                                       
-                layer = L.geoJSON(myGeoJSON);                        
-                layer.addTo(mymap); 
-                getCountryInfo(country_name, country_code);                                        
-                mymap.fitBounds(layer.getBounds());
-                layer.setStyle({
-                    color: 'yellow',
-                    weight: 2,
-                    fillOpacity: 0.1,
-            
-                });
-                country_selected = element['properties']['name'];
-            }
-        })
-    };      
+        success: function(result) { 
+            let myGeoJSON = result['data']['0'];
+            mymap.removeLayer(layer);
+            let name = myGeoJSON['properties']['name'];                                                    
+            layer = L.geoJSON(myGeoJSON);                        
+            layer.addTo(mymap); 
+            getCountryInfo(name, $code);                                        
+            mymap.fitBounds(layer.getBounds());
+            layer.setStyle({
+                color: 'yellow',
+                weight: 2,
+                fillOpacity: 0.1,
+        
+            });
+            country_selected = myGeoJSON['properties']['name'];  
+            getCountryCapitals(name.toLowerCase(), select);  
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            // your error code
+            console.log('error getCountryPolygon');
+        }
+    });     
+}
                 
 // GET COUNTRY POLYGON FOR MARKER ------------------------------------------------------------------------------------------------------------------------------
 
-function getCountryPolygonForMarker(code, name, currency, symbol, time_zone_name, time_zone, county, description, weather_main, weather, temperature, humidity, wind, extra_marker) {    
-    if (!quiz){  
-        geojson.forEach(element => {
-            if (element['properties']['iso_a2'] === code){
-                myGeoJSON = element;
-                mymap.removeLayer(layer);                                                    
-                layer = L.geoJSON(myGeoJSON);                        
-                layer.addTo(mymap); 
-                createPopupForMarker(name, code, currency, symbol, time_zone_name, time_zone, county, description, weather_main, weather, temperature, humidity, wind, extra_marker);                                        
-                if (!cluster_active){ 
-                        layer.setStyle({
-                        color: 'yellow',
-                        weight: 1,
-                        fillOpacity: 0.05                            
-                    });
-                } else {
-                    layer.setStyle({
-                        color: 'yellow',
-                        weight: 0,
-                        fillOpacity: 0  
-                    });
-                }
-                country_selected = element['properties']['name'];                
-            }
-        })
-    } else {
-        showPlayerChoice(code);
-    }
- }
+// function getCountryPolygonForMarker(code, name, currency, symbol, time_zone_name, time_zone, county, description, weather_main, weather, temperature, humidity, wind, extra_marker) {    
+//     if (!quiz){  
+//         geojson.forEach(element => {
+//             if (element['properties']['iso_a2'] === code){
+//                 myGeoJSON = element;
+//                 mymap.removeLayer(layer);                                                    
+//                 layer = L.geoJSON(myGeoJSON);                        
+//                 layer.addTo(mymap); 
+//                 createPopupForMarker(name, code, currency, symbol, time_zone_name, time_zone, county, description, weather_main, weather, temperature, humidity, wind, extra_marker);                                        
+//                 if (!cluster_active){ 
+//                         layer.setStyle({
+//                         color: 'yellow',
+//                         weight: 1,
+//                         fillOpacity: 0.05                            
+//                     });
+//                 } else {
+//                     layer.setStyle({
+//                         color: 'yellow',
+//                         weight: 0,
+//                         fillOpacity: 0  
+//                     });
+//                 }
+//                 country_selected = element['properties']['name'];                
+//             }
+//         })
+//     } else {
+//         showPlayerChoice(code);
+//     }
+//  }
 
 // GET COUNTRY INFO FOR POPUS-------------------------------------------------------------------
 
-function getCountryInfo(name, code, symbol) {   
-    console.log("getCountryInfo()"); 
-    getCountryCapitals(name.toLowerCase());
+function getCountryInfo(name, code) {   
+    console.log("getCountryInfo()");
     $.ajax(
         {
         url: "php/getCityInfo.php",
@@ -848,7 +854,7 @@ function getCountryInfo(name, code, symbol) {
                 let currency = result['data'][0]['currencyCode'];
                 let area = result['data'][0]['areaInSqKm'];
                 let continent = result['data'][0]['continentName'];      
-                createPopup(name, code, capital, population, currency, area, continent, symbol); 
+                createPopup(name, code, capital, population, currency, area, continent); 
                 
             };
             
@@ -1022,7 +1028,7 @@ const exchangeRate = (selected_currency) => {
                 inverted_exr = exrFormat(inverted_exr);
                 $('#exchange-rate').html(exr.int);
                 $('#decimals').html(exr.decimals);
-                $('#currency-title').html("/" + selected_currency);     
+                $('#currency-title').html("/ " + selected_currency);     
                 $('#base-last-calculation').html(`${inverted_exr.int}`);
                 $('#last-decimals').html(inverted_exr.decimals);
                 $('#last-base').html(base_currency);
@@ -1132,7 +1138,7 @@ function activateGetCurrencies(){
                         }
                     }
                 })
-                         
+                $('#base-currency-select').val("GBP");                  
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log("error getCurrencies");
@@ -1594,19 +1600,16 @@ function displayCovid() {
 
 function closePopup(display){
     if (display === "covid"){
-        console.log("covid open");
         weather_open = false;
         $('#weather').css('display', 'none');
         exr_open = false;
         $('#exr').css('display', 'none');
     } else if (display === "exr"){
-        console.log("exr open");
         weather_open = false;
         $('#weather').css('display', 'none');
         covid_open = false;
         $('#covid').css('display', 'none');
     } else if (display === "weather"){
-        console.log("weather open");
         covid_open = false;
         $('#covid').css('display', 'none');
         exr_open = false;
@@ -1623,17 +1626,8 @@ function closePopup(display){
 
 function dissolve(){
     if (!popup_open_small_screen && screenSize()){       
-        popup_open_small_screen = true;
-        $('.popup-container').css('transform', 'translateY(20%)');
+        scrollPopup();
     }
-    $('.data').css('visibility', 'none');
-    $('.data').css('opacity', '0');
-    setTimeout(() => {
-        $('.data').css('visibility', 'visible');
-        setTimeout(()=>{
-            $('.data').css('opacity', '1');
-        }, 50)
-    }, 50)
 }
 
 function screenSize(){
@@ -1721,13 +1715,8 @@ function scrollPopup(){
 
 //Exit Popup
 
-$('#exit-popup').on('click', () => {
-    $('.popup-container').css('opacity', '0');
-    popup_active = false;
-    setTimeout(()=> {
-        $('.popup-container').css('display', 'none');
-    }, 500)
-})
+$('#exit-popup').on('click', exitPopup);
+
 
 function activatePopup(){
     if (!popup_active){
@@ -1739,3 +1728,25 @@ function activatePopup(){
         }, 1500)
     }
 }
+
+function exitPopup(){
+    if (popup_active){        
+        $('.popup-container').css('opacity', '0');
+        popup_active = false;
+        setTimeout(()=> {
+            $('.popup-container').css('display', 'none');
+        }, 500)
+    }
+}
+
+// First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+let vh = window.innerHeight * 0.01;
+// Then we set the value in the --vh custom property to the root of the document
+document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+// We listen to the resize event
+window.addEventListener('resize', () => {
+    // We execute the same script as before
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  });
