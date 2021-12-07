@@ -7,9 +7,15 @@
     font-family: Helvetica, sans-serif;
 }
 
+html {
+    height: -webkit-fill-available;
+}
+
 body {
     height: 100vh;
-    height: calc(var(--vh, 1vh) * 100);
+    min-height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);    
+    min-height: -webkit-fill-available;
     width: 100%;
     background: rgba(162, 192, 255, 0.445);
     position: relative;
@@ -169,7 +175,7 @@ li select {
 select {
     -webkit-appearance: none;
     -moz-appearance: none;
-    text-indent: 1px;
+    text-indent: 3px;
     text-overflow: '';
 }
 
@@ -808,6 +814,7 @@ summary {
 #speed {
     font-style: italic;
     font-weight: 600;
+    text-transform: lowercase;
 }
 
 .weather-box {
