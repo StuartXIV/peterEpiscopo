@@ -579,8 +579,8 @@ function getWeatherInfo(latitude, longitude) {
                 wind = (wind * 2.23694).toFixed(0);
                 let wind_kmph = (wind * 1.609344).toFixed(0);
 
-                $('#weather-description').html(weather);
-                $('#weather-icon').attr('src', `images/${weather_main}.svg`);
+                $('#weather-description').html(weather_info);
+                $('#weather-icon').attr('src', `images/${weather}.svg`);
                 $('#temperature').html(`${temperatureConverter(temp_min)}&#8451; / ${temperatureConverter(temp_max)}&#8451;`);
                 $('#humidity').html(humidity + "%");
                 $('#wind-speed').html(wind_kmph);
@@ -1234,9 +1234,6 @@ function exitPopup(){
         console.log(popup_active);
         setTimeout(()=> {
             $('.popup-container').css('display', 'none');
-            // if(!screenSize()){
-            //     $('.popup-container').css('transform', 'translate(-235%, -50%)');
-            // }
         }, 500)
     }
 }
