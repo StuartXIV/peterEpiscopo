@@ -565,7 +565,7 @@ function getWeatherInfo(latitude, longitude) {
             if (result.status.name == "ok") {
                 const weather_main = result['data']['current']['weather']['0']['main'];
                 const weather_info = result['data']['current']['weather']['0']['description'];
-                const weather = weather_info[0].toUpperCase() + weather_info.substring(1);
+                const weather = weather_main.toLowerCase();
                 const temp_min = result['data']['daily']['0']['temp']['min'];
                 const temp_max = result['data']['daily']['0']['temp']['max'];
                 const temp_min_tomorrow = result['data']['daily']['1']['temp']['min'];
@@ -591,8 +591,8 @@ function getWeatherInfo(latitude, longitude) {
                 $('#tomorrow-max').html(temperatureConverter(temp_max_tomorrow) + "&deg");
                 $('#dayafter-min').html(temperatureConverter(temp_min_dayafter) + "&deg");
                 $('#dayafter-max').html(temperatureConverter(temp_max_dayafter) + "&deg");
-                $('#weather-icon-tomorrow').attr('src', `images/${weather_tomorrow}.svg`);
-                $('#weather-icon-dayafter').attr('src', `images/${weather_dayafter}.svg`);              
+                $('#weather-icon-tomorrow').attr('src', `images/${weather_tomorrow.toLowerCase()}.svg`);
+                $('#weather-icon-dayafter').attr('src', `images/${weather_dayafter.toLowerCase()}.svg`);              
             }
         
         },
