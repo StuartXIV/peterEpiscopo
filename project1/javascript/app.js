@@ -331,7 +331,7 @@ function showPosition(position) {
 /* MARKER generated with DOUBLECLICK */
 
 function getMarkerInfo(event, select) {
-    console.log("getMarkerInfo()");
+    //console.log("getMarkerInfo()");
     $.ajax(
         {
         url: "php/getMarkerInfo.php",
@@ -386,7 +386,7 @@ function getMarkerInfo(event, select) {
 };
 
 function getCovidInfo(code_country, population) {
-    console.log("getCovidInfo()");
+    //console.log("getCovidInfo()");
     $.ajax(
         {
         url: "php/getCovidData.php",
@@ -502,7 +502,7 @@ function getCountryNames() {
 /* GET COUNTRY CAPITAL */
 
 function getCountryCapitals(name = null, select) {   
-    console.log("getCountryCapitals()");
+    //console.log("getCountryCapitals()");
     removeCapital();
     name ? name = name.replace('+', ' ').toLowerCase() : null;
 
@@ -546,7 +546,7 @@ function getCountryCapitals(name = null, select) {
 /* REQUEST WEATHER INFO */
 
 function getWeatherInfo(latitude, longitude) {  
-    console.log("getWeatherInfo()");
+    //console.log("getWeatherInfo()");
     $.ajax(
         {
         url: "php/getWeatherInfo.php",
@@ -694,17 +694,6 @@ const getPlacePicture = (lat, lng, place, photo, address) => {
 };
 
 
-// CREATE COUNTRYS ARRAY ------------------------------------------------------------------------------
-
-function polygonCountryNameArr(arr){
-    return arr;
-}
-
-let country_array;
-function createCountryArr(arr){
-    country_array = arr;
-}
-
 // GET COUNTRY POLYGON WHEN USING SELECT BAR ------------------------------ -------------------------------------------------------------------
 
 let layer = []; //layer is the single highlighted country
@@ -722,7 +711,7 @@ function launchGetBorder(){
 }
         
 function getCountryPolygon(select = null){
-    console.log("getCountryPolygon()");
+   // console.log("getCountryPolygon()");
     loading();
     activatePopup();
     $code = $('#country').val();    
@@ -764,7 +753,7 @@ function getCountryPolygon(select = null){
 // GET COUNTRY INFO FOR POPUS-------------------------------------------------------------------
 
 function getCountryInfo(name, code) {   
-    console.log("getCountryInfo()");
+    //console.log("getCountryInfo()");
     $.ajax(
         {
         url: "php/getCountryData.php",
@@ -820,7 +809,7 @@ function createPopup(name, code, capital, population, currency, area, continent,
 
     let code_lowercase = code.toLowerCase();    
 
-    $('#flag').attr('src', `images/flags/${code_lowercase}.png`);
+    $('#flag-main').attr('src', `images/flags/${code_lowercase}.png`);
     $('#country-name-popup').html(name);
     $('#country-code').html(`(${code})`);
     $('#capital').html(capital);
@@ -831,7 +820,7 @@ function createPopup(name, code, capital, population, currency, area, continent,
     $('#continent').html(continent);
     $('#search-wiki').attr("href", `https://en.wikipedia.org/wiki/${name}`);
     $('#name-wiki').html(`${name} Wikipedia`);
-    $('#little-flag').attr('src', `images/flags/${code_lowercase}.png`);
+    $('#little-flag-main').attr('src', `images/flags/${code_lowercase}.png`);
 
     points_of_interest_cluster.clearLayers(); 
     getPointsOfInterest(name);
@@ -863,18 +852,15 @@ const createPopupForCapitals = (coordinates, name, code, country) => {
     
     let popup = L.popup().setContent                            
                             (`
-                            <div class="popup">
-                            <div id="img-container"><img id=\"flag\" src=\"images/flags/${code.toLowerCase()}.png\" alt="flag"></div>
+                            <div class="popup" >
+                            <div class="img-container" id="popup-capital"><img id=\"flag\" src=\"images/flags/${code.toLowerCase()}.png\" alt="flag"></div>
                             <p id="capital-p"><span id="capital-name-popup"> ${name} </span></p>
                             <p><span>Country:</span>  ${country}  <span>(${code})</span></p>
                             <p><a id="search-wiki" href=\"https://en.wikipedia.org/wiki/${name}\" target=\"_blank\">${name} Wikipedia <img id="little-flag" src=\"images/flags/${code.toLowerCase()}.png\" alt=""><span id="search-popup-box"><img id="search-popup" src="images/icons/search-solid.svg"></i></span></a></p>
                             </div>
                             `);
-    capital_marker.bindPopup(popup);
-    capital_marker.addTo(mymap);
-    capital_marker.on('click', () => {
-        select_country.value = code;
-    })    
+    capital_marker.addTo(mymap);    
+    capital_marker.bindPopup(popup).openPopup();
 };
 
 
@@ -1230,7 +1216,6 @@ function exitPopup(){
     if (popup_active){        
         $('.popup-container').css('opacity', '0');
         popup_active = false;
-        console.log(popup_active);
         setTimeout(()=> {
             $('.popup-container').css('display', 'none');
         }, 500)
