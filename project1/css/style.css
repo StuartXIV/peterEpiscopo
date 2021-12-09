@@ -1052,6 +1052,7 @@ summary {
     position: absolute;
     height: 100%;
     width: 10px;
+    max-width: 10px;
     top: 0;
     left: 7px;
     z-index: 10;
@@ -1062,9 +1063,11 @@ summary {
     pointer-events: none;
 }
 
-.sort-down-currency {
+#sort-down-currency {
     width: 100%;
     height: auto;
+    max-width: 10px;
+    max-height: 16px;
 }
 
 #service-not-available {

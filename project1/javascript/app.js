@@ -270,15 +270,8 @@ $(window).on('load', function () {
         $(this).remove();
         });
     }    
-    let coordinates = {
-        lat: 34.55,
-        lng: 69.20
-    };
-    getMarkerInfo(coordinates, marker);     
+    getLocation();   
     getCountryNames();
-    setTimeout(() =>{        
-        $('.popup-container').css('opacity', '1');
-    }, 2000)
     })
 
 
@@ -307,16 +300,10 @@ function closeSideMenu(){
 
 /* USER LOCATION */
 
-function getLocation() {
+function getLocation(load = null) {    
         if (iss_active){activateTimer()};
         loading();
-        if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
-        } else { 
-        console.log("Geolocation is not supported by this browser.");
-        user_location.style.display = "none";
-        }
-        
+        navigator.geolocation.getCurrentPosition(showPosition, noGeoLocation);        
   }
   
 function showPosition(position) {
@@ -324,9 +311,18 @@ function showPosition(position) {
         lat: position.coords.latitude,
         lng: position.coords.longitude
     }
-    getMarkerInfo(coordinates, "false");
+    getMarkerInfo(coordinates, "false");    
+    setTimeout(() =>{        
+        $('.popup-container').css('opacity', '1');
+    }, 2000)
   }
 
+  function noGeoLocation (){
+    getCountryPolygon();      
+    setTimeout(() =>{        
+        $('.popup-container').css('opacity', '1');
+    }, 2000)
+  }
   
 /* MARKER generated with DOUBLECLICK */
 
@@ -715,6 +711,7 @@ function getCountryPolygon(select = null){
     loading();
     activatePopup();
     $code = $('#country').val();    
+    if (!$code){$code = "AF"};
 
     $.ajax(
         {
