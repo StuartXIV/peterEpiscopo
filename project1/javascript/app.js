@@ -324,8 +324,6 @@ function showPosition(position) {
         lat: position.coords.latitude,
         lng: position.coords.longitude
     }
-    // marker.setLatLng([coordinates.lat, coordinates.lng]);
-    // mymap.setView([coordinates.lat, coordinates.lng], 5);
     getMarkerInfo(coordinates, "false");
   }
 
@@ -855,10 +853,11 @@ function temperatureConverter(valNum) {
     return Math.round(temp);
 }
 
-getCountryCapitals.php
 
 //POPUP FOR CAPITALS
 const createPopupForCapitals = (coordinates, name, code, country) => {
+
+    
 
     capital_marker = L.marker(coordinates, {icon: cityIcon});  
     
@@ -875,10 +874,10 @@ const createPopupForCapitals = (coordinates, name, code, country) => {
     capital_marker.addTo(mymap);
     capital_marker.on('click', () => {
         select_country.value = code;
-    })
+    })    
 };
 
-//EXCHANGE RATE SELECT FUNCTION
+
 
 
 /* REQUEST EXCHANGE RATE */

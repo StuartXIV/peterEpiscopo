@@ -1157,6 +1157,22 @@ summary {
     .popup-container {
         transform: translate(-145%, -50%);
     }
+
+    .leaflet-popup-content-wrapper {
+        max-width: 280px;
+    }
+
+    #img-container-place {
+        height: 100px;
+    }
+
+    #place-name-popup {
+        font-size: 1rem;
+    }
+
+    .address-place {
+        font-size: .8em;
+    }
 }
 @media only screen and (max-width: 992px) {
     
@@ -1300,6 +1316,8 @@ summary {
     #stop-follow, #exit-quiz {
         width: 100%;
     }
+
+  
 }
 @media only screen and (max-width: 768px) {
 
@@ -1314,21 +1332,7 @@ summary {
         pointer-events: none;
     }
 
-    .leaflet-popup-content-wrapper {
-        max-width: 280px;
-    }
-
-    #img-container-place {
-        height: 100px;
-    }
-
-    #place-name-popup {
-        font-size: 1rem;
-    }
-
-    .address-place {
-        font-size: .8em;
-    }
+    
 
     .popup-container {
         position: absolute;
