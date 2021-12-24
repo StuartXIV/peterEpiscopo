@@ -1,12 +1,14 @@
 <?php
 
-$mysqli = new mysqli('localhost', 'root', 'Gilardino11!', 'crud') or die(mysqli_error($mysqli));
+include("config.php");
+
+    $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname) or die(mysqli_error($conn));
 
 if (isset($_POST['save'])){
     $name = $_POST['name'];
     $department = $_POST['department'];
     $phone = $_POST['phone'];
 
-    $mysqli->query("INSERT INTO data (name, department, phone) VALUES('$name', '$department', '$phone')") or die($mysqli->error());
-    $mysqli->query("SELECT * FROM data ORDER BY name") or die(mysqli->error);
+    $conn->query("INSERT INTO data (name, department, phone) VALUES('$name', '$department', '$phone')") or die($conn->error());
+    $conn->query("SELECT * FROM data ORDER BY name") or die($conn->error);
 }

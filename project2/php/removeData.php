@@ -4,8 +4,10 @@
 	error_reporting(E_ALL);
 
 	$executionStartTime = microtime(true);
+	
+	include("config.php");
 
-    $conn = new mysqli('localhost', 'root', 'Gilardino11!', 'crud') or die(mysqli_error($mysqli));
+    $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname) or die(mysqli_error($conn));
 
     
 

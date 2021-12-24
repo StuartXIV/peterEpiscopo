@@ -1,16 +1,20 @@
 
 <?php
 
-	// connection details for MySQL database
+	//$conn = new mysqli('localhost', 'root', 'Gilardino11!', 'u893668777_crud') or die(mysqli_error($conn));
 
-	// $cd_host = "127.0.0.1";
-	// $cd_port = 3306;
-	// $cd_socket = "";
+	//connection details for MySQL database
 
-	// // database name, username and password
+	$cd_host = "localhost";
+	$cd_port = 3306;
+	$cd_socket = "";
 
-	// $cd_dbname = "companydirectory";
-	// $cd_user = "companydirectory";
-	// $cd_password = "companydirectory";
+	// database name, username and password
+
+	$cd_dbname = "u893668777_crud";
+	$cd_user = "u893668777_peter";
+	$cd_password = "Gilardino11!";
 
 ?>
+
+

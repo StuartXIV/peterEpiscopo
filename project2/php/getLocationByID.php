@@ -5,10 +5,12 @@
 
 	$executionStartTime = microtime(true);
 
-    $mysqli = new mysqli('localhost', 'root', 'Gilardino11!', 'crud') or die(mysqli_error($mysqli));
+	include("config.php");
+
+    $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname) or die(mysqli_error($conn));
 
 
-    $result = $mysqli->query("SELECT * FROM location") or die(mysqli->error);
+    $result = $conn->query("SELECT * FROM location") or die($conn->error);
 
     $data = [];
 

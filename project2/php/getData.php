@@ -5,10 +5,12 @@
 
 	$executionStartTime = microtime(true);
 
-    $mysqli = new mysqli('localhost', 'u893668777_peter', 'Gilardino11!', 'u893668777_crud') or die(mysqli_error($mysqli));
+    include("config.php");
 
+    //$mysqli = new mysqli('localhost', 'u893668777_peter', 'Gilardino11!', 'u893668777_crud') or die(mysqli_error($mysqli));
+    $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname) or die(mysqli_error($conn));
 
-    $result = $mysqli->query("SELECT * FROM personnel ORDER BY firstName") or die(mysqli->error);
+    $result = $conn->query("SELECT * FROM personnel ORDER BY firstName") or die($conn->error);
 
     $data = [];
 
