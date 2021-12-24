@@ -221,7 +221,6 @@ function addTableRow(employee, value = null, joined){
 
 // Retrieve Department by ID
 function getDepartmentByID(id, cell = null){
-    console.log("getDepartmentByID " + id);
     $.ajax(
         {
         url: "php/getDepartmentByID.php",
@@ -499,7 +498,6 @@ $('#search-button').click(() => {
     let name = $('#name-search').val();
     let last_name = $('#lastname-search').val();
     let department = $('#department-search').val();
-    console.log(`${name} ${last_name} ${department}`)
     let data = [];    
     let value = `${name} ${last_name} ${getLocationForNoResult(department)}`;    
     $('#tbody').html('');
@@ -545,7 +543,7 @@ $('#search-button').click(() => {
 
 function getLocationForNoResult(id){
     let name;
-    console.log(`getLocationForNoResult ${id}`)
+
     select_options.forEach(dept => {
         if (dept.id === id){
             console.log(dept.name);
@@ -582,89 +580,8 @@ function searchTable(value, data){
     return filterData;
 }
 
-// function createTable(data, value){
-//     $('#tbody').html('');
-//     $('#entries').html(data.length + " Entries");
-//     if (data.length > 0){
-//         data.forEach(employee => {
-//             let id = employee.id;
-//             let name = employee.name;
-//             let department = employee.department;
-//             let phone = employee.phone;
-        
-//         const row = document.createElement('tr');   
-//         row.setAttribute("id", `tr${id}`);             
-//         const text1 = document.createTextNode(name);
-//         const text2 = document.createTextNode(department);    
-//         const text5 = document.createTextNode(phone);
-//         const text3 = document.createTextNode("EDIT");                
-//         const text4 = document.createTextNode("DELETE");
-//         const cell1 = document.createElement('td');
-//         cell1.setAttribute('id', `name${id}`);
-//         const cell2 = document.createElement('td');
-//         cell2.setAttribute('id', `department${id}`);
-//         const cell3 = document.createElement('td');  
-//         const cell4 = document.createElement('td');
-//         const edit_btn = document.createElement('button');
-//         const delete_btn = document.createElement('button');
-//         const link_edit = document.createElement('a');
-//         const link_delete = document.createElement('a');
-//         const link_phone = document.createElement('a');
-//         link_phone.setAttribute('id', `phone${id}`);  
 
-//         link_edit.classList.add('edit');
-//         link_edit.setAttribute('href', '#editEmployeeModal');
-//         link_edit.setAttribute('data-toggle', 'modal');
 
-//         link_delete.classList.add('delete');
-//         link_delete.setAttribute('href', '#deleteEmployeeModal');
-//         link_delete.setAttribute('data-toggle', 'modal');
-
-//         link_phone.setAttribute('href', `tel:${phone}`);
-
-//         edit_btn.classList.add('btn');
-//         edit_btn.classList.add('btn-info');
-//         edit_btn.appendChild(text3);    
-//         edit_btn.setAttribute('onclick', `getEditData(${id})`);
-        
-//         delete_btn.classList.add('btn');
-//         delete_btn.classList.add('btn-danger');
-//         delete_btn.appendChild(text4);
-//         delete_btn.setAttribute('onclick', `selectedEmployee(${id})`);
-
-//         cell1.appendChild(text1);
-//         cell2.appendChild(text2);
-//         cell3.appendChild(link_phone);
-//         link_phone.appendChild(text5);
-
-//         cell1.classList.add('col-xs-3');
-//         cell3.classList.add('col-xs-3');
-//         cell3.classList.add('col-xs-3');
-//         cell4.classList.add('col-xs-3');
-//         cell4.classList.add('buttons-container');
-
-//         row.appendChild(cell1);
-//         row.appendChild(cell2);
-//         row.appendChild(cell3);
-//         row.appendChild(cell4);
-//         cell4.appendChild(link_edit);
-//         cell4.appendChild(link_delete);    
-//         link_delete.appendChild(delete_btn);
-//         link_edit.appendChild(edit_btn);
-//         $('tbody').append(row);  
-//         }) 
-//     } else {
-//         const row = document.createElement('tr');   
-//         row.setAttribute("id", `no-results`);            
-        
-//         const cell_no_results = document.createElement('td');
-//         const text_no_results = document.createTextNode(`No results found for '${value}'`);
-//         cell_no_results.appendChild(text_no_results);
-//         row.appendChild(cell_no_results);        
-//         $('tbody').append(row);  
-
-//     }
-// }
 
 function updateSelect(select, option = null){
     
