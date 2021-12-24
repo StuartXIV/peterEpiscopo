@@ -5,7 +5,7 @@
 
 	$executionStartTime = microtime(true);
 
-    $mysqli = new mysqli('localhost', 'root', 'Gilardino11!', 'crud') or die(mysqli_error($mysqli));
+    $mysqli = new mysqli('localhost', 'u893668777_peter', 'Gilardino11!', 'u893668777_crud') or die(mysqli_error($mysqli));
 
 
     $result = $mysqli->query("SELECT * FROM personnel ORDER BY firstName") or die(mysqli->error);
