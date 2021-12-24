@@ -19,6 +19,61 @@ let locations = [];
 let employees = [];
 let object_array = [];
 let entries = 0;
+let dropdown_active = false;
+
+
+//DROPDOWN
+
+$('#tr66').click(()=> {
+    if (!dropdown_active){
+
+        dropdown_active = true;
+
+        let id = 3;
+        console.log("bing!");
+        const row = document.createElement('tr');
+        row.setAttribute('id', 'dropdown');
+        // const text2 = document.createTextNode(department);    
+        const dept_txt = document.createTextNode("Department: Accounting");
+        const email_txt = document.createTextNode("Email: gmail@gmail.it");
+        const location_txt = document.createTextNode("Location: Rome");
+        const cell1 = document.createElement('p');
+        const cell3 = document.createElement('p');
+        const cell2 = document.createElement('p');
+        cell2.setAttribute('id', `location-dropdown${id}`);
+        const link_email = document.createElement('a');
+        link_email.setAttribute('id', `email-dropwdown${id}`);  
+    
+        link_email.setAttribute('href', `mailto:}`);
+        link_email.setAttribute('target', `_blank`);
+    
+        cell3.appendChild(link_email);
+        link_email.appendChild(email_txt);
+    
+        cell1.classList.add('col-xs-6');
+        cell2.classList.add('col-xs-6');
+    
+        cell1.appendChild(dept_txt);
+        cell2.appendChild(location_txt);
+    
+        row.appendChild(cell1);
+        row.appendChild(cell2);
+        row.appendChild(cell3);
+    
+        $('#tr66').after(row);
+        setTimeout(()=>{
+            $('#dropdown').css('opacity', '1');            
+            $('#dropdown').css('transform', 'translateY(0)');
+        }, 100)
+    } else {        
+        $('#dropdown').css('opacity', '0');            
+        $('#dropdown').css('transform', 'translateY(-20px)');
+        setTimeout(()=>{            
+            $('#dropdown').remove();
+        }, 100)
+        dropdown_active = false;
+    }
+})
 
 // Retrieve All Departments
 function getAllDepartments(){
@@ -164,7 +219,10 @@ function addTableRow(employee, value = null, joined){
     cell1.setAttribute('id', `name${id}`);
     const cell2 = document.createElement('td');
     cell2.setAttribute('id', `department${id}`);
-    const cell3 = document.createElement('td');  
+    cell2.classList.add('dept');    
+    const cell3 = document.createElement('td');
+    
+    cell3.classList.add('email');
     const cell4 = document.createElement('td');
     const edit_btn = document.createElement('button');
     const delete_btn = document.createElement('button');

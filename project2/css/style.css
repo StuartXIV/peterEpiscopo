@@ -114,6 +114,7 @@ thead tr th:last-child{
 
   .table-fixed tbody tr {
       height: 5rem;
+      pointer-events: none;
   }
 
 .table-fixed tbody {
@@ -172,6 +173,22 @@ thead tr th:last-child{
     cursor: pointer;
 }
 
+/* DROPDOWN */
+
+#dropdown {
+    background-color: white;
+    border-radius: 0 0 5px 5px;
+    line-height: normal;
+}
+
+#dropdown td {
+    border-top: none;
+}
+
+#dropdown p {
+    margin-bottom: 0;
+}
+
 @media only screen and (max-width: 1300px) {
     body {
         padding: 1%;
@@ -182,6 +199,68 @@ thead tr th:last-child{
     .container {
         margin: 0 1%;
     }
+}
+
+@media only screen and (max-width: 600px) {
+
+    html {
+        background-color: #435d7d;
+    }
+
+    body {
+        padding: 0;
+    }
+
+    .table-title {
+        border-radius: 0%;
+    }
+
+    .container {
+        margin: 0;
+    }
+
+    .table-fixed tbody td {
+        width: 50%;
+    }
+
+    thead tr th {
+        width: 50%;
+    }
+
+    thead {
+        padding: 0;
+    }
+
+    #dept-head, #email-head {
+        display: none;
+    }
+
+    .dept, .email {
+        display: none;
+    }
+
+    .table-fixed tbody tr {
+        height: 5rem;
+        pointer-events:initial;
+        cursor: pointer;
+    }
+
+    #dropdown {
+        padding: 0 1em;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: all .3s ease;
+    }
+
+    .table-fixed tbody {
+        padding: 0;
+    }
+
+    .clearfix {
+        border-radius: 0%;
+    }
+
+
 }
 
 /* PRELOADER */
