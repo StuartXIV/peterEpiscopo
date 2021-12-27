@@ -18,8 +18,33 @@ body {
     margin-top: 10px;
 }
 
-#add-employee-btn, #search-employee-btn {
+#dropdown-header, #search-employee-btn {
     width: 200px;
+}
+
+#dropdown-btn {
+    width: 100%;
+}
+
+.dropdown-menu {
+    background-color: rgb(54, 142, 54);
+    color: white;
+    border: 2px solid #358260;
+}
+
+.dropdown-menu a {
+    color: white;
+}
+
+#add-employee-list {
+    border-bottom: 2px solid white;
+    width: 90%;
+    margin: 0 auto;
+}
+
+#add-dept-list {
+    width: 90%;
+    margin: 0 auto;
 }
 
 .alert {
@@ -31,7 +56,7 @@ body {
     pointer-events: none;
 }
 
-#alert-error, #alert-success, #alert-success-edit {
+#alert-error, #alert-success, #alert-success-edit, #dept-error, #dept-success {
     opacity: 0;
     transition: opacity .5s ease;
 }
@@ -180,9 +205,11 @@ thead tr th:last-child{
 /* DROPDOWN */
 
 #dropdown {
-    background-color: white;
+    background-color: #435D7D;
+    color: white;
     border-radius: 0 0 5px 5px;
     line-height: normal;
+    font-size: 0.9em;
 }
 
 #dropdown td {
@@ -191,6 +218,10 @@ thead tr th:last-child{
 
 #dropdown p {
     margin-bottom: 0;
+}
+
+#dropdown a {
+    color: lightblue;
 }
 
 @media only screen and (max-width: 1300px) {
@@ -217,6 +248,10 @@ thead tr th:last-child{
 
     .table-title {
         border-radius: 0%;
+    }
+
+    #dropdown-header {
+        display: none;
     }
 
     .container {
@@ -254,6 +289,7 @@ thead tr th:last-child{
 
     .table-fixed tbody td {
         width: 50%;
+        border-top: none;
     }
 
     thead tr th {
@@ -280,13 +316,18 @@ thead tr th:last-child{
         height: 5rem;
         pointer-events:initial;
         cursor: pointer;
+        border-bottom: 2px solid rgba(153, 153, 153, 0.238);
+        border-radius: 0px 0px 10px 10px;
     }
 
     #dropdown {
         padding: 0 1em;
         opacity: 0;
         transform: translateY(-20px);
-        transition: all .3s ease;
+        transition: all .3s ease;        
+        border-bottom: 2px solid rgba(153, 153, 153, 0.238);
+        border-radius: 0px 0px 10px 10px;
+        line-height: 1.5rem;
     }
 
     .table-fixed tbody {

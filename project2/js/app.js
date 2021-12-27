@@ -24,56 +24,78 @@ let dropdown_active = false;
 
 //DROPDOWN
 
-$('#tr66').click(()=> {
+function dropdown(id){
+    // if (dropdown_active){
+    //     $('#dropdown').remove();
+    // }
+
     if (!dropdown_active){
 
         dropdown_active = true;
 
-        let id = 3;
-        console.log("bing!");
-        const row = document.createElement('tr');
-        row.setAttribute('id', 'dropdown');
-        // const text2 = document.createTextNode(department);    
-        const dept_txt = document.createTextNode("Department: Accounting");
-        const email_txt = document.createTextNode("Email: gmail@gmail.it");
-        const location_txt = document.createTextNode("Location: Rome");
-        const cell1 = document.createElement('p');
-        const cell3 = document.createElement('p');
-        const cell2 = document.createElement('p');
-        cell2.setAttribute('id', `location-dropdown${id}`);
-        const link_email = document.createElement('a');
-        link_email.setAttribute('id', `email-dropwdown${id}`);  
-    
-        link_email.setAttribute('href', `mailto:}`);
-        link_email.setAttribute('target', `_blank`);
-    
-        cell3.appendChild(link_email);
-        link_email.appendChild(email_txt);
-    
-        cell1.classList.add('col-xs-6');
-        cell2.classList.add('col-xs-6');
-    
-        cell1.appendChild(dept_txt);
-        cell2.appendChild(location_txt);
-    
-        row.appendChild(cell1);
-        row.appendChild(cell2);
-        row.appendChild(cell3);
-    
-        $('#tr66').after(row);
-        setTimeout(()=>{
-            $('#dropdown').css('opacity', '1');            
-            $('#dropdown').css('transform', 'translateY(0)');
-        }, 100)
-    } else {        
-        $('#dropdown').css('opacity', '0');            
-        $('#dropdown').css('transform', 'translateY(-20px)');
-        setTimeout(()=>{            
-            $('#dropdown').remove();
-        }, 100)
-        dropdown_active = false;
-    }
-})
+        object_array.forEach(employee => {
+            if (employee.id == id){
+                console.log("bing!");
+                const row = document.createElement('tr');
+                row.setAttribute('id', 'dropdown');
+                // const text2 = document.createTextNode(department); 
+                let dept_txt;  
+                let location_txt; 
+                select_options.forEach(dept => {
+                    if (dept.id == employee.department){                        
+                        dept_txt = document.createTextNode(`Department: ${dept.name}`);
+                        locations.forEach(loc => {
+                            if (loc.id == dept.locationID){
+                                location_txt = document.createTextNode(`Location: ${loc.name}`);
+                            }
+                        })
+                    }
+                })
+                const email_txt = document.createTextNode(`Email: ${employee.email}`);
+                const cell1 = document.createElement('p');
+                const cell3 = document.createElement('p');
+                const cell2 = document.createElement('p');
+                cell2.setAttribute('id', `location-dropdown${id}`);
+                const link_email = document.createElement('a');
+                link_email.setAttribute('id', `email-dropwdown${id}`);  
+            
+                link_email.setAttribute('href', `mailto:}`);
+                link_email.setAttribute('target', `_blank`);
+            
+                cell3.appendChild(link_email);
+                link_email.appendChild(email_txt);
+            
+                cell1.classList.add('col-xs-6');
+                cell2.classList.add('col-xs-6');
+            
+                cell1.appendChild(dept_txt);
+                cell2.appendChild(location_txt);
+            
+                row.appendChild(cell1);
+                row.appendChild(cell2);
+                row.appendChild(cell3);
+            
+                $(`#tr${id}`).after(row);
+                $(`#tr${id}`).css('border-bottom', '0px solid white');
+                setTimeout(()=>{
+                    $('#dropdown').css('opacity', '1');            
+                    $('#dropdown').css('transform', 'translateY(0)');
+                }, 100)
+            }
+    })
+}    
+
+else {        
+    $('#dropdown').css('opacity', '0');            
+    $('#dropdown').css('transform', 'translateY(-20px)');
+    setTimeout(()=>{            
+        $('#dropdown').remove();        
+        $(`#tr${id}`).css('border-bottom', '2px solid rgba(153, 153, 153, 0.238)');
+    }, 100)
+    dropdown_active = false;
+} 
+}
+
 
 // Retrieve All Departments
 function getAllDepartments(){
@@ -209,7 +231,8 @@ function addTableRow(employee, value = null, joined){
     $('#entries').html(entries + " Entries");
     if (joined){employees.push(joined)};
     const row = document.createElement('tr');   
-    row.setAttribute("id", `tr${id}`);             
+    row.setAttribute("id", `tr${id}`);
+    row.setAttribute("onclick", `dropdown(${id})`)             
     const text1 = document.createTextNode(capitalize(employee.firstName) + " " + capitalize(employee.lastName));
     // const text2 = document.createTextNode(department);    
     const text5 = document.createTextNode(employee.email);
@@ -483,6 +506,52 @@ function removeData(id){
 }
 
 //---------------------------------------------------------------------
+
+
+/* ADD DEPARTMENT */
+
+$('#add-dept-form').submit(checkDeptExists);
+
+function checkDeptExists(){
+    console.log('checkDeptExists');
+    let name = $('#dept-name').val();
+    let location = $('#dept-location').val().toLowerCase();  
+    if (select_options.some(e => e.name.toLowerCase() === name.toLowerCase())) {      
+        $('#dept-error').css('opacity', "1");
+        setTimeout(() => {            
+            $('#dept-error').css('opacity', "0");
+        }, 2000);
+      } else {
+            locations.forEach(loc => {
+                if (loc.name.toLowerCase() === location){
+                    location = parseInt(loc.id);
+                }
+            })
+            updateDeptDB(name, location);
+        }
+    
+}
+
+function updateDeptDB (name, locationID){
+    console.log('updateDeptDB()');
+    return $.ajax({  
+        type: 'POST',
+        url: 'php/addDeptDB.php', 
+        data: { 
+            name: name,
+            location: capitalize(locationID)
+         },
+        success: function(result){                   
+            $('#dept-success').css('opacity', "1");
+            setTimeout(() => {            
+                $('#dept-success').css('opacity', "0");
+            }, 2000);
+            getData();
+        }
+    });
+}
+
+
 
 
 /* ADD EMPLOYEE */
