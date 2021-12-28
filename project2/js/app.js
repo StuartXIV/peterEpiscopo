@@ -24,11 +24,13 @@ let dropdown_active = false;
 
 //DROPDOWN
 
-function dropdown(id){
-    // if (dropdown_active){
-    //     $('#dropdown').remove();
-    // }
+let new_row;
 
+function dropdown(id){
+    if (new_row != id){        
+        removeDropdown();
+    }
+    new_row = id;
     if (!dropdown_active){
 
         dropdown_active = true;
@@ -231,15 +233,19 @@ function addTableRow(employee, value = null, joined){
     $('#entries').html(entries + " Entries");
     if (joined){employees.push(joined)};
     const row = document.createElement('tr');   
-    row.setAttribute("id", `tr${id}`);
-    row.setAttribute("onclick", `dropdown(${id})`)             
+    row.setAttribute("id", `tr${id}`);       
     const text1 = document.createTextNode(capitalize(employee.firstName) + " " + capitalize(employee.lastName));
     // const text2 = document.createTextNode(department);    
     const text5 = document.createTextNode(employee.email);
     const text3 = document.createTextNode("EDIT");                
     const text4 = document.createTextNode("DELETE");
-    const cell1 = document.createElement('td');
-    cell1.setAttribute('id', `name${id}`);
+    const cell1 = document.createElement('td');    
+    cell1.classList.add('cell-name');    
+    cell1.setAttribute('id', `name${id}`);    
+    cell1.setAttribute("onclick", `dropdown(${id})`);
+    const arrow = document.createElement('img');    
+    arrow.setAttribute('src', 'images/down-arrow.svg'); 
+    arrow.classList.add('arrow'); 
     const cell2 = document.createElement('td');
     cell2.setAttribute('id', `department${id}`);
     cell2.classList.add('dept');    
@@ -275,6 +281,8 @@ function addTableRow(employee, value = null, joined){
     delete_btn.appendChild(text4);
     delete_btn.setAttribute('onclick', `selectedEmployee(${id})`);
 
+    
+    cell1.appendChild(arrow);
     cell1.appendChild(text1);
     cell3.appendChild(link_email);
     link_email.appendChild(text5);
@@ -339,6 +347,7 @@ $('#edit-form').submit(sendEditData);
 //
 function getEditData(id){
     console.log('getEditData()');
+    removeDropdown();
     selected_employee = id;
     
    return $.ajax(
@@ -403,8 +412,8 @@ function sendEditData(){
         dataType: 'json',
         data: {
             id : id,
-            firstName: $name,
-            lastName: $last_name,
+            firstName: capitalize($name),
+            lastName: capitalize($last_name),
             department: $department,
             email: $email
         },
@@ -433,6 +442,7 @@ $('#delete').click(getSingleData);
 
 function selectedEmployee(id, edit_employee){
     selected_employee = id;
+    removeDropdown();
     if (edit_employee){
         
     }
@@ -538,7 +548,7 @@ function updateDeptDB (name, locationID){
         type: 'POST',
         url: 'php/addDeptDB.php', 
         data: { 
-            name: name,
+            name: capitalize(name),
             location: capitalize(locationID)
          },
         success: function(result){                   
@@ -590,8 +600,8 @@ function sendData(first_name, last_name, department, email){
         type: 'POST',
         url: 'php/addData.php', 
         data: { 
-            firstName: first_name,
-            lastName: last_name,
+            firstName: capitalize(first_name),
+            lastName: capitalize(last_name),
             department: department,
             email: email
          },
@@ -768,4 +778,12 @@ function compare( a, b ) {
       return 1;
     }
     return 0;
+  }
+
+
+  function removeDropdown(){
+      if($('#dropdown').length){
+          $('#dropdown').remove();
+          dropdown_active = false;
+      }
   }

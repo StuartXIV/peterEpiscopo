@@ -27,6 +27,7 @@ body {
 }
 
 .dropdown-menu {
+    padding: .2rem .2rem;
     background-color: rgb(54, 142, 54);
     color: white;
     border: 2px solid #358260;
@@ -38,14 +39,8 @@ body {
 
 #add-employee-list {
     border-bottom: 2px solid white;
-    width: 90%;
-    margin: 0 auto;
 }
 
-#add-dept-list {
-    width: 90%;
-    margin: 0 auto;
-}
 
 .alert {
     position: absolute;
@@ -145,6 +140,12 @@ thead tr th:last-child{
       height: 5rem;
       pointer-events: none;
   }
+
+.arrow {
+    width: .5rem;
+    margin-right: .4rem;
+    display: none;
+}
 
 .table-fixed tbody {
     padding: 0 1.5em;
@@ -250,12 +251,37 @@ thead tr th:last-child{
         border-radius: 0%;
     }
 
+    .text-right {
+        text-align: left !important;
+    }
+
     #dropdown-header {
-        display: none;
+        width: 7rem;
+        display: inline-block;
+        font-size: 1.1rem;
+    }
+
+    #dropdown-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .dropdown-menu a {
+        font-size: .7rem;
     }
 
     .container {
         margin: 0;
+    }
+
+    .cell-name {
+        font-size: .8em;
+        font-weight: 600;
+    }
+
+    .arrow {
+        display: inline;
     }
 
     #add-dept-btn, #add-employee-btn, #search-employee-btn {
@@ -320,8 +346,9 @@ thead tr th:last-child{
         border-radius: 0px 0px 10px 10px;
     }
 
+
     #dropdown {
-        padding: 0 1em;
+        padding: 0.2em 1em 0 1em;
         opacity: 0;
         transform: translateY(-20px);
         transition: all .3s ease;        
