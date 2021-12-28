@@ -7,6 +7,14 @@ body {
     max-height: 100vh;
 }
 
+a:hover {
+    text-decoration: none;
+}
+
+.small-search {
+    display: none;
+}
+
 .container {
     background-color: #fff;
     height: 100%;
@@ -105,6 +113,7 @@ a .btn-danger {
 #show-all:active #refresh {
     transform: rotate(180);
 }
+
 
 .table-fixed {
     width: 100%;
@@ -251,6 +260,10 @@ thead tr th:last-child{
         border-radius: 0%;
     }
 
+    .title-page {
+        text-align: right !important;
+    }
+
     .text-right {
         text-align: left !important;
     }
@@ -268,7 +281,19 @@ thead tr th:last-child{
     }
 
     .dropdown-menu a {
-        font-size: .7rem;
+        font-size: .8rem;
+    }
+
+    .small-search {
+        display: inline-block;
+    }
+
+    #add-new {
+        display: none;
+    }
+
+    .btn-search {
+        pointer-events: none;
     }
 
     .container {

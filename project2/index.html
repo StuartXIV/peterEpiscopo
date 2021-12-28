@@ -17,7 +17,7 @@
 				<table class="table table-fixed">
 					<div class="table-title">
 						<div class="row align-items-center">
-							<div class="col-sm-6">
+							<div class="col-sm-6 title-page">
 								<h2>
 									Manage <b>Employees</b>
 								</h2>
@@ -26,13 +26,18 @@
 								<!-- Example single danger button -->
 								<div id="dropdown-header" class="btn-group">
 									<button id="dropdown-btn" type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										<i class="material-icons">&#xE147;</i> Add New
+										<i class="material-icons">&#xE147;</i><span id="add-new">Add New</span>
 									</button>
 									<div class="dropdown-menu">
 									  <a class="dropdown-item" id="add-employee-list" href="#addEmployeeModal" data-toggle="modal">Add New Employee</a>
 									  <a class="dropdown-item" id="add-dept-list" href="#addDeptModal" data-toggle="modal">Add New Department</a>
 									</div>
-								  </div>
+								</div>
+								<a id="dropdown-header" class="btn-group small-search" href="#searchEmployeeModal" data-toggle="modal">
+									<button id="dropdown-btn" type="button" class="btn btn-info btn-search" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<i class="material-icons">search</i>
+									</button>
+								</a>
   
 								<!-- <a href="#addEmployeeModal" data-toggle="modal">
 									<button id="add-employee-btn" class="btn btn-success"><i class="material-icons">&#xE147;</i> Add</button>
@@ -179,7 +184,7 @@
 								</div>		
 								<div class="form-group">
 									<label for="email">Email</label>
-									<input type="tel" id="email" name="email" class="form-control" placeholder="Enter email address" required>
+									<input type="email" id="email" name="email" class="form-control" placeholder="Enter email address" required>
 								</div>
 							</div>
 							<div class="modal-footer">
