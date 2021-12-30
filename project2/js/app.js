@@ -237,8 +237,16 @@ function addTableRow(employee, value = null, joined){
     const text1 = document.createTextNode(capitalize(employee.firstName) + " " + capitalize(employee.lastName));
     // const text2 = document.createTextNode(department);    
     const text5 = document.createTextNode(employee.email);
-    const text3 = document.createTextNode("EDIT");                
-    const text4 = document.createTextNode("DELETE");
+    // const text3 = document.createTextNode("EDIT");                
+    // const text4 = document.createTextNode("DELETE");
+
+    const text3 = document.createElement('img');
+    const text4 = document.createElement('img');
+    text3.setAttribute('src', 'images/edit.svg');
+    text3.classList.add('btn-icon');    
+    text4.setAttribute('src', './images/bin.svg');
+    text4.classList.add('btn-icon');
+
     const cell1 = document.createElement('td');    
     cell1.classList.add('cell-name');    
     cell1.setAttribute('id', `name${id}`);    
