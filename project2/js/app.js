@@ -53,7 +53,7 @@ function dropdown(id){
                         })
                     }
                 })
-                const email_txt = document.createTextNode(`Email: ${employee.email}`);
+                const email_txt = document.createTextNode(`${employee.email}`);
                 const cell1 = document.createElement('p');
                 const cell3 = document.createElement('p');
                 const cell2 = document.createElement('p');
