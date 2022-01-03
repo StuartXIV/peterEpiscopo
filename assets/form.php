@@ -1,11 +1,8 @@
-
-
 <?php
 
     if (isset($_POST['submit'])) {
         $name = $_POST['name'];
-        $mail = $_POST['email'];        
-        $subject = $_REQUEST['subject'];
+        $mail = $_POST['email'];
         $message = $_POST['message'];
 
         $mailTo = "peteralbertstuart@hotmail.it";
@@ -14,7 +11,7 @@
         $content= "Message from " . ucfirst($name);
 
         mail($mailTo, $content, $txt, $headers);
-        header("Location: ../../index.html");
+        header("Location: ../index.html");
         
     }
     
