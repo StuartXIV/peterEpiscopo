@@ -14,7 +14,7 @@
         $content= "Message from " . ucfirst($name);
 
         mail($mailTo, $content, $txt, $headers);
-        header("Location: ../../indexPeter.html#contact-form?mailsend");
+        header("Location: ../../index.html");
         
     }
     
