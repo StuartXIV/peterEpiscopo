@@ -7,10 +7,9 @@
         $message = $_POST['message'];
 
         $mailTo = "peteralbertstuart@hotmail.it";
-       // $headers = "From: contact@peterepiscopo.co.uk";
-        $headers= $subject;
+        $headers = "From: contact@peterepiscopo.co.uk";
         $txt = $message;
-        $content= "Message from " . ucfirst($name);
+        $content= $subject;
 
         mail($mailTo, $content, $txt, $headers);
         header("Location: ../index.html");
