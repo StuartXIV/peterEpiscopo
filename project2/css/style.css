@@ -1,3 +1,7 @@
+/*--------------------------------------------------------------
+# General
+--------------------------------------------------------------*/
+
 body {
     width: 100%;
     position: relative;
@@ -7,20 +11,89 @@ body {
     max-height: 100vh;
 }
 
-a:hover {
-    text-decoration: none;
-}
-
-.small-search {
-    display: none;
-}
-
 .container {
     background-color: #fff;
     height: 100%;
     overflow: hidden;
     max-width: 1400px;
 }
+
+a:hover {
+    text-decoration: none;
+}
+
+
+i {
+    float: left;
+    margin-right: 5px;
+}
+
+/*--------------------------------------------------------------
+# Preloader
+--------------------------------------------------------------*/
+
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    overflow: hidden;
+    background: #fff;
+    }
+    #preloader:before {
+    content: "";
+    position: fixed;
+    top: calc(50% - 30px);
+    left: calc(50% - 30px);
+    border: 6px solid #f2f2f2;
+    border-top: 6px solid #56829e ;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    
+    -webkit-animation: animate-preloader 1s linear infinite;
+    animation: animate-preloader 1s linear infinite;
+    }
+    @-webkit-keyframes animate-preloader {
+    0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    }
+    100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+    }
+    }
+    @keyframes animate-preloader {
+    0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    }
+    100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+    }
+    }
+
+/*--------------------------------------------------------------
+# Header
+--------------------------------------------------------------*/
+
+.table-title {
+    padding-bottom: 15px;
+    background: #435d7d;
+    color: #fff;
+    padding: 16px 30px;
+    min-width: 100%;
+    border-radius: 3px 3px 0 0;
+}
+
+.small-search {
+    display: none;
+}
+
 
 #search-row {
     margin-top: 10px;
@@ -49,6 +122,16 @@ a:hover {
     border-bottom: 2px solid white;
 }
 
+#refresh {
+    filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(38deg) brightness(105%) contrast(102%);
+    transform: rotate(0);
+    transition: transform .4s ease;
+    pointer-events: none;
+}
+
+/*--------------------------------------------------------------
+# Alerts
+--------------------------------------------------------------*/
 
 .alert {
     position: absolute;
@@ -64,10 +147,6 @@ a:hover {
     transition: opacity .5s ease;
 }
 
-i {
-    float: left;
-    margin-right: 5px;
-}
 
 .btn, a {
     pointer-events: initial;
@@ -83,14 +162,7 @@ i {
     float: none;
 }
 
-.table-title {
-    padding-bottom: 15px;
-    background: #435d7d;
-    color: #fff;
-    padding: 16px 30px;
-    min-width: 100%;
-    border-radius: 3px 3px 0 0;
-}
+
 
 a .btn-danger {
     margin-left: 10px;
@@ -109,12 +181,6 @@ a .btn-danger {
     cursor: pointer;
 }
 
-#refresh {
-    filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(38deg) brightness(105%) contrast(102%);
-    transform: rotate(0);
-    transition: transform .4s ease;
-    pointer-events: none;
-}
 
 #show-all:active #refresh {
     transform: rotate(180);
@@ -400,50 +466,3 @@ thead tr th:last-child{
 
 }
 
-/* PRELOADER */
-
-
-#preloader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 9999;
-    overflow: hidden;
-    background: #fff;
-    }
-    #preloader:before {
-    content: "";
-    position: fixed;
-    top: calc(50% - 30px);
-    left: calc(50% - 30px);
-    border: 6px solid #f2f2f2;
-    border-top: 6px solid #56829e ;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    
-    -webkit-animation: animate-preloader 1s linear infinite;
-    animation: animate-preloader 1s linear infinite;
-    }
-    @-webkit-keyframes animate-preloader {
-    0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-    }
-    100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-    }
-    }
-    @keyframes animate-preloader {
-    0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-    }
-    100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-    }
-    }

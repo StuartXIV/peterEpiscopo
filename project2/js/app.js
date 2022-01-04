@@ -235,10 +235,7 @@ function addTableRow(employee, value = null, joined){
     const row = document.createElement('tr');   
     row.setAttribute("id", `tr${id}`);       
     const text1 = document.createTextNode(capitalize(employee.firstName) + " " + capitalize(employee.lastName));
-    // const text2 = document.createTextNode(department);    
     const text5 = document.createTextNode(employee.email);
-    // const text3 = document.createTextNode("EDIT");                
-    // const text4 = document.createTextNode("DELETE");
 
     const text3 = document.createElement('img');
     const text4 = document.createElement('img');
@@ -347,6 +344,7 @@ function getDepartmentByID(id, cell = null){
 
 let selected_employee;
 let selected_employee_position_array; // joined element in employees[] 
+
 
 /* EDIT EMPLOYEE */
 
@@ -621,30 +619,14 @@ function sendData(first_name, last_name, department, email){
 
 
 
-// Format text
-function capitalize(str){
-
-    const arr = str.split(" ");
-
-
-    for (var i = 0; i < arr.length; i++) {
-        arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1);
-
-    }
-
-    const str2 = arr.join(" ");
-
-    return str2;
-}
 
 //ADVANCED SEARCH
 
 $('#search-button').click(() => {
     let name = $('#name-search').val();
-    let last_name = $('#lastname-search').val();
     let department = $('#department-search').val();
     let data = [];    
-    let value = `${name} ${last_name} ${getLocationForNoResult(department)}`;    
+    let value = `${name} ${getLocationForNoResult(department)}`;    
     $('#tbody').html('');
     if (name === "" && department === 'any'){
         getData();
@@ -672,10 +654,22 @@ $('#search-button').click(() => {
             $('#entries').html(entries + " Entries")
         } else {
             const row = document.createElement('tr');   
-            row.setAttribute("id", `no-results`);            
+            row.setAttribute("id", `no-results`);      
+            function value(){
+                if (department === 'any' && name){
+                    value = capitalize(name);
+                    return value;
+                } else if (!name){
+                    value = getLocationForNoResult(department);
+                    return department;
+                } else if (department && name){
+                    value = name + " " + getLocationForNoResult(department);
+                    return value;
+                }
+            }      
             
             const cell_no_results = document.createElement('td');
-            const text_no_results = document.createTextNode(`No results found for '${value}'`);
+            const text_no_results = document.createTextNode(`No results found for '${value()}'`);
             cell_no_results.appendChild(text_no_results);
             row.appendChild(cell_no_results);        
             $('tbody').append(row);        
@@ -767,6 +761,7 @@ function updateDatalist(){
 }
 
 
+// Refresh
 function resetArrays(){
     names = [];
     select_options = [];
@@ -795,3 +790,21 @@ function compare( a, b ) {
           dropdown_active = false;
       }
   }
+
+  
+
+// Format text
+function capitalize(str){
+
+    const arr = str.split(" ");
+
+
+    for (var i = 0; i < arr.length; i++) {
+        arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1);
+
+    }
+
+    const str2 = arr.join(" ");
+
+    return str2;
+}
