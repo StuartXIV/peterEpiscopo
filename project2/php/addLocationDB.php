@@ -8,3 +8,6 @@ $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname) or die(mysqli_e
     $conn->query("INSERT INTO location (name) VALUES('$name')") or die($mysqli->error);
 
 
+$data = [$name];
+
+echo json_encode($data);

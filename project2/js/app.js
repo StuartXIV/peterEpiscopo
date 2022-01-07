@@ -37,45 +37,43 @@ function dropdown(id){
 
         object_array.forEach(employee => {
             if (employee.id == id){
-                console.log("bing!");
+                console.log(employee);
                 const row = document.createElement('tr');
-                row.setAttribute('id', 'dropdown');
-                // const text2 = document.createTextNode(department); 
-                let dept_txt;  
-                let location_txt; 
-                select_options.forEach(dept => {
-                    if (dept.id == employee.department){                        
-                        dept_txt = document.createTextNode(`Department: ${dept.name}`);
-                        locations.forEach(loc => {
-                            if (loc.id == dept.locationID){
-                                location_txt = document.createTextNode(`Location: ${loc.name}`);
-                            }
-                        })
-                    }
-                })
+                row.setAttribute('id', 'dropdown');               
+                let dept_txt = document.createTextNode(`Department: ${employee.department}`);
+                let location_txt = document.createTextNode(`Location: ${employee.location}`);
+                let job_title = employee.jobTitle;
+                if (job_title === ""){
+                    job_title = 'unspecified'
+                }
+                let job_title_txt = document.createTextNode(`Job Title: ${job_title}`);
                 const email_txt = document.createTextNode(`${employee.email}`);
-                const cell1 = document.createElement('p');
-                const cell3 = document.createElement('p');
-                const cell2 = document.createElement('p');
-                cell2.setAttribute('id', `location-dropdown${id}`);
+                const dept_cell = document.createElement('p');
+                const job_title_cell = document.createElement('p');
+                const email_cell = document.createElement('p');
+                const location_cell = document.createElement('p');
+                location_cell.setAttribute('id', `location-dropdown${id}`);
                 const link_email = document.createElement('a');
                 link_email.setAttribute('id', `email-dropwdown${id}`);  
             
-                link_email.setAttribute('href', `mailto:}`);
+                link_email.setAttribute('href', `mailto:${email_txt}}`);
                 link_email.setAttribute('target', `_blank`);
             
-                cell3.appendChild(link_email);
+                email_cell.appendChild(link_email);
                 link_email.appendChild(email_txt);
+                
             
-                cell1.classList.add('col-xs-6');
-                cell2.classList.add('col-xs-6');
+                dept_cell.classList.add('col-xs-6');
+                location_cell.classList.add('col-xs-6');
+                console.log(job_title_txt);
+                dept_cell.appendChild(dept_txt);
+                job_title_cell.appendChild(job_title_txt);
+                location_cell.appendChild(location_txt);
             
-                cell1.appendChild(dept_txt);
-                cell2.appendChild(location_txt);
-            
-                row.appendChild(cell1);
-                row.appendChild(cell2);
-                row.appendChild(cell3);
+                row.appendChild(dept_cell);
+                row.appendChild(job_title_cell);
+                row.appendChild(location_cell);
+                row.appendChild(email_cell);
             
                 $(`#tr${id}`).after(row);
                 $(`#tr${id}`).css('border-bottom', '0px solid white');
@@ -116,16 +114,18 @@ function getAllDepartments(){
                 arr.forEach(element => {      
                     let id = element['id'];
                     let name = element['name'];
-                    let location = element['locationID'];
+                    let location = element['location'];
                     let object = {
                         id: id,
                         name, name,
-                        locationID: location
+                        location: location
                     }              
                     // Check object exists in array
                     if (!select_options.some(e => e.id === id)) {
                         select_options.push(object);
                       } 
+                      
+                    addDepartmentRow(object);
                 })
                 setTimeout(() => {
                     $select1 = $('#department-search');
@@ -144,13 +144,115 @@ function getAllDepartments(){
     });     
 }
 
+function addDepartmentRow(dept){    
+    const row = document.createElement('tr');
+    const dept_cell = document.createElement('td');
+    const location_cell = document.createElement('td');
+    location_cell.classList.add('col-xs-6'); 
+
+    const dept_txt = document.createTextNode(`${dept.name}`);
+    const location_txt = document.createTextNode(`${dept.location}`);
+    
+    dept_cell.appendChild(dept_txt);
+    location_cell.appendChild(location_txt);
+    row.appendChild(dept_cell);
+    row.appendChild(location_cell);
+    $('#table-departments').append(row);
+    addEditDeleteBtn(row, dept.id, "Dept");
+
+}
+
+
+
+// DELETE DEPARTMENT
+
+let selected_dept;
+
+function selectDept(id){
+    selected_dept  = id;
+    select_options.forEach(dept => {
+        if (dept.id == id){
+            $('#dept-delete-question').html(dept.name);
+            $('#department-edit-dept').val(dept.name);
+            $('#location-edit-dept').val(dept.location);
+        }
+    })
+}
+
+$('#delete-dept').click(removeDeptFromDB);
+
+function removeDeptFromDB(){    
+
+    $.ajax(
+        {
+            url: "php/deleteDepartmentByID.php",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id : selected_dept
+            },
+            
+            success: function(result) {      
+                //console.log(JSON.stringify(result)); 
+                    getData();
+                },
+    
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Error');
+            }        
+        });
+}
+
+
+// EDIT DEPARTMENT
+$('#edit-form-dept').submit(() => updateDeptInDB());
+
+function updateDeptInDB(){  
+    
+    $name = $('#department-edit-dept').val();
+    $location = $('#location-edit-dept').val();
+    if (locations.some(e => e.name === $location)) {
+        $location = "b";
+        console.log("location exists!");
+      }
+
+    console.log(typeof selected_dept + " " + $name);
+    $.ajax(
+        {
+            url: "php/updateDepartmentByID.php",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id : selected_dept,
+                name: $name,
+                location: $location
+            },
+            
+            success: function(result) {      
+                //console.log(JSON.stringify(result)); 
+                    getData();
+                    $('#alert-success-edit-dept').css('opacity', "1");
+                    setTimeout(() => {            
+                        $('#alert-success-edit-dept').css('opacity', "0");
+                    }, 2000);
+                },
+    
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Error');
+            }        
+        });
+}
+
+
 
 // GET LOCATIONS
+
+let number_locations = 0;
 
 function getLocations(){
     $.ajax(
         {
-        url: "php/getLocationByID.php",
+        url: "php/getAllLocations.php",
         type: 'POST',
         dataType: 'json',
         
@@ -161,6 +263,7 @@ function getLocations(){
                 let arr = result['data'];
                 arr.forEach(location => {
                     locations.push(location);
+                    addLocationRow(location);
                 })        
             }        
         },
@@ -171,17 +274,156 @@ function getLocations(){
     });     
 }
 
+function addLocationRow(location_object){
+    const row = document.createElement('tr');
+    const location_cell = document.createElement('td');
+    location_cell.classList.add('col-xs-6');  
+    location_cell.classList.add('loc-table');  
+
+    const location_text = document.createTextNode(`${location_object.name}`);
+    location_cell.appendChild(location_text);
+    row.appendChild(location_cell);
+    $('#table-locations').append(row);
+    addEditDeleteBtn(row, location_object.id, "Location");
+}
+
+let selected_location;
+
+function selectLocation(id){
+    selected_location  = id;
+    locations.forEach(location => {
+        if (location.id == id){
+            $('#location-delete-question').html(location.name);
+            $('#location-edit-loc').val(location.name);
+        }
+    })
+}
+
+$('#delete-location').click(removeLocationFromDB);
+
+function removeLocationFromDB(){    
+
+    $.ajax(
+        {
+            url: "php/deleteLocationByID.php",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id : selected_location
+            },
+            
+            success: function(result) {      
+                //console.log(JSON.stringify(result)); 
+                    getData();
+                },
+    
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Error');
+            }        
+        });
+}
+
+$('#add-location-form').submit(checkLocationExists);
+ 
+
+function checkLocationExists(){
+
+    const location = $('#location-name-add').val();
+
+    if (locations.some(e => e.name === capitalize(location))) {
+
+        $('#location-error').css('opacity', "1");
+        setTimeout(() => {            
+            $('#location-error').css('opacity', "0");
+        }, 2000);          
+                 
+    } else {
+
+        addLocationToDB(capitalize(location));               
+        $('#location-success').css('opacity', "1");
+        setTimeout(() => {            
+            $('#location-success').css('opacity', "0");
+        }, 2000);
+    }    
+}
+
+function addLocationToDB(location){
+
+    location = capitalize(location.toLowerCase());
+
+    $.ajax(
+        {
+        url: "php/addLocationDB.php",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            name: location
+        },
+        success: function(result) {
+            //console.log(JSON.stringify(result));
+            getData();
+        },       
+
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log('Error Location to DB');
+        }
+    })
+}
+
+function addEditDeleteBtn(row, id, string){
+    
+    const cell_action = document.createElement('td');
+    const pencil = document.createElement('img');
+    const bin = document.createElement('img');
+    pencil.setAttribute('src', 'images/edit.svg');
+    pencil.classList.add('btn-icon');    
+    bin.setAttribute('src', './images/bin.svg');
+    bin.classList.add('btn-icon');
+    const edit_btn = document.createElement('button');
+    const delete_btn = document.createElement('button');
+    const link_edit = document.createElement('a');
+    const link_delete = document.createElement('a');
+
+    link_edit.classList.add('edit');
+    link_edit.setAttribute('href', `#edit${string}Modal`);
+    link_edit.setAttribute('data-toggle', 'modal');
+
+    link_delete.classList.add('delete');
+    link_delete.setAttribute('href', `#delete${string}Modal`);
+    link_delete.setAttribute('data-toggle', 'modal');
+
+    edit_btn.classList.add('btn');
+    edit_btn.classList.add('btn-info');
+    edit_btn.appendChild(pencil);    
+    edit_btn.setAttribute('onclick', `select${string}(${id})`);
+    
+    delete_btn.classList.add('btn');
+    delete_btn.classList.add('btn-danger');
+    delete_btn.appendChild(bin);
+    delete_btn.setAttribute('onclick', `select${string}(${id})`);
+
+    cell_action.classList.add('col-xs-6');
+        cell_action.classList.add('loc-table');
+    cell_action.classList.add('buttons-container');
+    cell_action.classList.add('text-center');
+
+    cell_action.appendChild(link_edit);
+    cell_action.appendChild(link_delete);    
+    link_delete.appendChild(delete_btn);
+    link_edit.appendChild(edit_btn);  
+    row.appendChild(cell_action);  
+}
 
 // Retrieve Employees from Database
 function getData(){
     console.log("getData()");
-    $('#tbody').html('');
+    resetTables();
     resetArrays();
     getAllDepartments();
     getLocations();
     $.ajax(
         {
-        url: "php/getData.php",
+        url: "php/getAll.php",
         type: 'POST',
         dataType: 'json',
         
@@ -194,29 +436,36 @@ function getData(){
                     let id = element['id'];
                     let first_name = element['firstName'];
                     let last_name = element['lastName'];
-                    let department = element['departmentID'];   
+                    let job_title = element['jobTitle'];
+                    let department = element['department'];   
+                    let location = element['location'];
                     let email = element['email'];   
                     let employee = {    /////// MAYBE A SHORTCUT WOULD BE BETTER(push.(element))
                         id: id,
                         firstName: first_name,
                         lastName: last_name,
+                        jobTitle: job_title,
                         department: department,
-                        email: email
+                        location: location,
+                        email: email,
+                        joined: first_name + last_name
                     }   
                     let joined = first_name.toLowerCase() + last_name.toLowerCase();                      
-                    first_name = capitalize(first_name); // WATCH OUT!!!            
-                    entries++;     
+                    first_name = capitalize(first_name); // WATCH OUT!!!      
                     
     
                     object_array.push(employee);
                     addTableRow(employee, null, joined);    
-                    if(!names.includes(first_name)){names.push(first_name)}; // MAYBE DELETE                           
+                    if(!names.includes(first_name)){names.push(first_name)}; // MAYBE DELETE    
+
                     }
                 )
                 setTimeout(() =>{     
                     updateDatalist();
+                    addLocationOptionsToSelect();
                 }, 2000)   
-            }        
+            }
+        checkOpenTab();        
         },
 
         error: function(jqXHR, textStatus, errorThrown) {
@@ -230,19 +479,20 @@ function addTableRow(employee, value = null, joined){
  if (object_array.length > 0){
     let id = employee.id;
     
-    $('#entries').html(entries + " Entries");
     if (joined){employees.push(joined)};
     const row = document.createElement('tr');   
     row.setAttribute("id", `tr${id}`);       
-    const text1 = document.createTextNode(capitalize(employee.firstName) + " " + capitalize(employee.lastName));
+    const text1 = document.createTextNode(capitalize(employee.lastName) + " " + capitalize(employee.firstName));
     const text5 = document.createTextNode(employee.email);
+    const dept_text = document.createTextNode(employee.department); 
+    const job_title_txt = document.createTextNode(employee.jobTitle);
 
-    const text3 = document.createElement('img');
-    const text4 = document.createElement('img');
-    text3.setAttribute('src', 'images/edit.svg');
-    text3.classList.add('btn-icon');    
-    text4.setAttribute('src', './images/bin.svg');
-    text4.classList.add('btn-icon');
+    const pencil = document.createElement('img');
+    const bin = document.createElement('img');
+    pencil.setAttribute('src', 'images/edit.svg');
+    pencil.classList.add('btn-icon');    
+    bin.setAttribute('src', './images/bin.svg');
+    bin.classList.add('btn-icon');
 
     const cell1 = document.createElement('td');    
     cell1.classList.add('cell-name');    
@@ -255,9 +505,12 @@ function addTableRow(employee, value = null, joined){
     cell2.setAttribute('id', `department${id}`);
     cell2.classList.add('dept');    
     const cell3 = document.createElement('td');
+    const job_title_cell = document.createElement('td');
+
+                        
     
     cell3.classList.add('email');
-    const cell4 = document.createElement('td');
+    const cell_action = document.createElement('td');
     const edit_btn = document.createElement('button');
     const delete_btn = document.createElement('button');
     const link_edit = document.createElement('a');
@@ -278,69 +531,46 @@ function addTableRow(employee, value = null, joined){
 
     edit_btn.classList.add('btn');
     edit_btn.classList.add('btn-info');
-    edit_btn.appendChild(text3);    
+    edit_btn.appendChild(pencil);    
     edit_btn.setAttribute('onclick', `getEditData(${id})`);
     
     delete_btn.classList.add('btn');
     delete_btn.classList.add('btn-danger');
-    delete_btn.appendChild(text4);
+    delete_btn.appendChild(bin);
     delete_btn.setAttribute('onclick', `selectedEmployee(${id})`);
 
     
     cell1.appendChild(arrow);
-    cell1.appendChild(text1);
+    cell1.appendChild(text1);    
+    cell2.appendChild(dept_text);     
     cell3.appendChild(link_email);
+    job_title_cell.appendChild(job_title_txt);
     link_email.appendChild(text5);
 
     cell1.classList.add('col-xs-3');
     cell3.classList.add('col-xs-3');
     cell3.classList.add('col-xs-3');
-    cell4.classList.add('col-xs-3');
-    cell4.classList.add('buttons-container');
-    cell4.classList.add('text-center');
+    job_title_cell.classList.add('col-xs-3');
+    job_title_cell.classList.add('job-title-cell');
+    cell_action.classList.add('col-xs-3');
+    cell_action.classList.add('buttons-container');
+    cell_action.classList.add('text-center');
 
     row.appendChild(cell1);
+    row.appendChild(job_title_cell);
     row.appendChild(cell2);
     row.appendChild(cell3);
-    row.appendChild(cell4);
-    cell4.appendChild(link_edit);
-    cell4.appendChild(link_delete);    
+    row.appendChild(cell_action);
+    cell_action.appendChild(link_edit);
+    cell_action.appendChild(link_delete);    
     link_delete.appendChild(delete_btn);
     link_edit.appendChild(edit_btn);
-    $('tbody').append(row);   
-    getDepartmentByID(employee.department, cell2);
+    $('#table-personnel').append(row);   
 
  }
 }
 
-// Retrieve Department by ID
-function getDepartmentByID(id, cell = null){
-    $.ajax(
-        {
-        url: "php/getDepartmentByID.php",
-        type: 'POST',
-        dataType: 'json',
-        data: {
-            id: id
-        },
-        
-        success: function(result) {
-            //console.log(JSON.stringify(result));
 
-            if (result.status.name == "ok") {                
-                let department = result['data']['0'];
-                let name = department['name'];
-                let location_id = department['locationID'];
-                const text = document.createTextNode(name);                
-                cell.appendChild(text);                
-            }        
-        },
-
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.log('Error');
-        }
-    });     
-}
 
 let selected_employee;
 let selected_employee_position_array; // joined element in employees[] 
@@ -370,20 +600,19 @@ function getEditData(id){
             const employee = result['data']['personnel']['0'];   
             let first_name = employee.firstName;
             let last_name = employee.lastName;
+            let job_title = employee.jobTitle;
             let departmentID = employee.departmentID;
             let email = employee.email;
             let joined = first_name + last_name;
             selected_employee_position_array = employees.indexOf(joined); 
             $('#name-edit').val(first_name);   
             $('#surname-edit').val(last_name);           
-            $('#department-edit').val(departmentID);   
-            // $('#location-edit').val(location);         
+            $('#job-title-edit').val(job_title);
+            $('#department-edit').val(departmentID);         
             $('#email-edit').val(email);
             console.log("departmentID " + departmentID);
-            // console.log(select_options);
             let location;
             select_options.forEach(department => {
-                //console.log(department);
                 if (department.id == departmentID){
                     console.log(department.locationID);
                     location = department.locationID;
@@ -407,7 +636,8 @@ function sendEditData(){
     console.log('sendEditData()');
     let id = selected_employee;
     $name = $('#name-edit').val();          
-    $last_name = $('#surname-edit').val();  
+    $last_name = $('#surname-edit').val();      
+    $job_title = $('#job-title-edit').val();  
     $department= $('#department-edit').val();            
     $email = $('#email-edit').val();
 
@@ -418,10 +648,11 @@ function sendEditData(){
         dataType: 'json',
         data: {
             id : id,
-            firstName: capitalize($name),
-            lastName: capitalize($last_name),
+            firstName: capitalize($name.toLowerCase()),
+            lastName: capitalize($last_name.toLowerCase()),
+            jobTitle: capitalize($job_title.toLowerCase()),
             department: $department,
-            email: $email
+            email: $email.toLowerCase()
         },
         
         success: function(result) {      
@@ -447,12 +678,34 @@ function sendEditData(){
 $('#delete').click(getSingleData);
 
 function selectedEmployee(id, edit_employee){
-    selected_employee = id;
+    selected_employee = id;    
+    
     removeDropdown();
-    if (edit_employee){
-        
-    }
+
+    $.ajax(
+        {
+            url: "php/getPersonnelByID.php",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id : id
+            },
+            
+            success: function(result) {      
+                //console.log(JSON.stringify(result)); 
+                 
+                    const employee = result['data']['personnel']['0'];   
+                    let first_name = employee.firstName;
+                    let last_name = employee.lastName;
+                    $('#delete-question').html(`'${last_name} ${first_name}'`);
+                },
+    
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Error');
+            }        
+        });
 }
+
 
 
 //Remove from Array (employees)
@@ -475,7 +728,7 @@ function getSingleData(){
             let index = employees.indexOf(joined);
             object_array.pop(object_array[index]);
             employees.pop(joined);  
-            removeData(id);
+            //removeData(id);
             deleteRow(id);
         },
 
@@ -502,6 +755,7 @@ function deleteRow(id){
 
             if (result.status.name == "ok") {  
                 console.log("deleteRow()");
+                getData();
                 // console.log(employees);
             }        
         },
@@ -549,12 +803,13 @@ function checkDeptExists(){
 }
 
 function updateDeptDB (name, locationID){
-    console.log('updateDeptDB()');
+    console.log('addDeptDB()');
+    name = capitalize(name.toLowerCase());
     return $.ajax({  
         type: 'POST',
         url: 'php/addDeptDB.php', 
         data: { 
-            name: capitalize(name),
+            name: name,
             location: capitalize(locationID)
          },
         success: function(result){                   
@@ -572,6 +827,9 @@ function updateDeptDB (name, locationID){
 
 /* ADD EMPLOYEE */
 
+
+
+
 $('#form').submit(checkExist);
 
 
@@ -582,6 +840,7 @@ function checkExist(){
     
     let first_name = $('#name').val();
     let last_name = $('#last-name').val();
+    let job_title = $('#job-title-add').val();
     let department = $('#department-add').val(); 
     let email = $('#email').val(); 
     let joined = first_name.toLowerCase() + last_name.toLowerCase();
@@ -591,7 +850,7 @@ function checkExist(){
             $('#alert-error').css('opacity', "0");
         }, 2000);
     } else {
-        sendData(first_name, last_name, department, email);        
+        sendData(first_name, last_name, job_title, department, email);        
         $('#alert-success').css('opacity', "1");
         setTimeout(() => {            
             $('#alert-success').css('opacity', "0");
@@ -600,16 +859,17 @@ function checkExist(){
 }
 
 // Add Employee to Database
-function sendData(first_name, last_name, department, email){
+function sendData(first_name, last_name, job_title, department, email){
     console.log('sendData()');
     return $.ajax({  
         type: 'POST',
         url: 'php/addData.php', 
         data: { 
-            firstName: capitalize(first_name),
-            lastName: capitalize(last_name),
+            firstName: capitalize(first_name.toLowerCase()),
+            lastName: capitalize(last_name.toLowerCase()),
+            jobTitle: capitalize(job_title.toLowerCase()),
             department: department,
-            email: email
+            email: email.toLowerCase()
          },
         success: function(result){
             getData();
@@ -692,32 +952,68 @@ function getLocationForNoResult(id){
     return name;
 }
 
-/* SEARCH BAR INPUT */
+/*--------------------------------------------------------------- SEARCH BAR INPUT ----------------------------------------------------------- */
 
-$('#search-input').on('keyup', function (){
+$('#search-input').on('keyup', function (){       
     entries = 0;
     let value = $(this).val();
-    let data = searchTable(value, object_array);    
-    $('#tbody').html('');
-    data.forEach(element =>{        
-        addTableRow(element, value, null);
-    })
+    const id = $('.tab-content .active').attr('id');
+    let data;
+    console.log(id);
+    switch(id) {
+        case 'locations':         
+            data = searchTableDept(value, locations);             
+            $('#table-locations').html('');            
+            data.forEach(element =>{
+                addLocationRow(element);
+            })
+        break;
+        case 'departments':
+            data = searchTableDept(value, select_options);                
+            $('#table-departments').html('');
+            data.forEach(element =>{
+                addDepartmentRow(element);
+            })
+        break;
+        default:
+            data = searchTable(value, object_array);    
+            $('#table-personnel').html('');
+            data.forEach(element =>{        
+                addTableRow(element, value, null);
+            })   
+    }       
     entries = data.length;
-    $('#entries').html(entries + " Entries");
+    $('#entries').html(entries + " Entries");       
 })
+
+
 
 function searchTable(value, data){
     let filterData = [];
     for (let i = 0; i < data.length; i++){
         value = value.toLowerCase();
-        let name = data[i].firstName.toLowerCase();
+        let name = data[i].joined.toLowerCase();
         if (name.includes(value)){
             filterData.push(data[i]);
         }
     }
-
+    console.log(filterData);
     return filterData;
 }
+
+function searchTableDept(value, data){
+    let filterData = [];
+    for (let i = 0; i < data.length; i++){
+        value = value.toLowerCase();
+        let name = data[i].name.toLowerCase();
+        if (name.includes(value)){
+            filterData.push(data[i]);
+        }
+    }
+    console.log(filterData);
+    return filterData;
+}
+
 
 
 
@@ -762,12 +1058,20 @@ function updateDatalist(){
 
 
 // Refresh
+
+function resetTables(){
+    $('#table-personnel').html("");
+    $('#table-departments').html("");    
+    $('#table-locations').html("");
+}
+
 function resetArrays(){
     names = [];
     select_options = [];
     employees = [];
     object_array = [];
     entries = 0;
+    locations = [];
     $('datalist').html('');
     $('#department-search').html('');
 }
@@ -807,4 +1111,85 @@ function capitalize(str){
     const str2 = arr.join(" ");
 
     return str2;
+}
+
+// ADD - TOGGLE MODALS
+$('#add').click(()=>{
+    const id = $('.tab-content .active').attr('id');
+    console.log(id);
+    switch(id) {
+        case 'locations':
+            $('#addLocationModal').modal('toggle');
+        break;
+        case 'departments':
+            $('#addDeptModal').modal('toggle');   
+        break;
+        default:
+            $('#addEmployeeModal').modal('toggle');   
+      } 
+})
+
+$('#modal-add-dept').click(()=>{
+    $modal = $('#addDeptModal');
+    $modal.modal('toggle');
+})
+
+
+// ON TAB SELECTION
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {checkOpenTab();})
+
+// CHECK OPEN TAB and UPDATE ENTRIES
+function checkOpenTab(){
+
+    // Remove txt from Search Bar, restore tables
+    if ($('#search-input').val().length > 0){
+        $('#search-input').val("");
+        getData();
+    }
+    const id = $('.tab-content .active').attr('id');
+    switch(id) {
+        case 'locations': 
+            $('#add').attr('title', 'Add New Location');           
+            $('#entries').html(locations.length + " Entries");
+        break;
+        case 'departments':
+            $('#add').attr('title', 'Add New Department');     
+            $('#entries').html(select_options.length + " Entries");
+        break;
+        default:
+            $('#add').attr('title', 'Add New Personnel');     
+            $('#entries').html(employees.length + " Entries");      
+      }        
+}
+
+
+// UPDATE READONLY LOCATION INPUT
+$('#department-add').change(()=>{
+    const id = $('#department-add').val();
+    select_options.forEach(dept => {
+        if (dept.id == id){
+            $('#location-add').val(dept.location);
+        }
+    })
+})
+$('#department-edit').change(()=>{
+    const id = $('#department-edit').val();
+    select_options.forEach(dept => {
+        if (dept.id == id){
+            $('#location-edit').val(dept.location);
+        }
+    })
+})
+
+// POPULATE LOCATION SELECT
+
+function addLocationOptionsToSelect(){    
+    $('#dept-location').html("");
+    locations.forEach(location=>{
+        const option = document.createElement('option');
+        option.value = location.id;
+        const txt = document.createTextNode(location.name);
+        option.appendChild(txt);
+        $('#dept-location').append(option);
+    })
 }

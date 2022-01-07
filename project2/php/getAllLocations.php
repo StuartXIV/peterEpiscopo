@@ -10,7 +10,7 @@
     $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname) or die(mysqli_error($conn));
 
 
-    $result = $conn->query("SELECT * FROM location") or die($conn->error);
+    $result = $conn->query("SELECT * FROM location ORDER BY name") or die($conn->error);
 
     $data = [];
 

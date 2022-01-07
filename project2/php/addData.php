@@ -5,7 +5,7 @@ $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname) or die(mysqli_e
 
     $first_name = $_REQUEST['firstName'];
     $last_name = $_REQUEST['lastName'];
-    $job_title = '';
+    $job_title = $_REQUEST['jobTitle'];
     $department = $_REQUEST['department'];    
     $email = $_REQUEST['email'];
 

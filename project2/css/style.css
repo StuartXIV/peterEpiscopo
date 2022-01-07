@@ -6,16 +6,22 @@ body {
     width: 100%;
     position: relative;
     background-color: #F5F5F5;
-    padding: 5% 0;
     overflow: hidden;
     max-height: 100vh;
+    height: 100vh;
 }
+
 
 .container {
     background-color: #fff;
     height: 100%;
     overflow: hidden;
     max-width: 1400px;
+}
+
+#main {
+    height: 100vh;
+    position: relative;
 }
 
 a:hover {
@@ -25,7 +31,7 @@ a:hover {
 
 i {
     float: left;
-    margin-right: 5px;
+    vertical-align: middle;
 }
 
 /*--------------------------------------------------------------
@@ -87,7 +93,6 @@ i {
     color: #fff;
     padding: 16px 30px;
     min-width: 100%;
-    border-radius: 3px 3px 0 0;
 }
 
 .small-search {
@@ -129,6 +134,31 @@ i {
     pointer-events: none;
 }
 
+#advanced-search {
+    display: none;
+}
+
+/*--------------------------------------------------------------
+# TABS
+--------------------------------------------------------------*/
+
+#myTab {
+    width: 100%;
+    margin-top: 4px;
+    padding: 0 1em;
+    position: relative;
+}
+
+#myTabContent {
+    width: 100%;
+}
+
+#add {
+    position: absolute;
+    right: 1em;
+    vertical-align: middle;
+}
+
 /*--------------------------------------------------------------
 # Alerts
 --------------------------------------------------------------*/
@@ -142,9 +172,17 @@ i {
     pointer-events: none;
 }
 
-#alert-error, #alert-success, #alert-success-edit, #dept-error, #dept-success {
+#alert-error, #alert-success, #alert-success-edit, #dept-error, #dept-success, #location-error, #location-success, #alert-success-edit-dept, #alert-success-edit-location {
     opacity: 0;
     transition: opacity .5s ease;
+}
+
+.action-padding {
+    padding-right: 1.8rem !important;
+}
+
+.btn {
+    line-height: unset;
 }
 
 
@@ -190,13 +228,14 @@ a .btn-danger {
 .table-fixed {
     width: 100%;
     background-color: white;
-    margin-bottom: 0;
+    margin-bottom: 5em;
 }
 
 .table-fixed tbody{
-    height:60vh;
+    height:72vh;
     overflow-y:auto;
     width: 100%;
+    padding: 0 1.5em 5em 1.5em;
     }
 
 thead,tbody,tr,td,th{
@@ -208,14 +247,19 @@ thead {
     padding: 0 1.5em;
 }
 
-thead tr th{
+.table th {
     float:left;
     width: 25%;
+    border-top: none;
   }
 
-thead tr th:last-child{
-    padding-right: 3.1em;
+.table .personnel-header {
+    width: 20%;
 }
+
+/* thead tr th:last-child{
+    padding-right: 3.1em;
+} */
 
   .table-fixed tbody tr {
       height: 5rem;
@@ -228,9 +272,6 @@ thead tr th:last-child{
     display: none;
 }
 
-.table-fixed tbody {
-    padding: 0 1.5em;
-}
   
 .table-fixed tbody td{
     float:left;
@@ -241,6 +282,10 @@ thead tr th:last-child{
     padding-bottom: 30px;
 }
 
+#table-personnel tr td {
+    width: 20%;
+}
+
 .table-fixed tbody tr:nth-child(2n){
     background-color: #f3f3f3;
 }
@@ -248,19 +293,13 @@ thead tr th:last-child{
     border-top: none;
 }
 
-.clearfix {
-    width: 100%;
-    padding: 0.7em 1.5em;    
-    background: #435d7d;
-    border-radius: 0 0 3px 3px;
-}
-
-#entries {
-    color: #fff;
+#action-dept {
+    width: 50%;
 }
 
 .table-fixed tbody tr .buttons-container {
     padding-top: 21px;
+    padding-bottom: 21px;
 
 }
 
@@ -284,14 +323,22 @@ thead tr th:last-child{
     cursor: pointer;
 }
 
+/*--------------------------------------------------------------
+# Locations Table
+--------------------------------------------------------------*/
+
+.table .loc-table {
+    width: 50%;
+}
+
 /* DROPDOWN */
 
 #dropdown {
     background-color: #435D7D;
     color: white;
     border-radius: 0 0 5px 5px;
-    line-height: normal;
     font-size: 0.9em;
+    height: 6rem;
 }
 
 #dropdown td {
@@ -306,9 +353,73 @@ thead tr th:last-child{
     color: lightblue;
 }
 
+/*--------------------------------------------------------------
+# Modals
+--------------------------------------------------------------*/
+
+.question-span {
+    font-weight: bold;
+}
+
+#modal-add-dept {
+    padding: 0;
+    height: 1rem;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 1rem;
+    margin-bottom: .2em;
+    margin-left: .2em;
+    background: #28a745;
+    border: none;
+    box-shadow: none;
+}
+#modal-add-dept i {
+    font-size: 1rem;
+}
+
+.plus-modal {
+    filter: invert(77%) sepia(66%) saturate(4121%) hue-rotate(83deg) brightness(80%) contrast(74%);
+    margin-bottom: .25em;
+}
+/*--------------------------------------------------------------
+# Footer
+--------------------------------------------------------------*/
+.clearfix {
+    width: 100%;
+    padding: 0.7em 1.5em;    
+    background: #435d7d;
+    position: absolute;
+    bottom: 0;
+}
+
+#entries {
+    color: #fff;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #435D7D #F3F3F3;
+  }
+  
+  /* SCROLLBAR */
+  *::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+  *::-webkit-scrollbar-track {
+    background: #F3F3F3;
+  }
+  
+  *::-webkit-scrollbar-thumb {
+    background-color: #435D7D;
+    border-radius: 20px;
+    border: 3px solid #F3F3F3;
+  }
+
 @media only screen and (max-width: 1300px) {
     body {
-        padding: 1%;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -354,7 +465,7 @@ thead tr th:last-child{
     }
 
     .dropdown-menu a {
-        font-size: .8rem;
+        font-size: .7rem;
     }
 
     .small-search {
@@ -365,6 +476,60 @@ thead tr th:last-child{
         display: none;
     }
 
+    /* PERSONNEL PANE */
+    #job-title-head {
+        display: none;
+    }
+    .job-title-cell {
+        display: none;
+    }
+
+    /* ADD BUTTON */
+    #add {
+        right: 1em;  
+        border-radius: 50%;
+        height: 30px;
+        width: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;    
+        margin-top: .1em;  
+    }
+
+    #add i {
+        font-size: 1rem;
+    }
+    /* ---- */
+
+    #table-departments tr td:nth-child(2n){
+        display: none;
+    }
+
+    #table-departments tr td:first-child, #table-locations tr td:first-child, #table-personnel tr td:first-child{
+        width: 60%;
+    }
+
+    #table-departments tr .text-center, #table-locations tr .text-center, #table-personnel tr .text-center{
+        width: 40%;
+    }
+
+    #departments thead tr th:nth-child(2n){
+        display: none;
+    }
+
+    #department-header {
+        width: 50%;
+    }
+
+
+    #personnel-head tr th {
+        width: 50%;
+    }
+
+    .action-padding {
+        padding-right: 1em !important;
+    }
+
     .btn-search {
         pointer-events: none;
     }
@@ -373,10 +538,10 @@ thead tr th:last-child{
         margin: 0;
     }
 
-    .cell-name {
+    /* .cell-name {
         font-size: .8em;
         font-weight: 600;
-    }
+    } */
 
     .arrow {
         display: inline;
@@ -409,6 +574,7 @@ thead tr th:last-child{
 
     #tbody {
         height: 70vh;
+        padding-bottom: 10em;
     }
 
     .table-fixed tbody td {
@@ -436,6 +602,24 @@ thead tr th:last-child{
         font-size: .7rem;
     }
 
+
+    /* TABS */
+    #myTab {
+        padding: 0;
+    }
+
+    .nav-tabs .nav-item {
+        font-size: .7em;
+    }
+    /* --- */
+    .table-fixed tbody tr {
+        height: 5rem;
+        pointer-events:initial;
+        cursor: pointer;
+        border-bottom: 2px solid rgba(153, 153, 153, 0.238);
+        border-radius: 0px 0px 10px 10px;
+    }
+
     .table-fixed tbody tr {
         height: 5rem;
         pointer-events:initial;
@@ -452,15 +636,19 @@ thead tr th:last-child{
         transition: all .3s ease;        
         border-bottom: 2px solid rgba(153, 153, 153, 0.238);
         border-radius: 0px 0px 10px 10px;
-        line-height: 1.5rem;
+        line-height: 1.35rem;
     }
 
     .table-fixed tbody {
-        padding: 0;
+        padding: 0 0 10em 0;
     }
 
     .clearfix {
         border-radius: 0%;
+    }
+
+    .nav-tabs .nav-item {
+        font-size: .8em;
     }
 
 

@@ -1,9 +1,10 @@
 <?php
 
 	// example use from browser
-	// http://localhost/companydirectory/libs/php/getAllDepartments.php
+	// use insertDepartment.php first to create new dummy record and then specify it's id in the command below
+	// http://localhost/companydirectory/libs/php/deleteDepartmentByID.php?id=<id>
 
-	// remove next two lines for production	
+	// remove next two lines for production
 	
 	ini_set('display_errors', 'On');
 	error_reporting(E_ALL);
@@ -14,10 +15,7 @@
 
 	header('Content-Type: application/json; charset=UTF-8');
 
-
-    $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname) or die(mysqli_error($conn));
-
-	// $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname, $cd_port, $cd_socket);
+	$conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname, $cd_port, $cd_socket);
 
 	if (mysqli_connect_errno()) {
 		
@@ -35,13 +33,16 @@
 
 	}	
 
-	// SQL does not accept parameters and so is not prepared
+	// SQL statement accepts parameters and so is prepared to avoid SQL injection.
+	// $_REQUEST used for development / debugging. Remember to change to $_POST for production
 
-	$query = 'SELECT d.id, d.name, l.name as location FROM department d LEFT JOIN location l ON (l.id = d.locationID) ORDER BY d.name, l.name';
-
-	$result = $conn->query($query);
+	$query = $conn->prepare('DELETE FROM location WHERE id = ?');
 	
-	if (!$result) {
+	$query->bind_param("i", $_REQUEST['id']);
+
+	$query->execute();
+	
+	if (false === $query) {
 
 		$output['status']['code'] = "400";
 		$output['status']['name'] = "executed";
@@ -55,20 +56,12 @@
 		exit;
 
 	}
-   
-   	$data = [];
-
-	while ($row = mysqli_fetch_assoc($result)) {
-
-		array_push($data, $row);
-
-	}
 
 	$output['status']['code'] = "200";
 	$output['status']['name'] = "ok";
 	$output['status']['description'] = "success";
 	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-	$output['data'] = $data;
+	$output['data'] = [];
 	
 	mysqli_close($conn);
 
