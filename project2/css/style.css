@@ -242,6 +242,11 @@ thead,tbody,tr,td,th{
     display:block;
   }
 
+/* #myTabContent .btn-info {
+    background-color: #FEC61E;
+    border: #FEC61E;
+} */
+
 thead {
     width: 100%;
     padding: 0 1.5em;
@@ -257,9 +262,17 @@ thead {
     width: 20%;
 }
 
-/* thead tr th:last-child{
-    padding-right: 3.1em;
-} */
+/* NO RESULTS */
+.no-results-row span {
+    font-weight: 600;
+    margin: 0 .1em;
+}
+
+.no-results-row button {
+    margin-top: 2em;
+    padding: .7em 1em;
+}
+/* ------------------ */
 
   .table-fixed tbody tr {
       height: 5rem;
@@ -282,9 +295,63 @@ thead {
     padding-bottom: 30px;
 }
 
-#table-personnel tr td {
-    width: 20%;
+/* DEPARTMENTS TABLE */
+
+@media only screen and (min-width: 850px) {
+    .table-fixed tbody tr {
+        height: 4rem;
+    }
+
+    .table-fixed tbody td{
+        display: flex;
+        align-items: center;
+    }
+    
+    .table-fixed tbody tr td:last-child {    
+        justify-content: center;
+    }
+    #departments tr th {
+        width: 40%;
+    }
+
+    #departments tr th:last-child {
+        width: 20%;
+    }
+
+    #table-departments td{
+        width: 40%;
+    }
+
+    #table-departments tr td:last-child {
+        width: 20%;
+    }
+
+    #table-personnel tr td {
+        width: 20%;
+    }
 }
+/* ------------------------ */
+
+/* LOCATIONS TABLE */
+
+@media only screen and (min-width: 850px) {
+    #locations tr th {
+        width: 80%;
+    }
+
+    #locations tr th:last-child {
+        width: 20%;
+    }
+
+    #table-locations td{
+        width: 80%;
+    }
+
+    #table-locations tr td:last-child {
+        width: 20%;
+    }
+}
+/* ------------------------ */
 
 .table-fixed tbody tr:nth-child(2n){
     background-color: #f3f3f3;

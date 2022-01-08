@@ -959,32 +959,71 @@ $('#search-input').on('keyup', function (){
     let value = $(this).val();
     const id = $('.tab-content .active').attr('id');
     let data;
-    console.log(id);
     switch(id) {
         case 'locations':         
             data = searchTableDept(value, locations);             
-            $('#table-locations').html('');            
-            data.forEach(element =>{
-                addLocationRow(element);
-            })
+            $('#table-locations').html('');     
+            if (data.length > 0){                    
+                data.forEach(element =>{
+                    addLocationRow(element);
+                })
+            } else {
+                noResults($('#table-locations'), 'Locations');
+            }    
         break;
         case 'departments':
             data = searchTableDept(value, select_options);                
             $('#table-departments').html('');
-            data.forEach(element =>{
-                addDepartmentRow(element);
-            })
+            if (data.length > 0){                    
+                data.forEach(element =>{
+                    addDepartmentRow(element);
+                })
+            } else {
+                noResults($('#table-departments'), 'Departments');
+            }   
         break;
         default:
             data = searchTable(value, object_array);    
             $('#table-personnel').html('');
-            data.forEach(element =>{        
-                addTableRow(element, value, null);
-            })   
+            if (data.length > 0){                    
+                data.forEach(element =>{
+                    addTableRow(element);
+                })
+            } else {
+                noResults($('#table-personnel'), 'Personnel');
+            }   
     }       
     entries = data.length;
     $('#entries').html(entries + " Entries");       
 })
+
+function noResults(table, string){
+    const row = document.createElement('tr');
+    row.classList.add('no-results-row');
+    const cell = document.createElement('td');
+    const span = document.createElement('span');
+    const button = document.createElement('button');
+    button.setAttribute('id', 'no-results-btn');
+    button.setAttribute('onclick', 'noResultsModal()');
+
+    button.classList.add('btn');
+    button.classList.add('btn-success');
+    const value = $('#search-input').val();    
+    const txt = document.createTextNode('No search results for \'');
+    const txt_value = document.createTextNode(capitalize(value));    
+    const txt_2 = document.createTextNode('\'');
+    const txt_btn = document.createTextNode(`Add ${capitalize(value)} to ${string}`);
+
+    span.appendChild(txt_value);
+    button.appendChild(txt_btn);
+    cell.appendChild(txt);
+    cell.appendChild(span);
+    cell.appendChild(txt_2);
+    cell.appendChild(button);
+    row.appendChild(cell);
+    table.append(row);
+
+}
 
 
 
@@ -997,7 +1036,6 @@ function searchTable(value, data){
             filterData.push(data[i]);
         }
     }
-    console.log(filterData);
     return filterData;
 }
 
@@ -1014,7 +1052,39 @@ function searchTableDept(value, data){
     return filterData;
 }
 
+function noResultsModal(){    
+    const id = $('.tab-content .active').attr('id');
+    const value = capitalize($('#search-input').val().toLowerCase());
+    switch(id) {
+        case 'locations':
+            $('#location-name-add').val(value);
+        break;
+        case 'departments':
+            $('#dept-name').val(value);  
+        break;
+        default:
+            $('#name').val(value);   
+            $('#last-name').val(""); 
+            $('#job-title-add').val(""); 
+            $('#email').val("");
+      } 
+    openModal();
+}
 
+// OPEN MODAL
+function openModal(){
+    const id = $('.tab-content .active').attr('id');
+    switch(id) {
+        case 'locations':
+            $('#addLocationModal').modal('toggle');
+        break;
+        case 'departments':
+            $('#addDeptModal').modal('toggle');   
+        break;
+        default:
+            $('#addEmployeeModal').modal('toggle');   
+      } 
+}
 
 
 
@@ -1072,8 +1142,10 @@ function resetArrays(){
     object_array = [];
     entries = 0;
     locations = [];
+
     $('datalist').html('');
-    $('#department-search').html('');
+    $('#department-add').html('');
+    $('#department-edit').html('');
 }
 
 // Sort Object Array Function
@@ -1115,18 +1187,7 @@ function capitalize(str){
 
 // ADD - TOGGLE MODALS
 $('#add').click(()=>{
-    const id = $('.tab-content .active').attr('id');
-    console.log(id);
-    switch(id) {
-        case 'locations':
-            $('#addLocationModal').modal('toggle');
-        break;
-        case 'departments':
-            $('#addDeptModal').modal('toggle');   
-        break;
-        default:
-            $('#addEmployeeModal').modal('toggle');   
-      } 
+    openModal();
 })
 
 $('#modal-add-dept').click(()=>{
