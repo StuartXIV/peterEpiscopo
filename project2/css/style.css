@@ -390,6 +390,21 @@ thead {
     cursor: pointer;
 }
 
+/* NO RESULTS */
+
+.no-results-row {
+    height: 10em !important;
+}
+
+.no-results-row td {
+    display: inline-block !important;
+    width: 100% !important;
+}
+
+.no-results-row td button {
+    display: block !important;
+}
+
 /*--------------------------------------------------------------
 # Locations Table
 --------------------------------------------------------------*/
