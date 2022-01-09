@@ -1286,14 +1286,26 @@ $('#department-edit').change(()=>{
 // POPULATE LOCATION SELECT
 
 function addLocationOptionsToSelect(){    
+    addLocationOptionsToSelectEdit();
     $('#dept-location').html("");
+    locations.forEach(location=>{
+        const option = document.createElement('option');
+        option.value = location.id;
+        const txt = document.createTextNode(location.name);
+        option.appendChild(txt);
+        let option2 = option;    
+        $('#dept-location').append(option);
+    })
+}
+
+function addLocationOptionsToSelectEdit(){   
     $('#location-select-dept').html("");
     locations.forEach(location=>{
         const option = document.createElement('option');
         option.value = location.id;
         const txt = document.createTextNode(location.name);
         option.appendChild(txt);
-        $('#dept-location').append(option);
-        $('#location-select-dept').append(option);
+        let option2 = option;
+        $('#location-select-dept').append(option);    
     })
 }
