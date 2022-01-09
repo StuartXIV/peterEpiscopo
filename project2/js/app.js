@@ -172,9 +172,13 @@ function selectDept(id){
     selected_dept  = id;
     select_options.forEach(dept => {
         if (dept.id == id){
+            locations.forEach(loc => {
+                if (loc.name == dept.location){
+                    $('#location-select-dept').val(loc.id);
+                }
+            })
             $('#dept-delete-question').html(dept.name);
             $('#department-edit-dept').val(dept.name);
-            $('#location-edit-dept').val(dept.location);
         }
     })
 }
@@ -323,12 +327,72 @@ function removeLocationFromDB(){
         });
 }
 
-$('#add-location-form').submit(checkLocationExists);
- 
+$('#add-location-form').submit(addLocationToDB);
 
-function checkLocationExists(){
+function addLocationToDB(){
 
-    const location = $('#location-name-add').val();
+    let location = $('#location-name-add').val();
+
+    if (!checkLocationExists(location)){
+        console.log(checkLocationExists(location));
+
+        location = capitalize(location.toLowerCase());
+
+        $.ajax(
+            {
+            url: "php/addLocationDB.php",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                name: location
+            },
+            success: function(result) {
+                //console.log(JSON.stringify(result));
+                getData();
+            },       
+
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Error Location to DB');
+            }
+        })
+    } 
+}
+
+// EDIT DEPARTMENT
+$('#edit-form-loc').submit(() => updateLocationByID());
+
+function updateLocationByID(){    
+
+    let location = $('#location-edit-loc').val();
+    console.log(selected_location + " " + location);
+    
+    $.ajax(
+        {
+            url: "php/updateLocationByID.php",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id : selected_location,
+                location: location
+            },
+            
+            success: function(result) {      
+                //console.log(JSON.stringify(result)); 
+                    getData();
+                    $('#alert-success-edit-location').css('opacity', "1");
+                    setTimeout(() => {            
+                        $('#alert-success-edit-location').css('opacity', "0");
+                    }, 2000);
+                },
+    
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Error');
+            }        
+        });
+} 
+
+function checkLocationExists(location){
+    let exists;
 
     if (locations.some(e => e.name === capitalize(location))) {
 
@@ -336,38 +400,16 @@ function checkLocationExists(){
         setTimeout(() => {            
             $('#location-error').css('opacity', "0");
         }, 2000);          
-                 
+        exists = true;      
     } else {
 
-        addLocationToDB(capitalize(location));               
         $('#location-success').css('opacity', "1");
         setTimeout(() => {            
             $('#location-success').css('opacity', "0");
         }, 2000);
-    }    
-}
-
-function addLocationToDB(location){
-
-    location = capitalize(location.toLowerCase());
-
-    $.ajax(
-        {
-        url: "php/addLocationDB.php",
-        type: 'POST',
-        dataType: 'json',
-        data: {
-            name: location
-        },
-        success: function(result) {
-            //console.log(JSON.stringify(result));
-            getData();
-        },       
-
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.log('Error Location to DB');
-        }
-    })
+        exists = false;
+    } 
+    return exists;   
 }
 
 function addEditDeleteBtn(row, id, string){
@@ -614,14 +656,7 @@ function getEditData(id){
             let location;
             select_options.forEach(department => {
                 if (department.id == departmentID){
-                    console.log(department.locationID);
-                    location = department.locationID;
-                    locations.forEach(l => {
-                        if (l.id == location){                            
-                            $('#location-edit').val(l.name);
-                            console.log(locations);
-                        }
-                    })
+                    $('#location-edit').val(department.location);                       
                 }
             });
         },
@@ -1082,7 +1117,13 @@ function openModal(){
             $('#addDeptModal').modal('toggle');   
         break;
         default:
-            $('#addEmployeeModal').modal('toggle');   
+            $('#addEmployeeModal').modal('toggle'); 
+              let id = $('#department-add').val();
+              select_options.forEach(dept => {
+                  if (dept.id == id){
+                      $('#location-add').val(dept.location);
+                  }
+              })
       } 
 }
 
@@ -1246,11 +1287,13 @@ $('#department-edit').change(()=>{
 
 function addLocationOptionsToSelect(){    
     $('#dept-location').html("");
+    $('#location-select-dept').html("");
     locations.forEach(location=>{
         const option = document.createElement('option');
         option.value = location.id;
         const txt = document.createTextNode(location.name);
         option.appendChild(txt);
         $('#dept-location').append(option);
+        $('#location-select-dept').append(option);
     })
 }
