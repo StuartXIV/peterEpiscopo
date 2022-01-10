@@ -217,7 +217,7 @@ function removeDeptFromDB(){
                     //console.log(JSON.stringify(result)); 
                         select_options.forEach(d => {
                             if (d.id == selected_dept){
-                                $('#alert-success-remove-dept').html(`Succesfully removed <b>${d.name}</b> from Departments`);
+                                $('#alert-success-remove-dept').html(`<b>${d.name}</b> succesfully removed from Departments`);
                             }
                         })
                         getData();
@@ -373,7 +373,7 @@ function removeLocationFromDB(){
                     //console.log(JSON.stringify(result)); 
                         locations.forEach(l => {
                             if (l.id == selected_location){
-                                $('#alert-success-remove-location').html(`Succesfully removed <b>${l.name}</b> from Locations`);
+                                $('#alert-success-remove-location').html(`<b>${l.name}</b> succesfully removed from Locations`);
                             }
                         })
                         $('#deleteLocationModal').modal('hide');
@@ -870,7 +870,7 @@ function deleteRow(id){
                 //console.log("deleteRow()");
                 object_array.forEach(d => {
                     if (d.id == selected_employee){
-                        $('#alert-success-remove').html(`Succesfully removed <b>${d.lastName} ${d.firstName}</b> from Personnel`);
+                        $('#alert-success-remove').html(`<b>${d.lastName} ${d.firstName}</b> succesfully removed from Personnel`);
                     }
                 })
                 getData();
