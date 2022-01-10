@@ -172,9 +172,13 @@ i {
     pointer-events: none;
 }
 
-#alert-error, #alert-success, #alert-success-edit, #dept-error, #dept-success, #location-error, #location-success, #alert-success-edit-dept, #alert-success-edit-location {
+.alert {
     opacity: 0;
     transition: opacity .5s ease;
+}
+
+#department-error-delete, #location-error-delete {
+    text-align: left;
 }
 
 .action-padding {
@@ -352,6 +356,12 @@ thead {
     }
 }
 /* ------------------------ */
+
+/* ALERT */
+
+.alert {
+    border-radius: 0px;
+}
 
 .table-fixed tbody tr:nth-child(2n){
     background-color: #f3f3f3;

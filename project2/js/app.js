@@ -186,25 +186,55 @@ function selectDept(id){
 $('#delete-dept').click(removeDeptFromDB);
 
 function removeDeptFromDB(){    
+    if (object_array.some(e => e.departmentID == selected_dept)) {  
+        let employee_to_reassign = [];
+        object_array.forEach(p => {
+            if (p.departmentID == selected_dept){
+                const first_name = p.firstName;
+                const last_name = p.lastName;
+                let joined = `<b>${last_name} ${first_name}</b>`;
+                employee_to_reassign.push(joined);
+            }
+        })
 
-    $.ajax(
-        {
-            url: "php/deleteDepartmentByID.php",
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                id : selected_dept
-            },
-            
-            success: function(result) {      
-                //console.log(JSON.stringify(result)); 
-                    getData();
+        $('#department-error-delete').html(`Please reassign the following employees before deletion:<br> ${employee_to_reassign.join(`<br>`)}`)
+        $('#department-error-delete').css('opacity', "1");
+            setTimeout(() => {            
+                $('#department-error-delete').css('opacity', "0");
+            }, 2000);   
+        
+      } else {
+        $.ajax(
+            {
+                url: "php/deleteDepartmentByID.php",
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    id : selected_dept
                 },
-    
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.log('Error');
-            }        
-        });
+                
+                success: function(result) {      
+                    //console.log(JSON.stringify(result)); 
+                        select_options.forEach(d => {
+                            if (d.id == selected_dept){
+                                $('#alert-success-remove-dept').html(`Succesfully removed <b>${d.name}</b> from Departments`);
+                            }
+                        })
+                        getData();
+                        $('#deleteDeptModal').modal('hide');
+                        setTimeout(()=> {      
+                            $('#alert-success-remove-dept').css('opacity', "1");
+                            setTimeout(() => {            
+                                $('#alert-success-remove-dept').css('opacity', "0");
+                            }, 2000);
+                        }, 500)
+                    },
+        
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log('Error');
+                }        
+            });
+      }
 }
 
 
@@ -214,13 +244,13 @@ $('#edit-form-dept').submit(() => updateDeptInDB());
 function updateDeptInDB(){  
     
     $name = $('#department-edit-dept').val();
-    $location = $('#location-edit-dept').val();
+    $location = $('#location-select-dept').val();
     if (locations.some(e => e.name === $location)) {
         $location = "b";
         console.log("location exists!");
       }
 
-    console.log(typeof selected_dept + " " + $name);
+    console.log(typeof selected_dept + " " + $name + " " + $location);
     $.ajax(
         {
             url: "php/updateDepartmentByID.php",
@@ -235,10 +265,14 @@ function updateDeptInDB(){
             success: function(result) {      
                 //console.log(JSON.stringify(result)); 
                     getData();
-                    $('#alert-success-edit-dept').css('opacity', "1");
-                    setTimeout(() => {            
-                        $('#alert-success-edit-dept').css('opacity', "0");
-                    }, 2000);
+                    
+                    $('#editDeptModal').modal('hide');
+                    setTimeout(()=>{
+                        $('#alert-success-edit-dept').css('opacity', "1");
+                        setTimeout(() => {            
+                            $('#alert-success-edit-dept').css('opacity', "0");
+                        }, 2000);
+                    }, 500);
                 },
     
             error: function(jqXHR, textStatus, errorThrown) {
@@ -292,6 +326,7 @@ function addLocationRow(location_object){
 }
 
 let selected_location;
+let selected_location_name;
 
 function selectLocation(id){
     selected_location  = id;
@@ -299,32 +334,63 @@ function selectLocation(id){
         if (location.id == id){
             $('#location-delete-question').html(location.name);
             $('#location-edit-loc').val(location.name);
+            selected_location_name = location.name;
         }
     })
 }
 
+// REMOVE LOCATION
 $('#delete-location').click(removeLocationFromDB);
 
-function removeLocationFromDB(){    
+function removeLocationFromDB(){   
+    if (select_options.some(e => e.location === selected_location_name)) {  
+        let dept_to_reassign = [];
+        select_options.forEach(d => {
+            if (d.location === selected_location_name){
+                const name = `<b>${d.name}</b>`;
+                dept_to_reassign.push(name);
+            }
+        })
 
-    $.ajax(
-        {
-            url: "php/deleteLocationByID.php",
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                id : selected_location
-            },
-            
-            success: function(result) {      
-                //console.log(JSON.stringify(result)); 
-                    getData();
+        $('#location-error-delete').html(`Please reassign the following departments before deletion:<br> ${dept_to_reassign.join(`<br>`)}`)
+        $('#location-error-delete').css('opacity', "1");
+            setTimeout(() => {            
+                $('#location-error-delete').css('opacity', "0");
+            }, 2000);   
+
+    } else {
+
+        $.ajax(
+            {
+                url: "php/deleteLocationByID.php",
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    id : selected_location
                 },
-    
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.log('Error');
-            }        
-        });
+                
+                success: function(result) {      
+                    //console.log(JSON.stringify(result)); 
+                        locations.forEach(l => {
+                            if (l.id == selected_location){
+                                $('#alert-success-remove-location').html(`Succesfully removed <b>${l.name}</b> from Locations`);
+                            }
+                        })
+                        $('#deleteLocationModal').modal('hide');
+                        getData();
+                        setTimeout(()=> {      
+                            $('#alert-success-remove-location').css('opacity', "1");
+                            setTimeout(() => {            
+                                $('#alert-success-remove-location').css('opacity', "0");
+                            }, 2000);
+                        }, 500)
+                    },
+        
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log('Error');
+                }        
+            });
+    }       
 }
 
 $('#add-location-form').submit(addLocationToDB);
@@ -348,7 +414,15 @@ function addLocationToDB(){
             },
             success: function(result) {
                 //console.log(JSON.stringify(result));
+                $('#location-success').html(`<b>${location}</b> succesfully added to Locations!`);
                 getData();
+                $('#addLocationModal').modal('hide');
+                setTimeout(()=>{
+                    $('#location-success').css('opacity', "1");
+                    setTimeout(() => {            
+                        $('#location-success').css('opacity', "0");
+                    }, 2000);
+                }, 500)
             },       
 
             error: function(jqXHR, textStatus, errorThrown) {
@@ -358,13 +432,12 @@ function addLocationToDB(){
     } 
 }
 
-// EDIT DEPARTMENT
+// EDIT LOCATION
 $('#edit-form-loc').submit(() => updateLocationByID());
 
 function updateLocationByID(){    
 
     let location = $('#location-edit-loc').val();
-    console.log(selected_location + " " + location);
     
     $.ajax(
         {
@@ -379,10 +452,13 @@ function updateLocationByID(){
             success: function(result) {      
                 //console.log(JSON.stringify(result)); 
                     getData();
-                    $('#alert-success-edit-location').css('opacity', "1");
-                    setTimeout(() => {            
-                        $('#alert-success-edit-location').css('opacity', "0");
-                    }, 2000);
+                    $('#editLocationModal').modal('hide');
+                    setTimeout(()=>{
+                        $('#alert-success-edit-location').css('opacity', "1");
+                        setTimeout(() => {            
+                            $('#alert-success-edit-location').css('opacity', "0");
+                        }, 2000);
+                    }, 500)
                 },
     
             error: function(jqXHR, textStatus, errorThrown) {
@@ -402,11 +478,6 @@ function checkLocationExists(location){
         }, 2000);          
         exists = true;      
     } else {
-
-        $('#location-success').css('opacity', "1");
-        setTimeout(() => {            
-            $('#location-success').css('opacity', "0");
-        }, 2000);
         exists = false;
     } 
     return exists;   
@@ -456,9 +527,9 @@ function addEditDeleteBtn(row, id, string){
     row.appendChild(cell_action);  
 }
 
-// Retrieve Employees from Database
+// ---------------------------------------------------* GET ALL DATA *--------------------------------------------------- //
 function getData(){
-    console.log("getData()");
+
     resetTables();
     resetArrays();
     getAllDepartments();
@@ -480,6 +551,7 @@ function getData(){
                     let last_name = element['lastName'];
                     let job_title = element['jobTitle'];
                     let department = element['department'];   
+                    let departmentID = element['departmentID']; 
                     let location = element['location'];
                     let email = element['email'];   
                     let employee = {    /////// MAYBE A SHORTCUT WOULD BE BETTER(push.(element))
@@ -490,7 +562,8 @@ function getData(){
                         department: department,
                         location: location,
                         email: email,
-                        joined: first_name + last_name
+                        joined: first_name + last_name,
+                        departmentID: departmentID
                     }   
                     let joined = first_name.toLowerCase() + last_name.toLowerCase();                      
                     first_name = capitalize(first_name); // WATCH OUT!!!      
@@ -516,6 +589,7 @@ function getData(){
     });     
 }
 
+// ---------------------------------------------------* BUILD TABLE *--------------------------------------------------- //
 function addTableRow(employee, value = null, joined){
 
  if (object_array.length > 0){
@@ -618,7 +692,7 @@ let selected_employee;
 let selected_employee_position_array; // joined element in employees[] 
 
 
-/* EDIT EMPLOYEE */
+// ---------------------------------------------------* EDIT EMPLOYEE *--------------------------------------------------- //
 
 $('#edit-form').submit(sendEditData);
 
@@ -692,13 +766,16 @@ function sendEditData(){
         
         success: function(result) {      
             //console.log(JSON.stringify(result)); 
-            employees[selected_employee_position_array] = $name.toLowerCase() + $department.toLowerCase();
+            employees[selected_employee_position_array] = $name.toLowerCase() + $department.toLowerCase();//maybe DELETE
             getData();
             //Alert Success
-            $('#alert-success-edit').css('opacity', "1");
-            setTimeout(() => {            
-                $('#alert-success-edit').css('opacity', "0");
-            }, 2000);
+            $('#editEmployeeModal').modal('hide');
+            setTimeout(()=>{
+                $('#alert-success-edit').css('opacity', "1");
+                setTimeout(() => {            
+                    $('#alert-success-edit').css('opacity', "0");
+                }, 2000);
+            }, 500)
             },
 
         error: function(jqXHR, textStatus, errorThrown) {
@@ -708,7 +785,7 @@ function sendEditData(){
 }
 
 
-/* REMOVE DATA */
+// ---------------------------------------------------* REMOVE EMPLOYEE *--------------------------------------------------- //
 
 $('#delete').click(getSingleData);
 
@@ -789,9 +866,20 @@ function deleteRow(id){
             //console.log(JSON.stringify(result));
 
             if (result.status.name == "ok") {  
-                console.log("deleteRow()");
+                console.log(selected_employee + "se");
+                //console.log("deleteRow()");
+                object_array.forEach(d => {
+                    if (d.id == selected_employee){
+                        $('#alert-success-remove').html(`Succesfully removed <b>${d.lastName} ${d.firstName}</b> from Personnel`);
+                    }
+                })
                 getData();
-                // console.log(employees);
+                setTimeout(()=>{
+                    $('#alert-success-remove').css('opacity', "1");
+                    setTimeout(() => {            
+                        $('#alert-success-remove').css('opacity', "0");
+                    }, 2000);
+                }, 500);
             }        
         },
 
@@ -801,19 +889,8 @@ function deleteRow(id){
     });  
 }
 
-//remove HTML
-function removeData(id){               
-    console.log('removeData()');
-    entries--;
-    $('#entries').html(entries + " Entries");
-    let row = document.getElementById(`tr${id}`);
-    row.remove();    
-}
 
-//---------------------------------------------------------------------
-
-
-/* ADD DEPARTMENT */
+// ---------------------------------------------------* ADD DEPARTMENT *--------------------------------------------------- //
 
 $('#add-dept-form').submit(checkDeptExists);
 
@@ -847,12 +924,16 @@ function updateDeptDB (name, locationID){
             name: name,
             location: capitalize(locationID)
          },
-        success: function(result){                   
-            $('#dept-success').css('opacity', "1");
-            setTimeout(() => {            
-                $('#dept-success').css('opacity', "0");
-            }, 2000);
-            getData();
+        success: function(result){   
+            $('#dept-success').html(`<b>${capitalize(name.toLowerCase())}</b> succesfully added to Departments!`);
+            getData();            
+            $('#addDeptModal').modal('hide');
+            setTimeout(()=>{
+                $('#dept-success').css('opacity', "1");
+                setTimeout(() => {            
+                    $('#dept-success').css('opacity', "0");
+                }, 2000);
+            }, 500);
         }
     });
 }
@@ -861,9 +942,6 @@ function updateDeptDB (name, locationID){
 
 
 /* ADD EMPLOYEE */
-
-
-
 
 $('#form').submit(checkExist);
 
@@ -885,11 +963,7 @@ function checkExist(){
             $('#alert-error').css('opacity', "0");
         }, 2000);
     } else {
-        sendData(first_name, last_name, job_title, department, email);        
-        $('#alert-success').css('opacity', "1");
-        setTimeout(() => {            
-            $('#alert-success').css('opacity', "0");
-        }, 2000);
+        sendData(first_name, last_name, job_title, department, email);  
     }
 }
 
@@ -907,7 +981,16 @@ function sendData(first_name, last_name, job_title, department, email){
             email: email.toLowerCase()
          },
         success: function(result){
+
+            $('#alert-success-employee').html(`<b>${capitalize(last_name.toLowerCase())} ${capitalize(first_name.toLowerCase())}</b> succesfully added to Personnel!`);
             getData();
+            $('#addEmployeeModal').modal('hide');
+            setTimeout(()=> {      
+                $('#alert-success-employee').css('opacity', "1");
+                setTimeout(() => {            
+                    $('#alert-success-employee').css('opacity', "0");
+                }, 2000);
+            }, 500)
         }
     });
 }
@@ -1128,7 +1211,7 @@ function openModal(){
 }
 
 
-
+// UPDATE SELECT DROPDOWNS
 function updateSelect(select, option = null){
     
     select_options.sort( compare ); 
@@ -1153,6 +1236,7 @@ function updateSelect(select, option = null){
     })
 }
 
+// UPDATE DATALISTS
 function updateDatalist(){
     names.sort();
     names.forEach(name =>{        
@@ -1201,6 +1285,7 @@ function compare( a, b ) {
   }
 
 
+  // Remove Mobile Table Dropdowns
   function removeDropdown(){
       if($('#dropdown').length){
           $('#dropdown').remove();
