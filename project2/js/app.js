@@ -1000,62 +1000,62 @@ function sendData(first_name, last_name, job_title, department, email){
 
 //ADVANCED SEARCH
 
-$('#search-button').click(() => {
-    let name = $('#name-search').val();
-    let department = $('#department-search').val();
-    let data = [];    
-    let value = `${name} ${getLocationForNoResult(department)}`;    
-    $('#tbody').html('');
-    if (name === "" && department === 'any'){
-        getData();
-    } else {        
+// $('#search-button').click(() => {
+//     let name = $('#name-search').val();
+//     let department = $('#department-search').val();
+//     let data = [];    
+//     let value = `${name} ${getLocationForNoResult(department)}`;    
+//     $('#tbody').html('');
+//     if (name === "" && department === 'any'){
+//         getData();
+//     } else {        
 
-        object_array.forEach(element => {
-            if (element.department === department && name === ""){
-                data.push(element);
-                value=department;
+//         object_array.forEach(element => {
+//             if (element.department === department && name === ""){
+//                 data.push(element);
+//                 value=department;
                 
-            } else if (department === "any" && element.firstName === name){            
-                data.push(element);
-                value = name;
+//             } else if (department === "any" && element.firstName === name){            
+//                 data.push(element);
+//                 value = name;
 
-            } else if (element.department === department && element.firstName === name){                        
-                data.push(element);
-            };
-        }) 
+//             } else if (element.department === department && element.firstName === name){                        
+//                 data.push(element);
+//             };
+//         }) 
 
-        if (data.length > 0){            
-            data.forEach(employee => {
-                addTableRow(employee, value, null);
-                })
-            entries = data.length;
-            $('#entries').html(entries + " Entries")
-        } else {
-            const row = document.createElement('tr');   
-            row.setAttribute("id", `no-results`);      
-            function value(){
-                if (department === 'any' && name){
-                    value = capitalize(name);
-                    return value;
-                } else if (!name){
-                    value = getLocationForNoResult(department);
-                    return department;
-                } else if (department && name){
-                    value = name + " " + getLocationForNoResult(department);
-                    return value;
-                }
-            }      
+//         if (data.length > 0){            
+//             data.forEach(employee => {
+//                 addTableRow(employee, value, null);
+//                 })
+//             entries = data.length;
+//             $('#entries').html(entries + " Entries")
+//         } else {
+//             const row = document.createElement('tr');   
+//             row.setAttribute("id", `no-results`);      
+//             function value(){
+//                 if (department === 'any' && name){
+//                     value = capitalize(name);
+//                     return value;
+//                 } else if (!name){
+//                     value = getLocationForNoResult(department);
+//                     return department;
+//                 } else if (department && name){
+//                     value = name + " " + getLocationForNoResult(department);
+//                     return value;
+//                 }
+//             }      
             
-            const cell_no_results = document.createElement('td');
-            const text_no_results = document.createTextNode(`No results found for '${value()}'`);
-            cell_no_results.appendChild(text_no_results);
-            row.appendChild(cell_no_results);        
-            $('tbody').append(row);        
-            entries = 0;
-            $('#entries').html(entries + " Entries")              
-        }
-    }
-})
+//             const cell_no_results = document.createElement('td');
+//             const text_no_results = document.createTextNode(`No results found for '${value()}'`);
+//             cell_no_results.appendChild(text_no_results);
+//             row.appendChild(cell_no_results);        
+//             $('tbody').append(row);        
+//             entries = 0;
+//             $('#entries').html(entries + " Entries")              
+//         }
+//     }
+// })
 
 
 function getLocationForNoResult(id){
@@ -1073,7 +1073,7 @@ function getLocationForNoResult(id){
 /*--------------------------------------------------------------- SEARCH BAR INPUT ----------------------------------------------------------- */
 
 $('#search-input').on('keyup', function (){       
-    entries = 0;
+    // entries = 0;
     let value = $(this).val();
     const id = $('.tab-content .active').attr('id');
     let data;
@@ -1265,7 +1265,7 @@ function resetArrays(){
     select_options = [];
     employees = [];
     object_array = [];
-    entries = 0;
+    entries = object_array.length;
     locations = [];
 
     $('datalist').html('');
@@ -1336,16 +1336,22 @@ function checkOpenTab(){
     const id = $('.tab-content .active').attr('id');
     switch(id) {
         case 'locations': 
-            $('#add').attr('title', 'Add New Location');           
-            $('#entries').html(locations.length + " Entries");
+            $('#add').attr('title', 'Add New Location');    
+            setTimeout(()=>{
+                $('#entries').html(locations.length + " Entries");                
+            }, 200)       
         break;
         case 'departments':
             $('#add').attr('title', 'Add New Department');     
-            $('#entries').html(select_options.length + " Entries");
+            setTimeout(()=>{
+                $('#entries').html(select_options.length + " Entries");                
+            }, 200)         
         break;
         default:
             $('#add').attr('title', 'Add New Personnel');     
-            $('#entries').html(employees.length + " Entries");      
+            setTimeout(()=>{
+                $('#entries').html(employees.length + " Entries");                  
+            }, 200)             
       }        
 }
 
