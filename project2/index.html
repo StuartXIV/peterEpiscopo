@@ -36,7 +36,10 @@
 				</div>	
 				<div class="alert alert-success" department="alert" id="alert-success-remove-dept">
 					Department succesfully removed!
-				</div>	
+				</div>					
+				<div class="alert alert-danger" role="alert" id="department-error-delete">
+					<p id="reassign">Reassign personnel before deletion.</p>
+				</div>
 				<div class="alert alert-success" role="alert" id="location-success">
 					Location succesfully added!
 				</div>			
@@ -45,6 +48,9 @@
 				</div>		
 				<div class="alert alert-success" department="alert" id="alert-success-remove-location">
 					Location succesfully removed!
+				</div>
+				<div class="alert alert-danger" role="alert" id="location-error-delete">
+					<p id="reassign">Reassign personnel before deletion.</p>
 				</div>
 
 		<!-- MAIN -->
@@ -178,7 +184,7 @@
 						</div>
 						<div class="modal-footer">
 							<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-							<input type="submit" id="update" class="btn btn-info" value="Update">
+							<input type="submit" id="update" class="btn btn-info" value="Save">
 						</div>
 					</form>
 				</div>
@@ -199,8 +205,8 @@
 							<p class="text-warning"><small>This action cannot be undone.</small></p>
 						</div>
 						<div class="modal-footer">
-							<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-							<input type="submit" class="btn btn-danger" data-dismiss="modal" value="Delete" id="delete">
+							<input type="button" class="btn btn-danger" data-dismiss="modal" value="No">
+							<input type="submit" class="btn btn-success" data-dismiss="modal" value="Yes" id="delete">
 						</div>
 					</form>
 				</div>
@@ -251,7 +257,7 @@
 							</div>
 							<div class="modal-footer">
 								<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-								<button type="submit" class="btn btn-primary" maxlength="30" data-toggle="modal" data-target="myModal" name="save">Add</button>
+								<button type="submit" class="btn btn-primary" maxlength="30" data-toggle="modal" data-target="myModal" name="save">Save</button>
 							</div>
 					</form>
 				</div>
@@ -259,7 +265,7 @@
 		</div>
 
 		<!-- SEARCH EMPLOYEE MODAL -->
-		<div id="searchEmployeeModal" class="modal fade">
+		<!-- <div id="searchEmployeeModal" class="modal fade">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<form action="javascript:void(0);" method="post" target="frame" id="search-form">
@@ -288,7 +294,7 @@
 					</form>
 				</div>
 			</div>
-		</div>
+		</div> -->
 
 		<!-- ADD DEPARTMENT MODAL -->
 		<div id="addDeptModal" class="modal fade">
@@ -315,7 +321,7 @@
 						</div>
 						<div class="modal-footer">
 							<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-							<input type="submit" id="dept-update" class="btn btn-info" value="Add">
+							<input type="submit" id="dept-update" class="btn btn-info" value="Save">
 						</div>
 					</form>
 				</div>
@@ -348,7 +354,7 @@
 						</div>
 						<div class="modal-footer">
 							<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-							<input type="submit" id="update-edit-dept" class="btn btn-info" value="Update">
+							<input type="submit" id="update-edit-dept" class="btn btn-info" value="Save">
 						</div>
 					</form>
 				</div>
@@ -359,9 +365,6 @@
 		<div id="deleteDeptModal" class="modal fade">
 			<div class="modal-dialog">
 				<div class="modal-content">
-					<div class="alert alert-danger" role="alert" id="department-error-delete">
-						<p id="reassign">Reassign personnel before deletion.</p>
-					</div>
 					<form id="delete-form-dept" action="javascript:void(0);" method="post">
 						<div class="modal-header">						
 							<h4 class="modal-title">Delete Department</h4>
@@ -372,8 +375,8 @@
 							<p class="text-warning"><small>This action cannot be undone.</small></p>
 						</div>
 						<div class="modal-footer">
-							<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-							<input type="submit" class="btn btn-danger" value="Delete" id="delete-dept">
+							<input type="button" class="btn btn-danger" data-dismiss="modal" value="No">
+							<input type="submit" class="btn btn-success" value="Yes" id="delete-dept">
 						</div>
 					</form>
 				</div>
@@ -400,7 +403,7 @@
 						</div>
 						<div class="modal-footer">
 							<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-							<input type="submit" id="location-update" class="btn btn-info" value="Add">
+							<input type="submit" id="location-update" class="btn btn-info" value="Save">
 						</div>
 					</form>
 				</div>
@@ -424,7 +427,7 @@
 						</div>
 						<div class="modal-footer">
 							<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-							<input type="submit" id="update-edit-dept" class="btn btn-info" value="Update">
+							<input type="submit" id="update-edit-dept" class="btn btn-info" value="Save">
 						</div>
 					</form>
 				</div>
@@ -435,9 +438,6 @@
 		<div id="deleteLocationModal" class="modal fade">
 			<div class="modal-dialog">
 				<div class="modal-content">
-					<div class="alert alert-danger" role="alert" id="location-error-delete">
-						<p id="reassign">Reassign personnel before deletion.</p>
-					</div>
 					<form id="delete-location-form" action="javascript:void(0);" method="post">
 						<div class="modal-header">						
 							<h4 class="modal-title">Delete Location</h4>
@@ -448,8 +448,8 @@
 							<p class="text-warning"><small>This action cannot be undone.</small></p>
 						</div>
 						<div class="modal-footer">
-							<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-							<input type="submit" class="btn btn-danger"  value="Delete" id="delete-location">
+							<input type="button" class="btn btn-danger" data-dismiss="modal" value="No">
+							<input type="submit" class="btn btn-success"  value="Yes" id="delete-location">
 						</div>
 					</form>
 				</div>

@@ -168,7 +168,7 @@ function addDepartmentRow(dept){
 
 let selected_dept;
 
-function selectDept(id){
+function selectDept(id, mode){
     selected_dept  = id;
     select_options.forEach(dept => {
         if (dept.id == id){
@@ -181,61 +181,89 @@ function selectDept(id){
             $('#department-edit-dept').val(dept.name);
         }
     })
+    if (mode === "delete"){
+        checkDepartmentDependencies(id);
+    }
+}
+
+function checkDepartmentDependencies(id){
+    $.ajax(
+        {
+            url: "php/checkDepartmentDependencies.php",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id : id
+            },
+            
+            success: function(result) {      
+                //console.log(JSON.stringify(result)); 
+                const count = result['data']['0'].pc;
+                if (count === 0){
+                    $('#deleteDeptModal').modal('show');
+                } else {
+                    alertDepartment();
+                }
+                },
+    
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Error');
+            }        
+        }
+    )
+}
+
+function alertDepartment(){ 
+    let employee_to_reassign = [];
+    object_array.forEach(p => {
+        if (p.departmentID == selected_dept){
+            const first_name = p.firstName;
+            const last_name = p.lastName;
+            let joined = `<b>${last_name} ${first_name}</b>`;
+            employee_to_reassign.push(joined);
+        }
+    })
+    $('#department-error-delete').html(`Please reassign the following employees before deletion:<br> ${employee_to_reassign.join(`<br>`)}`)
+    $('#department-error-delete').css('opacity', "1");
+        setTimeout(() => {            
+            $('#department-error-delete').css('opacity', "0");
+        }, 3000);  
 }
 
 $('#delete-dept').click(removeDeptFromDB);
 
 function removeDeptFromDB(){    
-    if (object_array.some(e => e.departmentID == selected_dept)) {  
-        let employee_to_reassign = [];
-        object_array.forEach(p => {
-            if (p.departmentID == selected_dept){
-                const first_name = p.firstName;
-                const last_name = p.lastName;
-                let joined = `<b>${last_name} ${first_name}</b>`;
-                employee_to_reassign.push(joined);
-            }
-        })
-
-        $('#department-error-delete').html(`Please reassign the following employees before deletion:<br> ${employee_to_reassign.join(`<br>`)}`)
-        $('#department-error-delete').css('opacity', "1");
-            setTimeout(() => {            
-                $('#department-error-delete').css('opacity', "0");
-            }, 2000);   
-        
-      } else {
-        $.ajax(
+    $.ajax(
             {
                 url: "php/deleteDepartmentByID.php",
                 type: 'POST',
                 dataType: 'json',
                 data: {
                     id : selected_dept
+            },
+            
+            success: function(result) {      
+                //console.log(JSON.stringify(result)); 
+                    select_options.forEach(d => {
+                        if (d.id == selected_dept){
+                            $('#alert-success-remove-dept').html(`<b>${d.name}</b> succesfully removed from Departments`);
+                        }
+                    })
+                    getData();
+                    $('#deleteDeptModal').modal('hide');
+                    setTimeout(()=> {      
+                        $('#alert-success-remove-dept').css('opacity', "1");
+                        setTimeout(() => {            
+                            $('#alert-success-remove-dept').css('opacity', "0");
+                        }, 2000);
+                    }, 500)
                 },
-                
-                success: function(result) {      
-                    //console.log(JSON.stringify(result)); 
-                        select_options.forEach(d => {
-                            if (d.id == selected_dept){
-                                $('#alert-success-remove-dept').html(`<b>${d.name}</b> succesfully removed from Departments`);
-                            }
-                        })
-                        getData();
-                        $('#deleteDeptModal').modal('hide');
-                        setTimeout(()=> {      
-                            $('#alert-success-remove-dept').css('opacity', "1");
-                            setTimeout(() => {            
-                                $('#alert-success-remove-dept').css('opacity', "0");
-                            }, 2000);
-                        }, 500)
-                    },
-        
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.log('Error');
-                }        
-            });
-      }
-}
+    
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Error');
+            }        
+        });       
+}            
 
 
 // EDIT DEPARTMENT
@@ -328,7 +356,7 @@ function addLocationRow(location_object){
 let selected_location;
 let selected_location_name;
 
-function selectLocation(id){
+function selectLocation(id, mode){
     selected_location  = id;
     locations.forEach(location => {
         if (location.id == id){
@@ -337,60 +365,89 @@ function selectLocation(id){
             selected_location_name = location.name;
         }
     })
+    if (mode === "delete"){
+        checkLocationDependencies(id);
+    }
+}
+
+function checkLocationDependencies(id){
+    
+    $.ajax(
+        {
+            url: "php/checkLocationDependencies.php",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id : id
+            },
+            
+            success: function(result) {      
+                console.log(JSON.stringify(result)); 
+                const count = result['data']['0'].pc;
+                if (count === 0){
+                    $('#deleteLocationModal').modal('show');
+                } else {
+                    alertLocation();
+                }
+                },
+
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Error');
+            }        
+        }
+    )
+}
+
+function alertLocation(){
+    let dept_to_reassign = [];
+    select_options.forEach(d => {
+        if (d.location === selected_location_name){
+            const name = `<b>${d.name}</b>`;
+            dept_to_reassign.push(name);
+        }
+    })
+
+    $('#location-error-delete').html(`Please reassign the following departments before deletion:<br> ${dept_to_reassign.join(`<br>`)}`)
+    $('#location-error-delete').css('opacity', "1");
+        setTimeout(() => {            
+            $('#location-error-delete').css('opacity', "0");
+        }, 3000);  
 }
 
 // REMOVE LOCATION
 $('#delete-location').click(removeLocationFromDB);
 
 function removeLocationFromDB(){   
-    if (select_options.some(e => e.location === selected_location_name)) {  
-        let dept_to_reassign = [];
-        select_options.forEach(d => {
-            if (d.location === selected_location_name){
-                const name = `<b>${d.name}</b>`;
-                dept_to_reassign.push(name);
-            }
-        })
-
-        $('#location-error-delete').html(`Please reassign the following departments before deletion:<br> ${dept_to_reassign.join(`<br>`)}`)
-        $('#location-error-delete').css('opacity', "1");
-            setTimeout(() => {            
-                $('#location-error-delete').css('opacity', "0");
-            }, 2000);   
-
-    } else {
-
-        $.ajax(
-            {
-                url: "php/deleteLocationByID.php",
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    id : selected_location
+    $.ajax(
+        {
+            url: "php/deleteLocationByID.php",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id : selected_location
+            },
+            
+            success: function(result) {      
+                //console.log(JSON.stringify(result)); 
+                    locations.forEach(l => {
+                        if (l.id == selected_location){
+                            $('#alert-success-remove-location').html(`<b>${l.name}</b> succesfully removed from Locations`);
+                        }
+                    })
+                    $('#deleteLocationModal').modal('hide');
+                    getData();
+                    setTimeout(()=> {      
+                        $('#alert-success-remove-location').css('opacity', "1");
+                        setTimeout(() => {            
+                            $('#alert-success-remove-location').css('opacity', "0");
+                        }, 2000);
+                    }, 500)
                 },
-                
-                success: function(result) {      
-                    //console.log(JSON.stringify(result)); 
-                        locations.forEach(l => {
-                            if (l.id == selected_location){
-                                $('#alert-success-remove-location').html(`<b>${l.name}</b> succesfully removed from Locations`);
-                            }
-                        })
-                        $('#deleteLocationModal').modal('hide');
-                        getData();
-                        setTimeout(()=> {      
-                            $('#alert-success-remove-location').css('opacity', "1");
-                            setTimeout(() => {            
-                                $('#alert-success-remove-location').css('opacity', "0");
-                            }, 2000);
-                        }, 500)
-                    },
-        
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.log('Error');
-                }        
-            });
-    }       
+    
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Error');
+            }        
+        });     
 }
 
 $('#add-location-form').submit(addLocationToDB);
@@ -483,6 +540,9 @@ function checkLocationExists(location){
     return exists;   
 }
 
+
+// ADD BUTTONS TO TABLE ROWS
+
 function addEditDeleteBtn(row, id, string){
     
     const cell_action = document.createElement('td');
@@ -502,18 +562,18 @@ function addEditDeleteBtn(row, id, string){
     link_edit.setAttribute('data-toggle', 'modal');
 
     link_delete.classList.add('delete');
-    link_delete.setAttribute('href', `#delete${string}Modal`);
+    link_delete.setAttribute('href', `#`);
     link_delete.setAttribute('data-toggle', 'modal');
 
     edit_btn.classList.add('btn');
     edit_btn.classList.add('btn-info');
     edit_btn.appendChild(pencil);    
-    edit_btn.setAttribute('onclick', `select${string}(${id})`);
+    edit_btn.setAttribute('onclick', `select${string}(${id}, "edit")`);
     
     delete_btn.classList.add('btn');
     delete_btn.classList.add('btn-danger');
     delete_btn.appendChild(bin);
-    delete_btn.setAttribute('onclick', `select${string}(${id})`);
+    delete_btn.setAttribute('onclick', `select${string}(${id}, "delete")`);
 
     cell_action.classList.add('col-xs-6');
         cell_action.classList.add('loc-table');
@@ -726,7 +786,6 @@ function getEditData(id){
             $('#job-title-edit').val(job_title);
             $('#department-edit').val(departmentID);         
             $('#email-edit').val(email);
-            console.log("departmentID " + departmentID);
             let location;
             select_options.forEach(department => {
                 if (department.id == departmentID){
@@ -741,8 +800,10 @@ function getEditData(id){
     });  
 }
 
+
+// UPDATE PERSONNEL IN DATABASE
+
 function sendEditData(){
-    console.log('sendEditData()');
     let id = selected_employee;
     $name = $('#name-edit').val();          
     $last_name = $('#surname-edit').val();      
@@ -752,7 +813,7 @@ function sendEditData(){
 
    return $.ajax(
         {
-        url: "php/processEditData.php",
+        url: "php/updatePersonnelByID.php",
         type: 'POST',
         dataType: 'json',
         data: {
@@ -789,7 +850,7 @@ function sendEditData(){
 
 $('#delete').click(getSingleData);
 
-function selectedEmployee(id, edit_employee){
+function selectedEmployee(id){
     selected_employee = id;    
     
     removeDropdown();
@@ -804,7 +865,6 @@ function selectedEmployee(id, edit_employee){
             },
             
             success: function(result) {      
-                //console.log(JSON.stringify(result)); 
                  
                     const employee = result['data']['personnel']['0'];   
                     let first_name = employee.firstName;
@@ -840,8 +900,8 @@ function getSingleData(){
             let index = employees.indexOf(joined);
             object_array.pop(object_array[index]);
             employees.pop(joined);  
-            //removeData(id);
-            deleteRow(id);
+            //(id);
+            deletePersonnelByID(id);
         },
 
         error: function(jqXHR, textStatus, errorThrown) {
@@ -852,10 +912,10 @@ function getSingleData(){
 
 
 //remove from MYSQL Database
-function deleteRow(id){    
+function deletePersonnelByID(id){    
     $.ajax(
         {
-        url: "php/removeData.php",
+        url: "php/deletePersonnelByID.php",
         type: 'POST',
         dataType: 'json',
         data: {
@@ -863,11 +923,9 @@ function deleteRow(id){
         },
         
         success: function(result) {
-            //console.log(JSON.stringify(result));
 
             if (result.status.name == "ok") {  
-                console.log(selected_employee + "se");
-                //console.log("deleteRow()");
+
                 object_array.forEach(d => {
                     if (d.id == selected_employee){
                         $('#alert-success-remove').html(`<b>${d.lastName} ${d.firstName}</b> succesfully removed from Personnel`);
@@ -895,7 +953,7 @@ function deleteRow(id){
 $('#add-dept-form').submit(checkDeptExists);
 
 function checkDeptExists(){
-    console.log('checkDeptExists');
+    //console.log('checkDeptExists');
     let name = $('#dept-name').val();
     let location = $('#dept-location').val().toLowerCase();  
     if (select_options.some(e => e.name.toLowerCase() === name.toLowerCase())) {      
@@ -915,7 +973,7 @@ function checkDeptExists(){
 }
 
 function updateDeptDB (name, locationID){
-    console.log('addDeptDB()');
+    //console.log('addDeptDB()');
     name = capitalize(name.toLowerCase());
     return $.ajax({  
         type: 'POST',
@@ -1321,13 +1379,11 @@ $('#modal-add-dept').click(()=>{
     $modal.modal('toggle');
 })
 
-
 // ON TAB SELECTION
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {checkOpenTab();})
 
 // CHECK OPEN TAB and UPDATE ENTRIES
 function checkOpenTab(){
-
     // Remove txt from Search Bar, restore tables
     if ($('#search-input').val().length > 0){
         $('#search-input').val("");

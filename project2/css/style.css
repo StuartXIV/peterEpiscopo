@@ -149,6 +149,13 @@ i {
     position: relative;
 }
 
+#myTab li a {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 #myTabContent {
     width: 100%;
 }
@@ -178,7 +185,7 @@ i {
 }
 
 #department-error-delete, #location-error-delete {
-    text-align: left;
+    line-height: 2em;
 }
 
 .action-padding {
