@@ -265,50 +265,40 @@
 
 
 /**
-   * Copy Email to Clipboard
+   * SEND EMAIL
    */
-function copy() {
-
-  const icon = document.getElementById('copy');
-
-   /* Copy the text inside the text field */
-  navigator.clipboard.writeText('contact@peterepiscopo.co.uk');
 
 
+$('#contact-form').submit(()=>{
 
-  icon.classList.remove("bx-copy");
-  icon.classList.add("bx-check");
-  setTimeout(()=>{
-    icon.classList.remove("bx-check");
-    icon.classList.add("bx-copy");
-  }, 1000)
-}
+  
+  $('#name').attr('readonly', '');
+  $('#email').attr('readonly', '');
+  $('#subject').attr('readonly', '');
+  $('#message').attr('readonly', '');
+  $('#submit').val('Submitted');
+  $('#submit').css('pointer-events', 'none');
+  
+  $.ajax(
+    {
+      url: "assets/forms/contact.php",
+      type: 'POST',
+      dataType: 'json',
+      data: {
+          name: $('#name').val(),
+          email: $('#email').val(),
+          subject: $('#subject').val(),
+          message: $('#message').val(),
+      },
+      
+      success: function(data) {      
+          //console.log(JSON.stringify(result)); 
+          console.log('Email Sent!');
+          },
 
-
-// $('#form').submit(() => {
-//   sendEmail()
-// });
-
-// function sendEmail(){
-
-//   $.ajax(
-//     {      
-//       url: "forms/form.php",
-//       type: 'POST',
-//       dataType: 'json',
-//       data: {
-//         name: $('#name').val(),
-//         email: $('#email').val(),
-//         subject: $('#subject').val(),
-//         message: $('#message').val()
-//       },
-
-//       success: function(result) {
-//           console.log(JSON.stringify(result));
-//       },
-
-//       error: function(jqXHR, textStatus, errorThrown) {
-//           console.log('Error');
-//       }
-//   });     
-// }
+      error: function(jqXHR, textStatus, errorThrown) {
+          console.log('Error Contact');
+      }        
+  }
+  )
+})

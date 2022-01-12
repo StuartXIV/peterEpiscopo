@@ -1,41 +1,46 @@
 <?php
-  /**
-  * Requires the "PHP Email Form" library
-  * The "PHP Email Form" library is available only in the pro version of the template
-  * The library should be uploaded to: vendor/php-email-form/php-email-form.php
-  * For more info and help: https://bootstrapmade.com/php-email-form/
-  */
+//Import PHPMailer classes into the global namespace
+//These must be at the top of your script, not inside a function
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
-  // Replace contact@example.com with your real receiving email address
-  $receiving_email_address = 'contact@example.com';
+//Load Composer's autoloader
+require '../vendor/autoload.php';
 
-  if( file_exists($php_email_form = '../assets/vendor/php-email-form/php-email-form.php' )) {
-    include( $php_email_form );
-  } else {
-    die( 'Unable to load the "PHP Email Form" Library!');
-  }
+$email = $_REQUEST['email'];
+$name = $_REQUEST['name'];
+$subject = $_REQUEST['subject'];
+$message = $_REQUEST['message'];
 
-  $contact = new PHP_Email_Form;
-  $contact->ajax = true;
-  
-  $contact->to = $receiving_email_address;
-  $contact->from_name = $_POST['name'];
-  $contact->from_email = $_POST['email'];
-  $contact->subject = $_POST['subject'];
+//Create an instance; passing `true` enables exceptions
+$mail = new PHPMailer(true);
 
-  // Uncomment below code if you want to use SMTP to send emails. You need to enter your correct SMTP credentials
-  /*
-  $contact->smtp = array(
-    'host' => 'example.com',
-    'username' => 'example',
-    'password' => 'pass',
-    'port' => '587'
-  );
-  */
+try {
+    //Server settings
+    //$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+    $mail->isSMTP();                                            //Send using SMTP
+    $mail->Host       = 'smtp.hostinger.com';                     //Set the SMTP server to send through
+    $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+    $mail->Username   = 'contact@peterepiscopo.co.uk';                     //SMTP username
+    $mail->Password   = 'Gilardino11!';                               //SMTP password
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+    $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
-  $contact->add_message( $_POST['name'], 'From');
-  $contact->add_message( $_POST['email'], 'Email');
-  $contact->add_message( $_POST['message'], 'Message', 10);
+    //Recipients
+    $mail->setFrom('contact@peterepiscopo.co.uk', 'Mail from ' . $name);
+    $mail->addAddress('peteralbertstuart@hotmail.it', 'Peter Episcopo');     
 
-  echo $contact->send();
-?>
+    //Content
+    $mail->isHTML(true);                                  //Set email format to HTML
+    $mail->Subject = $subject;
+    $mail->Body = $name . '<br>' . $email . '<br>' . '<p style="color: blue">' . $message . '</p>';
+
+    $mail->send();
+    $output = json_encode(array('success' => true));
+    die($output);
+} catch (Exception $e) {
+    $output = json_encode(array('success' => false));
+    die($output);
+}
+
