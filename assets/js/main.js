@@ -271,34 +271,32 @@
 
 $('#contact-form').submit(()=>{
 
-  
-  $('#name').attr('readonly', '');
-  $('#email').attr('readonly', '');
-  $('#subject').attr('readonly', '');
-  $('#message').attr('readonly', '');
-  $('#submit').val('Submitted');
-  $('#submit').css('pointer-events', 'none');
-  
-  $.ajax(
-    {
-      url: "assets/forms/contact.php",
-      type: 'POST',
-      dataType: 'json',
-      data: {
-          name: $('#name').val(),
-          email: $('#email').val(),
-          subject: $('#subject').val(),
-          message: $('#message').val(),
-      },
-      
-      success: function(data) {      
-          //console.log(JSON.stringify(result)); 
-          console.log('Email Sent!');
-          },
+     
+  $('#contact-form').css('display', 'none');  
+  $('#email-success').css('display', 'block');
+  $('#email-success').css('opacity', '1');
 
-      error: function(jqXHR, textStatus, errorThrown) {
-          console.log('Error Contact');
-      }        
-  }
-  )
+  // $.ajax(
+  //   {
+  //     url: "assets/forms/contact.php",
+  //     type: 'POST',
+  //     dataType: 'json',
+  //     data: {
+  //         name: $('#name').val(),
+  //         email: $('#email').val(),
+  //         subject: $('#subject').val(),
+  //         message: $('#message').val(),
+  //     },
+      
+  //     success: function(data) {      
+  //         //console.log(JSON.stringify(result)); 
+  //         console.log('Email Sent!');          
+  //         $('#contact-form').remove();
+  //         },
+
+  //     error: function(jqXHR, textStatus, errorThrown) {
+  //         console.log('Email not sent');
+  //     }        
+  // }
+  // )
 })

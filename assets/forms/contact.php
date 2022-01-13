@@ -29,7 +29,7 @@ try {
 
     //Recipients
     $mail->setFrom('contact@peterepiscopo.co.uk', 'Mail from ' . $name);
-    $mail->addAddress('peteralbertstuart@hotmail.it', 'Peter Episcopo');     
+    $mail->addAddress('peteralbertstuart@hotmail.it', 'Peter Episcopo');  
 
     //Content
     $mail->isHTML(true);                                  //Set email format to HTML
