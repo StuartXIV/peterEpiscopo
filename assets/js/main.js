@@ -282,7 +282,7 @@ $('#contact-form').submit(()=>{
   $('#email-success').css('opacity', '1');
   setTimeout(()=>{
     $('#email-success').css('opacity', '0');
-  }, 3000);
+  }, 5000);
 
   $.ajax(
     {
