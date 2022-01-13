@@ -276,27 +276,27 @@ $('#contact-form').submit(()=>{
   $('#email-success').css('display', 'block');
   $('#email-success').css('opacity', '1');
 
-  // $.ajax(
-  //   {
-  //     url: "assets/forms/contact.php",
-  //     type: 'POST',
-  //     dataType: 'json',
-  //     data: {
-  //         name: $('#name').val(),
-  //         email: $('#email').val(),
-  //         subject: $('#subject').val(),
-  //         message: $('#message').val(),
-  //     },
+  $.ajax(
+    {
+      url: "assets/forms/contact.php",
+      type: 'POST',
+      dataType: 'json',
+      data: {
+          name: $('#name').val(),
+          email: $('#email').val(),
+          subject: $('#subject').val(),
+          message: $('#message').val(),
+      },
       
-  //     success: function(data) {      
-  //         //console.log(JSON.stringify(result)); 
-  //         console.log('Email Sent!');          
-  //         $('#contact-form').remove();
-  //         },
+      success: function(data) {      
+          //console.log(JSON.stringify(result)); 
+          console.log('Email Sent!');          
+          $('#contact-form').remove();
+          },
 
-  //     error: function(jqXHR, textStatus, errorThrown) {
-  //         console.log('Email not sent');
-  //     }        
-  // }
-  // )
+      error: function(jqXHR, textStatus, errorThrown) {
+          console.log('Email not sent');
+      }        
+  }
+  )
 })
