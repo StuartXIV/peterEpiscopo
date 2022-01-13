@@ -831,14 +831,19 @@ section {
 /*--------------------------------------------------------------
 # Contact
 --------------------------------------------------------------*/
+
+.section-title {
+  padding-bottom: 0;
+}
+
 #email-success {
-  display: none;
   opacity: 0;
   transition: all .5s ease;
   background-color: #DEF9C6;
-  color: #272829;;
-  margin-bottom: 12em;
+  color: #272829;
   text-align: center;
+  width: 64%;
+  margin: 0 auto;
 }
 
 .contact .info {

@@ -270,11 +270,19 @@
 
 
 $('#contact-form').submit(()=>{
+  $name = $('#name').val();
+  $email = $('#email').val();
+  $subject = $('#subject').val();
+  $message = $('#message').val();
 
-     
-  $('#contact-form').css('display', 'none');  
-  $('#email-success').css('display', 'block');
+  $('#name').val('');
+  $('#email').val('');
+  $('#subject').val('');
+  $('#message').val('');
   $('#email-success').css('opacity', '1');
+  setTimeout(()=>{
+    $('#email-success').css('opacity', '0');
+  }, 3000);
 
   $.ajax(
     {
@@ -282,16 +290,16 @@ $('#contact-form').submit(()=>{
       type: 'POST',
       dataType: 'json',
       data: {
-          name: $('#name').val(),
-          email: $('#email').val(),
-          subject: $('#subject').val(),
-          message: $('#message').val(),
+          name: $name,
+          email: $email,
+          subject: $subject,
+          message: $message
       },
       
       success: function(data) {      
           //console.log(JSON.stringify(result)); 
-          console.log('Email Sent!');          
-          $('#contact-form').remove();
+          console.log('Email Sent!');    
+
           },
 
       error: function(jqXHR, textStatus, errorThrown) {
