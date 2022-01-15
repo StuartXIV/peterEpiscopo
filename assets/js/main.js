@@ -4,6 +4,9 @@
 * Author: BootstrapMade.com
 * License: https://bootstrapmade.com/license/
 */
+const email_peter = config.EMAIL;
+const email_password = config.EMAIL_PASSWORD;
+
 (function() {
   "use strict";
 
@@ -290,6 +293,8 @@ $('#contact-form').submit(()=>{
       type: 'POST',
       dataType: 'json',
       data: {
+          emailPeter: email_peter,
+          emailPassword: email_password,
           name: $name,
           email: $email,
           subject: $subject,
