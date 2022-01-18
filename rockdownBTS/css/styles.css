@@ -1,0 +1,435 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
+@font-face {
+  font-family: "Spotify";
+  src: url(fonts/Gotham-Black.otf);
+}
+@font-face {
+  font-family: "SpotifyThin";
+  src: url(./fonts/Gotham-Light.otf);
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "SpotifyThin", "Poppins", Geneva, Tahoma, sans-serif;
+  font-weight: 800;
+}
+
+body {
+  height: 100vh;
+  width: 100%;
+  background-color: #565555;
+  background-image: linear-gradient(180deg, #5c0d1d, #121212 40%);
+  background-attachment: fixed;
+}
+
+.wrapper {
+  width: 95%;
+  height: 100%;
+  margin: 0 auto;
+  padding: 1.5em 2em;
+}
+
+header {
+  width: 80%;
+  height: 100px;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  opacity: 0.9;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+#ban {
+  font-weight: 200;
+  font-family: "Spotify", serif;
+}
+
+.container {
+  height: 90%;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.box-1 {
+  height: 100%;
+  width: 50%;
+  min-width: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.player-box {
+  height: 100%;
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.player {
+  padding: 20px 40px;
+  background: #282828;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image {
+  width: 350px;
+  height: 350px;
+  background: lemonchiffon;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  box-shadow: 2px 2px 4px grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+img {
+  margin: auto;
+  border-radius: 50%;
+  animation-play-state: paused;
+}
+
+.play {
+  animation: rotate 7s linear infinite;
+  animation-play-state: running;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  position: absolute;
+  z-index: 2;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: #181818;
+  box-shadow: 0 0 5px inset black;
+}
+
+audio {
+  border-radius: 20px;
+}
+
+.song-box {
+  height: 100%;
+  width: 50%;
+  min-width: 400px;
+  display: flex;
+  flex-direction: column;
+  padding: 2em 0;
+  overflow: auto;
+}
+
+/* LIST OF SONGS  -------------------------------------------------------------------------------------------------*/
+
+ul {
+  list-style-type: none;
+  line-height: 2em;
+  font-size: 1.5rem;
+  color: white;
+  overflow-x: hidden;
+}
+
+li {
+  padding: 0px 20px;
+  margin-bottom: 5px;
+  background: #181818;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.5s ease;
+  max-width: 80%;
+  min-width: 300px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inner-list {
+  flex: 6;
+}
+
+.image-and-download-box {
+  flex: 1;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+
+.image-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  float: right;
+  opacity: 0.4;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  transition: opacity 0.3s ease;
+  position: relative;
+  margin: 0.2em 0;
+}
+
+.image-icon img {
+  width: 50px;
+  height: 50px;
+}
+
+.download-box {
+  width: 1em;
+  height: 1em;
+}
+
+#download-arrow {
+  color: #ccc;
+  position: absolute;
+  transition: opacity 0.2s ease;
+  height: 100%;
+  width: 100%;
+}
+
+li .download-box {
+  display: none;
+}
+
+li:hover .download-box {
+  display: block;
+}
+
+li:hover .image-and-download-box {
+  justify-content: space-between;
+}
+
+#download-arrow:hover {
+  opacity: 0.5;
+  font-size: 98%;
+}
+
+li:hover {
+  background: #282828;
+  color: white;
+  transform: translateX(1%);
+  transition: all 0.3s ease;
+}
+
+li:hover .image-icon {
+  opacity: 1;
+}
+
+li:active .inner-list {
+  color: rgb(180, 180, 180);
+}
+
+.song-title {
+  line-height: 2em;
+  font-size: 1.5rem;
+  color: white;
+  opacity: 0.9;
+  font-weight: 400;
+  padding: 30px 0;
+  text-align: center;
+}
+
+.song-title h2 {
+  font-family: "Poppins";
+}
+
+/* PRELOADER */
+
+#preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  overflow: hidden;
+  background-image: linear-gradient(180deg, #5c0d1d, #121212 40%);
+  background-attachment: fixed;
+}
+
+#preloader:before {
+  content: "";
+  position: fixed;
+  top: calc(50% - 30px);
+  left: calc(50% - 30px);
+  border: 6px solid #5c0d1d;
+  border-top: 6px solid #121212;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  -webkit-animation: animate-preloader 1s linear infinite;
+  animation: animate-preloader 1s linear infinite;
+}
+
+
+@-webkit-keyframes animate-preloader {
+  0% {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+  }
+  100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+  }
+}
+
+@keyframes animate-preloader {
+  0% {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+  }
+  100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+  }
+}
+
+/* LAPTOP SCREEN */
+
+@media screen and (max-width: 1500px) {
+  .wrapper {
+    width: 100%;
+  }
+
+  .image,
+  .image img {
+    width: 200px;
+    height: 200px;
+  }
+
+  li img {
+    width: 30px;
+    height: 30px;
+  }
+
+  li {
+    font-size: 1.2rem;
+    padding: 2px 10px;
+  }
+
+  header {
+    width: 100%;
+    height: 60px;
+    margin: -20px auto 0px auto;
+    font-size: 1rem;
+  }
+
+  .spinner {
+    width: 20px;
+    height: 20px;
+  }
+
+  .player {
+    padding: 10px 20px;
+  }
+
+  .song-title {
+    line-height: 1em;
+    font-size: 1rem;
+    color: white;
+    opacity: 0.9;
+    font-weight: 400;
+    padding: 40px 0;
+  }
+
+  @media screen and (max-width: 330px) {
+    header {
+      width: 100%;
+    }
+
+    header h1 {
+      font-size: 0.9rem;
+    }
+
+    .player-box {
+      padding-bottom: 4px;
+    }
+
+    .container {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .image-icon {
+      visibility: hidden;
+    }
+
+    .image-icon img {
+      width: 10px;
+      height: 10px;
+    }
+
+    .image,
+    .image img {
+      width: 50px;
+      height: 50px;
+    }
+
+    .spinner {
+      width: 3px;
+      height: 3px;
+    }
+
+    .box-1 {
+      height: 150px;
+      width: 100%;
+    }
+
+    .player-box {
+      width: 100%;
+      justify-content: flex-end;
+    }
+
+    .song-title {
+      padding: 20px 0;
+    }
+
+    .song-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 350px;
+    }
+
+    .image-and-download-box {
+      justify-content: space-between;
+    }
+
+    .player {
+      padding: 0;
+      z-index: 2;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+    }
+
+    li {
+      font-size: 1rem;
+      padding: 10px;
+      line-height: 0;
+    }
+  }
+}
