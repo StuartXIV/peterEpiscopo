@@ -1,0 +1,139 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-image: url("../Images/light-bg.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: #0d0d0d
+}
+h1 {
+    letter-spacing: 15px;
+    word-spacing: 20px;
+}
+header {
+    text-align: center;
+    padding: 1rem;
+}
+
+/* NAVIGATION BAR */
+nav {
+    text-align: center;
+    padding: 0.5rem;
+}
+nav a {
+    color: #0d0d0d;
+    text-decoration: none;
+    padding: 0.5rem 2rem;
+    margin: 0 1rem;
+    text-transform: uppercase;
+    font-weight: 800;
+    border: 1px solid #0d0d0d;
+}
+nav a:hover {
+    background-color: #0d0d0d;
+    color: white
+}
+
+/* TABS */
+section {
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+table {
+    border-collapse: collapse;
+}
+#tabs {            
+    width: 100%;
+}
+button {
+    background-color: #353535;
+    color: white;
+    padding: 5px;
+    border-radius: 2px;
+}
+button:hover{            
+    background-color: #0d0d0d;
+    color: white;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+th {
+    background-color: #0d0d0d;
+    color: white
+}
+td button:hover{
+    cursor: pointer;
+}
+h2 {
+    letter-spacing: 5px;
+}
+#tabs tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+#tabs tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+/* SOCIAL MEDIA LINKS */
+#social-media-links{
+    width: 40%;
+}
+#social-media-links tr{
+    background-color: none !important;
+    width: 100%
+}
+
+/* FOOTER */
+footer {
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+    padding: 1rem;
+}
+
+/* BUY ME A COFFEE */
+#buymeacoffee img {
+    width: 200px;
+    height: 110px;
+    display: inline-block;
+    background-color: #f9f9f986;
+    transition: 0.1s;
+}
+
+#buymeacoffee img:hover {
+    background-color: #f9f9f9;
+    width: 210px;
+    transition: 0.1s;
+}
+
+#buymeacoffeecontainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+}
+
+#buymeacoffee {
+    width: 200px;
+    height: 100px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid #0d0d0d;
+}
+
+.sm-icon {
+    width: 50px
+}
