@@ -59,6 +59,10 @@ window.onload = function() {
       "date2024-12-28",
       "date2024-12-31",
       "date2025-07-2",
+      'date2024-12-24',
+      'date2024-12-25',
+      'date2024-12-26',
+      'date2024-12-31'
     ];
   
     // Iterate over the array of element IDs
@@ -86,7 +90,36 @@ window.onload = function() {
         "date2024-09-14",,
         "date2024-09-28",
         "date2024-10-5",
-        "date2024-12-21"
+        "date2024-12-21",
+        'date2024-10-12',
+        'date2024-05-11',
+        'date2024-05-18',
+        'date2024-04-5',
+        'date2024-04-12',
+        'date2024-04-19',
+        'date2024-04-26',
+        'date2024-05-3',
+        'date2024-05-10',
+        'date2024-05-17',
+        'date2024-05-24',
+        'date2024-05-31',
+        'date2024-06-7',
+        'date2024-06-14',
+        'date2024-06-21',
+        'date2024-06-28',
+        'date2024-07-5',
+        'date2024-07-12',
+        'date2024-07-19',
+        'date2024-07-26',
+        'date2024-08-2',
+        'date2024-08-9',
+        'date2024-08-16',
+        'date2024-08-23',
+        'date2024-08-30',
+        'date2024-09-6',
+        'date2024-09-13',
+        'date2024-09-20',
+        'date2024-09-27'        
     ];
   
     // Iterate over the array of element IDs
