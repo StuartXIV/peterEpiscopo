@@ -85,7 +85,8 @@ window.onload = function() {
         "date2024-08-24",,
         "date2024-09-14",,
         "date2024-09-28",
-        "date2024-10-5"
+        "date2024-10-5",
+        "date2024-21-12"
     ];
   
     // Iterate over the array of element IDs
