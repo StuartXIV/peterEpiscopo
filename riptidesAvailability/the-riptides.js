@@ -25,7 +25,7 @@ window.onload = function() {
   if (window.location.href.endsWith('.html')) {
     window.location.href = window.location.href.slice(0, -5); // Remove the last 5 characters (".html")
   }
-  
+
     // Array of element IDs
     var unavailableDates = [
         "date2024-04-3",
@@ -53,7 +53,12 @@ window.onload = function() {
       "date2024-10-26",
       "date2024-11-1",
       "date2024-12-15",
-      "date2025-07-2"
+      "date2024-12-24",
+      "date2024-12-25",
+      "date2024-12-26",
+      "date2024-12-28",
+      "date2024-12-31",
+      "date2025-07-2",
     ];
   
     // Iterate over the array of element IDs
