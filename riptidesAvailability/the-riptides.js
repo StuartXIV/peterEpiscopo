@@ -28,6 +28,20 @@ window.onload = function() {
 
     // Array of element IDs
     var unavailableDates = [
+      'date2024-03-2',
+    'date2024-03-3',
+    'date2024-03-8',
+    'date2024-03-9',
+    'date2024-03-10',
+    'date2024-03-14',
+    'date2024-03-15',
+    'date2024-03-16',
+    'date2024-03-22',
+    'date2024-03-23',
+    'date2024-03-29',
+    'date2024-03-30',
+    'date2024-4-5',
+    'date2024-5-4',    
         "date2024-04-3",
         "date2024-04-20",
         "date2024-04-27",
