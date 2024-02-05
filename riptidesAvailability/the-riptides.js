@@ -159,7 +159,7 @@ function sendData(fieldId, status, lastUpdated, updatedBy){
   var password = document.getElementById('passwordInput').value
 
   if (!VALID_PASSWORDS.includes(password.toLowerCase()) && !OVERRIDE_LOGIN){
-    alert('Login is required in order to make changes.\nADMIN: use Setlist Helper password.')
+    alert('Login is required in order to make changes.')
     return false;
   } else {
     console.log('oy')
