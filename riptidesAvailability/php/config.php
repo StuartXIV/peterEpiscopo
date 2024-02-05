@@ -12,8 +12,8 @@
 	// database name, username and password
 
 	$cd_dbname = "rip";
-	//$cd_user = "u893668777_peter";
-	$cd_user = "root";
+	$cd_user = "u893668777_riptides";
+	//$cd_user = "root";
 	$cd_password = "Gilardino11!";
 
 ?>
