@@ -1989,8 +1989,8 @@
     color: #fff !important; }
 
 .bg-grey {
-  background-color: #9E9E9E !important;
-  color: #fff; }
+  background-color: #eee !important;
+  color: #fff !important; }
   .bg-grey .content .text,
   .bg-grey .content .number {
     color: #fff !important; }

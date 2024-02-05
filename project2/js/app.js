@@ -483,7 +483,7 @@ function addLocationToDB(){
             },       
 
             error: function(jqXHR, textStatus, errorThrown) {
-                console.log('Error Location to DB');
+                console.log('Error Location to DB', errorThrown);
             }
         })
     } 
