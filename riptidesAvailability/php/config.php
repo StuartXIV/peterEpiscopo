@@ -14,7 +14,7 @@
 	$cd_dbname = "u893668777_riptides";
 	$cd_user = "u893668777_rockup";
 	//$cd_user = "root";
-	$cd_password = "Gilardino11!";
+	$cd_password = "Sixpence11!";
 
 ?>
 
