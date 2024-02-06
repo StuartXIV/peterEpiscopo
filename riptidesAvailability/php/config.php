@@ -12,14 +12,14 @@
 	// database name, username and password
 
 	//// PROD
-	// $cd_dbname = "u893668777_riptides";
-	// $cd_user = "u893668777_rockup";
-	// $cd_password = "Sixpence11!";
+	$cd_dbname = "u893668777_riptides";
+	$cd_user = "u893668777_rockup";
+	$cd_password = "Sixpence11!";
 
 	//// TEST
-	$cd_dbname = "rip";
-	$cd_user = "root";
-	$cd_password = "Gilardino11!";
+	// $cd_dbname = "rip";
+	// $cd_user = "root";
+	// $cd_password = "Gilardino11!";
 
 ?>
 
