@@ -1,5 +1,22 @@
-﻿Navbar ======================================
+﻿/* Navbar ====================================== */
 @import url(materialize.css);
+
+.new-alert {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 7;
+  background-color: rgb(62, 201, 62);
+  font-weight: 500;
+  color: white;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 15px;
+  pointer-events:all;
+}
+
 .navbar {
   font-family: "Roboto", sans-serif;
   -webkit-border-radius: 0;
@@ -2365,7 +2382,7 @@
 @media (min-width: 768px) and (max-width: 991px) {
   .navbar > .container .navbar-brand,
   .navbar > .container-fluid .navbar-brand {
-    margin-left: 50px; } }
+    margin-left: 20px; } }
 
 @media (min-width: 992px) and (max-width: 1169px) {
   .navbar > .container .navbar-brand,
@@ -6446,7 +6463,7 @@ fieldset[disabled] .form-control {
   transform: scale(0); }
 
 .ls-closed .navbar-brand {
-  margin-left: 100px; }
+  margin-left: 60px; }
 
 .overlay-open .bars:before {
   -moz-transform: scale(0);
