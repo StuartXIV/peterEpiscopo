@@ -101,7 +101,10 @@ function getData(){
       },
 
       error: function(jqXHR, textStatus, errorThrown) {
-          console.log('Error');
+          console.log('Error', {
+            errorThrown: errorThrown,
+            textStatus: textStatus
+          });
       }
   });     
 }
