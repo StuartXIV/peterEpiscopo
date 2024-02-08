@@ -1,4 +1,4 @@
-const OVERRIDE_LOGIN = false
+const OVERRIDE_LOGIN = true
 const VALID_PASSWORDS = ['luke','sam','peter']
 
   // Run the code after the page has loaded
@@ -47,7 +47,6 @@ function getData(){
       dataType: 'json',
       
       success: function(result) {
-          //console.log(JSON.stringify(result));
 
           if (result.status.name == "ok") {                
               let arr = result['data'];
@@ -88,6 +87,13 @@ function getData(){
                   element.classList.add('disable');
                   element.classList.add('bg-grey');
 
+                }                
+
+                if (calendarDate.isNew === 'yes'){
+                  var isNewBanner = document.createElement('div')
+                  isNewBanner.classList.add('new-alert');
+                  isNewBanner.innerHTML = 'NEW'
+                  element.appendChild(isNewBanner)
                 }
               })
 
@@ -153,10 +159,46 @@ available_elements.forEach(function(element) {
 });
 
 
-// Add Employee to Database
-function sendData(fieldId, status, lastUpdated, updatedBy){
+/**
+ * ACKNOWLEDGE ALL UPDATES BUTTON for Listenout
+ * @returns 
+ */
+function acknowledgeUpdates(){
 
-  //console.log('Password is your first name')
+  var user = document.getElementById('passwordInput').value.toLowerCase();
+  var today = formatDateToYYYYMMDD(new Date())
+
+  return $.ajax({  
+    type: 'POST',
+    url: 'php/acknowledgeUpdates.php', 
+    data: { 
+        user: user,
+        dateSetByListenOut: today
+     },
+    success: function(result){
+      console.log('acknowledgeUpdatesSuccess!', result)
+      window.location.href = window.location.href + '?user=listenout'
+  
+
+        // $('#alert-success-employee').html(`<b>${capitalize(last_name.toLowerCase())} ${capitalize(first_name.toLowerCase())}</b> succesfully added to Personnel!`);
+        // getData();
+        // $('#addEmployeeModal').modal('hide');
+        // setTimeout(()=> {      
+        //     $('#alert-success-employee').css('opacity', "1");
+        //     setTimeout(() => {            
+        //         $('#alert-success-employee').css('opacity', "0");
+        //     }, 2000);
+        // }, 500)
+        //window.location.reload()
+    }
+});
+}
+
+
+/**
+ * UPDATES CALENDAR
+ */
+function sendData(fieldId, status, lastUpdated, updatedBy){
 
   // PASSWORD CHECK
   var password = document.getElementById('passwordInput').value
@@ -164,8 +206,6 @@ function sendData(fieldId, status, lastUpdated, updatedBy){
   if (!VALID_PASSWORDS.includes(password.toLowerCase()) && !OVERRIDE_LOGIN){
     alert('Login is required in order to make changes.')
     return false;
-  } else {
-    console.log('oy')
   }
 
   console.log('sendData()', lastUpdated);
@@ -238,3 +278,7 @@ function validatePassword() {
     passwordContainer.appendChild(newDiv)
   }
 }
+
+
+
+

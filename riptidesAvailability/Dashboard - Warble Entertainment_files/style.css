@@ -1,5 +1,13 @@
 ﻿/* Navbar ====================================== */
-@import url(materialize.css);
+/* @import url(materialize.css); */
+
+.content td {position: relative;}
+
+.calendar-listenoutbtn{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
 .new-alert {
   position: absolute;
@@ -13,8 +21,11 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 15px;
+  height: 13px;
   pointer-events:all;
+  padding-top: 1%;
+  font-size: .6em;
+  letter-spacing: .8em;
 }
 
 .navbar {

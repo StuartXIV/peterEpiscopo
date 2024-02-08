@@ -12,6 +12,7 @@ $status = $_REQUEST['status'];
     $conn->query("UPDATE `datesrip` SET `status` = '$status' WHERE `datesrip`.`fieldId` = '$fieldId'") or die($conn->error());
     $conn->query("UPDATE `datesrip` SET `lastUpdated` = '$lastUpdated' WHERE `datesrip`.`fieldId` = '$fieldId'") or die($conn->error());
     $conn->query("UPDATE `datesrip` SET `updatedBy` = '$updatedBy' WHERE `datesrip`.`fieldId` = '$fieldId'") or die($conn->error());
+    $conn->query("UPDATE `datesrip` SET `isNew` = 'yes' WHERE `datesrip`.`fieldId` = '$fieldId'") or die($conn->error());
 
     // $sql = "UPDATE `datesrip` 
     //     SET `status` = '$status',
