@@ -5,7 +5,9 @@
 
 	//connection details for MySQL database
 
-	$cd_host = "localhost";
+	// HOSTINGER requires localhost for hostinger database
+	//$cd_host = "localhost";
+	$cd_host = "sql8.freesqldatabase.com";
 	$cd_port = 3306;
 	$cd_socket = "";
 
@@ -18,15 +20,31 @@
 	$current_url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
 	if (strpos($current_url, 'localhost') !== false) {
+
 		// LOCAL
-		$cd_dbname = "u893668777_riptides";
-		$cd_user = "root";
-		$cd_password = "Gilardino11!";
+
+		// $cd_dbname = "u893668777_riptides";
+		// $cd_user = "root";
+		// $cd_password = "Gilardino11!";
+
+		// www.freesqldatabase.com
+		$cd_dbname = "sql8683144";
+		$cd_user = "sql8683144";
+		$cd_password = "Wk1vTzqGM4";
+
 	} else {
+
 		// PROD
-		$cd_dbname = "u893668777_riptides";
-		$cd_user = "u893668777_rockup";
-		$cd_password = "Sixpence11!";
+
+		// HOSTINGER DETAILS
+		// $cd_dbname = "u893668777_riptides";
+		// $cd_user = "u893668777_rockup";
+		// $cd_password = "Sixpence11!";
+
+		// www.freesqldatabase.com
+		$cd_dbname = "sql8683144";
+		$cd_user = "sql8683144";
+		$cd_password = "Wk1vTzqGM4";
 	}
 
 ?>
