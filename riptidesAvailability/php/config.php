@@ -37,14 +37,14 @@
 		// PROD
 
 		// HOSTINGER DETAILS
-		// $cd_dbname = "u893668777_riptides";
-		// $cd_user = "u893668777_rockup";
-		// $cd_password = "Sixpence11!";
+		$cd_dbname = "u893668777_riptides";
+		$cd_user = "u893668777_rockup";
+		$cd_password = "Sixpence11!";
 
 		// www.freesqldatabase.com
-		$cd_dbname = "sql8683144";
-		$cd_user = "sql8683144";
-		$cd_password = "Wk1vTzqGM4";
+		// $cd_dbname = "sql8683144";
+		// $cd_user = "sql8683144";
+		// $cd_password = "Wk1vTzqGM4";
 	}
 
 ?>
